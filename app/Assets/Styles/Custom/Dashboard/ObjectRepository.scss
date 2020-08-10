@@ -93,14 +93,18 @@
 .tag.active {
   color: white;
   border: none;
-  border: 1px solid rgba($color: #ff9879, $alpha: 0.5);
-  background-color: #ff9879;
+  // border: 1px solid rgba($color: #ff9879, $alpha: 0.5);
+  // background-color: #ff9879;
+  border: 1px solid #6448d1;
+  background-color: #6448d1;
 
   &:hover {
     color: white;
     border: none;
-    border: 1px solid rgba($color: #ff9879, $alpha: 0.5);
-    background-color: #ff9879;
+    // border: 1px solid rgba($color: #ff9879, $alpha: 0.5);
+    // background-color: #ff9879;
+    border: 1px solid #6448d1;
+    background-color: #6448d1;
   }
 }
 
@@ -151,8 +155,11 @@
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
     display: inline-block !important;
-    color: #333333 !important;
+    // color: #333333 !important;
   }
+}
+span.ant-tree-iconEle {
+  color: #848484 !important;
 }
 
 .anticon {

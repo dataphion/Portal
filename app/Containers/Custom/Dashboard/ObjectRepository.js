@@ -251,6 +251,8 @@ export default class ObjectRepository extends React.Component {
   // };
 
   renderSelectedNode = () => {
+    // console.log("test cases ---->", this.state.loadTestcase);
+
     if (this.state.show_ui) {
       if (this.state.selected_path !== "") {
         return (
@@ -263,6 +265,8 @@ export default class ObjectRepository extends React.Component {
               if (testcase.url) {
                 if (testcase.url.includes(this.state.selected_path)) {
                   if (testcase.tag) {
+                    console.log("testcases --->", testcase);
+
                     return (
                       <div
                         key={index}
@@ -387,7 +391,7 @@ export default class ObjectRepository extends React.Component {
               <div className="page-element-right-body">
                 {this.state.loadTestcase.map(element => {
                   if (element.url) {
-                    if (element.url.includes(this.state.selected_path) && element.y_scroll) {
+                    if (element.url.includes(this.state.selected_path)) {
                       return <PageElementBody element_values={element} />;
                     }
                   }
