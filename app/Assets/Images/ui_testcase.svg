@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="49" height="49" viewBox="0 0 49 49">
+  <defs>
+    <linearGradient id="linear-gradient" x1="1.017" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ffcbe0"/>
+      <stop offset="1" stop-color="#ea0068"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_2" data-name="Group 2" transform="translate(-912 -446)">
+    <path id="Path_1" data-name="Path 1" d="M37.244,51.242h-19a14,14,0,0,1-14-14v-19a14,14,0,0,1,14-14h19a14,14,0,0,1,14,14v19A14,14,0,0,1,37.244,51.242Z" transform="translate(908.755 442.755)" fill="url(#linear-gradient)"/>
+    <path id="Path_2" data-name="Path 2" d="M15,2A13,13,0,0,0,2,15V34A13,13,0,0,0,15,47H34A13,13,0,0,0,47,34V15A13,13,0,0,0,34,2H15m0-2H34A15,15,0,0,1,49,15V34A15,15,0,0,1,34,49H15A15,15,0,0,1,0,34V15A15,15,0,0,1,15,0Z" transform="translate(912 446)" fill="#ffe8f1"/>
+    <g id="Group_1" data-name="Group 1">
+      <g id="Monitor_white" transform="translate(923.15 1435.349)">
+        <path id="Subtraction_1" data-name="Subtraction 1" d="M-910.65-1415.349c-3.188,0-5.7-.008-5.727-.019a8.467,8.467,0,0,1,1.221-.616c.055-.015.6-.022,1.625-.022h1.548l.068-.17a7.246,7.246,0,0,0,.392-1.749c.033-.264.071-.769.071-.95v-.107l-5.644,0c-4.273,0-5.66-.006-5.707-.025a.581.581,0,0,1-.29-.263l-.059-.111v-15.574l.043-.085a.568.568,0,0,1,.347-.3c.026-.006,3.466-.01,8.977-.01h3.171l12.09,0,.08.045a.629.629,0,0,1,.248.261l.043.085v15.574l-.059.111a.581.581,0,0,1-.29.263c-.047.019-1.433.025-5.705.025l-5.646,0v.107c0,.18.038.685.071.95a7.251,7.251,0,0,0,.392,1.749l.068.17h1.548c1.023,0,1.57.008,1.624.022a8.551,8.551,0,0,1,1.221.616C-904.947-1415.357-907.516-1415.349-910.65-1415.349Zm-10-17.224v11h20v-11Z" transform="translate(924 460.724)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>

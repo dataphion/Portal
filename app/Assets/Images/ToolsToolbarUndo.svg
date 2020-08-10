@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1, .cls-3 {
+        fill: #54a0ff;
+      }
+
+      .cls-1 {
+        stroke: #707070;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_7" data-name="Rectangle 7" class="cls-1" width="16" height="16" transform="translate(303 62)"/>
+    </clipPath>
+  </defs>
+  <g id="undo" class="cls-2" transform="translate(-303 -62)">
+    <g id="undo-circular-arrow" transform="translate(304.5 62)">
+      <path id="Path_9" data-name="Path 9" class="cls-3" d="M8.938,14a4.5,4.5,0,0,0,0-9V8l-5-4,5-4V3a6.5,6.5,0,1,1-6.5,6.5h2A4.5,4.5,0,0,0,8.938,14Z" transform="translate(-2.438)"/>
+    </g>
+  </g>
+</svg>

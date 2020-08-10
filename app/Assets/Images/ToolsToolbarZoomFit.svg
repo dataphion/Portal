@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1, .cls-3 {
+        fill: #487eb0;
+      }
+
+      .cls-1 {
+        stroke: #707070;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_27" data-name="Rectangle 27" class="cls-1" width="16" height="16" transform="translate(470 65)"/>
+    </clipPath>
+  </defs>
+  <g id="fit" class="cls-2" transform="translate(-470 -65)">
+    <g id="full-screen-exit" transform="translate(470 65)">
+      <g id="fullscreen-exit">
+        <path id="Path_13" data-name="Path 13" class="cls-3" d="M0,12.571H3.429V16H5.714V10.286H0ZM3.429,3.429H0V5.714H5.714V0H3.429ZM10.286,16h2.286V12.571H16V10.286H10.286ZM12.571,3.429V0H10.286V5.714H16V3.429Z"/>
+      </g>
+    </g>
+  </g>
+</svg>

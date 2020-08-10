@@ -1,0 +1,31 @@
+@import "../../base";
+
+.query-template-accordion {
+  background: #f7f7f7;
+  border-radius: 5px !important;
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 0;
+  overflow: hidden;
+  .query-template-accordion-data {
+    display: flex;
+    justify-content: space-between;
+    .query-template-accordion-data-btn-container {
+      display: flex;
+      .query-template-accordion-data-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-left: 10px;
+        height: 30px;
+        border-radius: 5px;
+        width: 30px;
+        transition: $TRANSITION_SPEED;
+        &:hover {
+          background: #ffffff;
+        }
+      }
+    }
+  }
+}

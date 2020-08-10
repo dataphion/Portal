@@ -1,0 +1,272 @@
+@import "../base";
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .sidebar-logo {
+    margin: 6px 0 10px 0;
+    height: 50px;
+    width: 40px;
+    background-image: url("../../Images/qa.png");
+    background-position-x: center;
+    background-position-y: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  .header-version {
+    font-family: $PRIMARY;
+    font-weight: $PRIMARY_MEDIUM;
+    font-size: 11px;
+    color: #ffffff40;
+    margin-bottom: 10px;
+  }
+}
+
+.header-sidebar-menu {
+  overflow: hidden;
+  margin-top: 10px;
+  .header-sidebar-menu-item {
+    cursor: pointer;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    transition: $TRANSITION_SPEED;
+    color: #ffffff;
+    font-weight: $SECONDARY_BOLD;
+    font-size: 14px;
+    margin-bottom: 10px;
+    &:hover {
+      background: #fbfbfb1a;
+    }
+    i {
+      font-size: 20px;
+    }
+  }
+}
+
+.header-profile-container {
+  position: fixed;
+  left: 8px;
+  bottom: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  height: 40px;
+  width: 40px;
+  border-radius: 100%;
+  background: #c4c4c4;
+  z-index: 999999999999;
+}
+
+.hover-header-profile-container {
+  overflow: hidden;
+  display: none;
+  cursor: pointer;
+  position: fixed;
+  bottom: 8px;
+  left: 0;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px #00000040;
+  z-index: 999;
+  flex-direction: row-reverse;
+  .hover-header-profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px;
+    flex-direction: row-reverse;
+    white-space: nowrap;
+    .hover-header-profile-header-name {
+      text-transform: capitalize;
+      font-size: 15px;
+      color: #444444;
+      margin-left: 20px;
+      font-family: $PRIMARY;
+      font-weight: $PRIMARY_REGULAR;
+    }
+    .hover-header-profile-header-profile {
+      height: 40px;
+      width: 40px;
+      border-radius: 100%;
+      background: #c4c4c4;
+      overflow: hidden;
+    }
+  }
+  .header-border {
+    width: 100%;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .hover-header-profile-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 5px 0;
+    .hover-header-profile-body-row {
+      text-align: end;
+      width: 100%;
+      padding: 5px 10px;
+      color: #4d4d4d;
+      font-size: 13px;
+      font-weight: $SECONDARY_SEMI_BOLD;
+      transition: $TRANSITION_SPEED;
+      &:hover {
+        background: #f5f5f5;
+      }
+    }
+  }
+}
+
+.hidden-hover-header-profile-container {
+  display: block !important;
+}
+
+.sidenav-bug-container {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  height: 40px;
+  width: 40px;
+  border-radius: 100%;
+  color: #ffffff !important;
+  background: #ff6b6b;
+  font-size: 23px;
+  box-shadow: 0 5px 15px -5px #00000080;
+  z-index: 5;
+  transition: $TRANSITION_SPEED;
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 25px -5px #000000;
+  }
+}
+
+// Dashboard Sidebar
+.dashboard-sidebar-container {
+  display: flex;
+  flex-direction: column;
+  width: 230px;
+  min-width: 230px;
+  height: 100vh;
+  background: $SIDEBAR_COLOR;
+  // background: darken($color: $PRIMARY_COLOR, $amount: 10);
+  box-shadow: 5px 0 30px #00000040;
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 99;
+  .dashboard-header-logo-container {
+    // padding: 10px;
+    background: darken($color: $SIDEBAR_COLOR, $amount: 5);
+    display: flex;
+    align-items: center;
+    height: 70px;
+    position: sticky;
+    left: 0;
+    top: 0;
+    z-index: 99;
+    padding-left: 8px;
+    .dashboard-header-logo {
+      height: 34px;
+      width: 118px;
+      background-image: url("../../Images/logo_dark.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      margin-bottom: 3px;
+    }
+    .dashboard-header-name-version-container {
+      margin-right: 10px;
+      .dashboard-header-name {
+        font-family: $PRIMARY;
+        font-weight: $PRIMARY_LIGHT;
+        font-size: 18px;
+        color: #ffffff;
+        span {
+          font-family: $PRIMARY;
+          font-weight: $PRIMARY_MEDIUM;
+          color: #ff9879;
+        }
+      }
+      .dashboard-header-version {
+        font-family: $PRIMARY;
+        font-weight: $PRIMARY_MEDIUM;
+        font-size: 11px;
+        color: #ffffff40;
+      }
+    }
+  }
+  .dashboard-sidebar-menu {
+    overflow: auto;
+    // margin-top: 27px;
+    .dashboard-sidebar-menu-item-active {
+      background-color: $HIGHLIGHT_COLOR;
+    }
+    .dashboard-sidebar-menu-item {
+      margin: 10px 0 0 9px;
+      cursor: pointer;
+      padding: 0 10px;
+      border-radius: 10px 0 0 10px;
+      display: flex;
+      align-items: center;
+      height: 40px;
+      transition: $TRANSITION_SPEED;
+      color: rgba(255, 255, 255, 0.75);
+      font-weight: $SECONDARY_BOLD;
+      font-size: 14px;
+      margin-bottom: 10px;
+      &:hover {
+        color: rgba(255, 255, 255, 1);
+        background: #fbfbfb1a;
+      }
+      i {
+        font-size: 20px;
+        min-width: 35px;
+      }
+    }
+  }
+  .dashboard-sidebar-profile-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 0 8px;
+    // background: darken($color: $PRIMARY_COLOR, $amount: 15);
+    background: darken($color: $SIDEBAR_COLOR, $amount: 10);
+    height: 60px;
+    width: 230px;
+    z-index: 99;
+    .dashboard-sidebar-profile-name {
+      margin-left: 48px;
+      width: 126px;
+      text-transform: capitalize;
+      font-size: 15px;
+      color: #ffffff;
+      font-family: $PRIMARY;
+      font-weight: $PRIMARY_REGULAR;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dashboard-sidebar-profile-btn {
+      cursor: pointer;
+      height: 32px;
+      width: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 22px;
+      border-radius: 100%;
+      color: #000000;
+      background: #ffffff;
+      opacity: 0.5;
+    }
+  }
+}

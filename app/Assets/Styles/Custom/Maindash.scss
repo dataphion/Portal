@@ -1,0 +1,18 @@
+@import "../base";
+
+.dashboard-sidebar-select-button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  height: 50px;
+  width: 20px;
+  top: calc(50vh - 25px);
+  left: 230px;
+  background: $HIGHLIGHT_COLOR;
+  color: #ffffff;
+  font-size: 22px;
+  z-index: 99;
+  border-radius: 0 10px 10px 0;
+}

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1, .cls-3 {
+        fill: #487eb0;
+      }
+
+      .cls-1 {
+        stroke: #707070;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_26" data-name="Rectangle 26" class="cls-1" width="16" height="16" transform="translate(435 65)"/>
+    </clipPath>
+  </defs>
+  <g id="in" class="cls-2" transform="translate(-435 -65)">
+    <g id="magnifying-glass-zoom-in" transform="translate(435 65.001)">
+      <g id="Group_6" data-name="Group 6" transform="translate(0 0)">
+        <g id="Group_5" data-name="Group 5">
+          <path id="Path_12" data-name="Path 12" class="cls-3" d="M9.5,0A6.5,6.5,0,0,0,4.44,10.579L.2,14.814a.694.694,0,0,0,.981.982L5.421,11.56A6.5,6.5,0,1,0,9.5,0Zm3,7H10V9.5a.5.5,0,1,1-1,0V7H6.5a.5.5,0,0,1,0-1H9V3.5a.5.5,0,1,1,1,0V6h2.5a.5.5,0,1,1,0,1Z" transform="translate(0 -0.001)"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

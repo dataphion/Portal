@@ -1,0 +1,45 @@
+.settings-container {
+  //   margin: 20px;
+  width: 100% !important;
+  .setting-card {
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px #00000026;
+
+    .setting-card-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .configure-btn {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 5px 20px;
+      /* border: 1px solid #333; */
+      border-radius: 5px;
+      /* color: #333333; */
+      font-size: 15px;
+      transition: all 0.3s;
+      font-weight: 600;
+      //   margin-top: 15px;
+      width: 112px !important;
+      color: #ff7d64 !important;
+      border: 1px solid #ff7d64 !important;
+    }
+    .text-view {
+      padding: 20px 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+  }
+}

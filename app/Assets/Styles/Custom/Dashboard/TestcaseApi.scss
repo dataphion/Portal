@@ -1,0 +1,201 @@
+@import "../../base";
+
+// Main Graph Css
+div.mxTooltip {
+  box-shadow: 3px 3px 12px #c0c0c0;
+  background: #fff;
+  border-radius: 5px;
+  font-size: 8pt;
+  position: absolute;
+  cursor: default;
+  padding: 5px;
+  color: black;
+}
+
+.tooltip-row-container {
+  display: flex;
+  border-bottom: 1px solid #e7e6e6;
+  opacity: 0.6;
+  &:last-child {
+    border-bottom: none;
+  }
+  .tooltip-heading {
+    font-family: $PRIMARY;
+    font-weight: $PRIMARY_MEDIUM;
+    font-size: 12px;
+    color: #333333;
+    padding-right: 5px;
+  }
+  .tooltip-value {
+    font-family: $PRIMARY;
+    line-height: 19px;
+    font-size: 12px;
+  }
+}
+
+div.mxPopupMenu {
+  -webkit-box-shadow: 0 0 12px #c0c0c0;
+  -moz-box-shadow: 0 0 12px#c0c0c0;
+  box-shadow: 0 0 15px#c0c0c0;
+  position: absolute;
+  border: 1px solid #a6bbc4;
+  border-radius: 3px;
+  background: #1b2736;
+}
+
+table.mxPopupMenu {
+  border-collapse: collapse;
+}
+
+tr.mxPopupMenuItem {
+  color: #ffffff;
+  cursor: pointer;
+}
+
+tr.mxPopupMenuItemHover {
+  background: #ffffff1a;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+td.mxPopupMenuItem {
+  padding: 3px 10px !important;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.graph-board {
+  height: calc(100% - 60px);
+  flex: 1;
+  background-image: url("../../../Images/MxGraphGridBG.png");
+  background-repeat: repeat;
+  position: relative;
+  .graph-board-container {
+    height: 100%;
+  }
+}
+
+.graph-left-panel-container {
+  width: 250px;
+  height: 100vh;
+  box-shadow: 5px 0 30px #00000040;
+  z-index: 99;
+  background: #1b2736;
+  .dashboard-header-logo-container {
+    background: #222f3e;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    position: sticky;
+    left: 0;
+    top: 0;
+    z-index: 99;
+    padding-left: 8px;
+    .dashboard-header-logo {
+      height: 45px;
+      width: 160px;
+      background-image: url("../../../Images/logo_dark.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      margin-bottom: 3px;
+    }
+    .dashboard-header-name-version-container {
+      margin-left: 10px;
+      .dashboard-header-name {
+        font-family: $PRIMARY;
+        font-weight: $PRIMARY_LIGHT;
+        font-size: 18px;
+        color: #ffffff;
+        span {
+          font-family: $PRIMARY;
+          font-weight: $PRIMARY_MEDIUM;
+          color: #ff9879;
+        }
+      }
+      .dashboard-header-version {
+        font-family: $PRIMARY;
+        font-weight: $PRIMARY_MEDIUM;
+        font-size: 11px;
+        color: #ffffff40;
+      }
+    }
+  }
+  .graph-left-panel {
+    overflow-y: auto;
+    height: calc(100% - 60px);
+    padding-bottom: 60px;
+    // Create Separate Component LeftPanelElements
+  }
+  .dashboard-sidebar-profile-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 0 8px;
+    background: #222f3e;
+    height: 60px;
+    width: 250px;
+    z-index: 99;
+    .dashboard-sidebar-profile-name {
+      margin-left: 48px;
+      width: 126px;
+      text-transform: capitalize;
+      font-size: 15px;
+      color: #ffffff;
+      font-family: $PRIMARY;
+      font-weight: $PRIMARY_REGULAR;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dashboard-sidebar-profile-btn {
+      cursor: pointer;
+      height: 32px;
+      width: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 22px;
+      border-radius: 100%;
+      color: #000000;
+      background: #ffffff;
+      opacity: 0.5;
+    }
+  }
+}
+
+.graph-left-panel-draggable-element {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  width: 230px;
+  height: 69px;
+  background: #000000;
+  font-weight: $SECONDARY_EXTRA_BOLD;
+  font-size: 14px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  margin-top: -17px;
+}
+
+.cconflict-modal {
+  width: 400px !important;
+  .cconflict-modal-body {
+    margin-top: 15px !important;
+    .cconflict-modal-body-container {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      .cconflict-modal-body-text {
+        margin-left: 10px;
+        font-size: 16px;
+        font-family: $PRIMARY;
+        font-weight: $PRIMARY_MEDIUM;
+        text-align: center;
+      }
+    }
+  }
+}

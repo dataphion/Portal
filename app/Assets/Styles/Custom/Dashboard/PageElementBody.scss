@@ -1,0 +1,53 @@
+@import "../../base";
+
+.main-tag-btn {
+  padding: 3px;
+  background: $HIGHLIGHT_COLOR;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+}
+.main-tag-container {
+  display: flex;
+  padding: 10px 20px;
+  font-size: 20px;
+  font-family: "Rubik", sans-serif;
+  font-weight: 500;
+  color: $HIGHLIGHT_COLOR;
+  align-items: center;
+  justify-content: space-between;
+}
+.main-tag-icon {
+  height: 26px;
+  width: 26px;
+  border-radius: 100%;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $HIGHLIGHT_COLOR;
+}
+.main-tag-text-container {
+  padding: 0 5px;
+  font-size: 17px;
+  font-family: "Rubik", sans-serif;
+  font-weight: 500;
+  color: #ffffff;
+  input {
+    text-align: center;
+    outline: none;
+    background: $HIGHLIGHT_COLOR;
+    border: unset;
+    color: #ffffff;
+    min-width: 30px !important;
+    max-width: 400px !important;
+  }
+}
+.input-container-text {
+  min-height: 30px !important;
+  border-width: 1px;
+  border-radius: 10px;
+  color: #333333 !important;
+  font-size: 17px !important;
+  font-weight: 400 !important;
+}

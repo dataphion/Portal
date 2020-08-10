@@ -1,0 +1,102 @@
+@import "../../base";
+
+.graph-board-tools-container {
+  position: absolute;
+  width: 220px;
+  margin-left: -210px;
+  bottom: 10px;
+  left: 10px;
+  transition: $TRANSITION_SPEED;
+  .graph-board-tools-menu {
+    display: flex;
+    width: 200px;
+    align-items: center;
+    justify-content: space-around;
+    background: #fff;
+    box-shadow: 0 0 10px #00000026;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    .graph-board-tools-menu-btn-container {
+      display: flex;
+      cursor: pointer;
+      position: relative;
+      justify-content: center;
+      align-items: center;
+      height: 30px;
+      width: 30px;
+      border-radius: 5px;
+      .graph-board-tools-menu-btn-undo {
+        height: 16px;
+        width: 16px;
+        background-image: url("../../../Images/ToolsToolbarUndo.svg");
+      }
+      .graph-board-tools-menu-btn-redo {
+        height: 16px;
+        width: 16px;
+        background-image: url("../../../Images/ToolsToolbarRedo.svg");
+      }
+      .graph-board-tools-menu-btn-zoom-in {
+        height: 16px;
+        width: 16px;
+        background-image: url("../../../Images/ToolsToolbarZoomIn.svg");
+      }
+      .graph-board-tools-menu-btn-zoom-out {
+        height: 16px;
+        width: 16px;
+        background-image: url("../../../Images/ToolsToolbarZoomOut.svg");
+      }
+      .graph-board-tools-menu-btn-zoom-fit {
+        height: 16px;
+        width: 16px;
+        background-image: url("../../../Images/ToolsToolbarZoomFit.svg");
+      }
+    }
+    .button-hover {
+      transition: $TRANSITION_SPEED;
+      &:hover {
+        background: #ddd !important;
+      }
+    }
+    .graph-toolbar-body-tools-divider {
+      width: 2px;
+      height: 20px;
+      background: #eeeeee;
+      border-radius: 25px;
+    }
+  }
+  .graph-board-tools-container-inside {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    #dashboard_outline_container {
+      overflow: hidden;
+      padding: 5px;
+      width: 200px;
+      height: 120px;
+      background: #ffffff;
+      background-image: url("../../../Images/MxGraphGridBG.png");
+      background-repeat: repeat;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #00000026;
+    }
+    .graph-board-tools-side-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 50px;
+      border-radius: 0 10px 10px 0;
+      background: #ff9879;
+      color: #ffffff;
+      font-size: 25px;
+      z-index: 1;
+      box-shadow: 0 0 10px #00000026;
+      transition: $TRANSITION_SPEED;
+      cursor: pointer;
+    }
+  }
+}
+.graph-board-tools-container-open {
+  margin-left: 0 !important;
+}

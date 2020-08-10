@@ -1,0 +1,37 @@
+@import "../base";
+
+.delete-modal-body {
+  margin-top: 0 !important;
+  .delete-modal-body-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .delete-modal-body-text {
+      margin-left: 10px;
+      font-size: 18px;
+      font-family: $PRIMARY;
+      font-weight: $PRIMARY_MEDIUM;
+    }
+  }
+}
+
+.delete-modal-footer-btn-container {
+  display: flex;
+  justify-content: center;
+  .negative-btn {
+    cursor: pointer;
+    padding: 5px 20px;
+    border: 1px solid #ff6b6b;
+    border-radius: 30px;
+    color: #ffffff;
+    background: #ff6b6b;
+    font-size: 15px;
+    transition: $TRANSITION_SPEED;
+    font-weight: $SECONDARY_SEMI_BOLD;
+    margin-left: 10px;
+    &:hover {
+      background: lighten($color: #ff6b6b, $amount: 5);
+      border: 1px solid lighten($color: #ff6b6b, $amount: 5);
+    }
+  }
+}

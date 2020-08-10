@@ -1,0 +1,297 @@
+@import "../../base";
+
+.testsuites-panel {
+  margin: 0;
+  padding: 15px;
+  list-style: none;
+}
+
+.testsuite-drag-container {
+  cursor: move;
+  background: #ffffff;
+  height: 36px;
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+  &:first-child {
+    margin-top: 0;
+  }
+  .testsuite-left-part {
+    display: flex;
+    align-items: center;
+    width: 500px;
+    overflow: hidden;
+    margin-right: 10px;
+    .testcase-rank {
+      flex-shrink: 0;
+      display: flex;
+      margin-right: 8px;
+      align-items: center;
+      justify-content: center;
+      height: 26px;
+      width: 27px;
+      background-color: #ddd;
+      color: #777;
+      font-size: 12px;
+      font-family: $PRIMARY;
+      font-weight: $PRIMARY_MEDIUM;
+      border-radius: 100%;
+    }
+    .testcase-name {
+      min-width: 120px;
+      width: 120px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right: 8px;
+      color: #333333;
+      font-size: 14px;
+      font-family: $SECONDARY;
+      font-weight: $SECONDARY_SEMI_BOLD;
+    }
+    .testcase-description {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #999;
+      font-size: 13px;
+      font-family: $SECONDARY;
+      font-weight: $SECONDARY_SEMI_BOLD;
+    }
+  }
+  .testsuite-right-part {
+    display: flex;
+
+    .remove-card {
+      margin-left: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      height: 22px;
+      width: 22px;
+      border-radius: 13px;
+      color: #ff6b6b;
+      border: 1px solid #ff6b6b;
+      transition-duration: 0.15s;
+
+      .fa {
+        font-size: 10px;
+      }
+
+      &:hover {
+        color: white;
+        background-color: #ff6b6b;
+      }
+    }
+
+    .testcase-feature {
+      padding: 0 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-transform: uppercase;
+      margin-right: 5px;
+      height: 26px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-family: $PRIMARY;
+      font-weight: $PRIMARY_MEDIUM;
+      background: rgb(189, 255, 235);
+    }
+    .testcase-steps {
+      min-width: 90px;
+      padding: 0 10px 0 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-transform: uppercase;
+      margin-right: 5px;
+      height: 26px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-family: $PRIMARY;
+      font-weight: $PRIMARY_MEDIUM;
+      background-color: rgb(255, 241, 212);
+      span {
+        text-align: center;
+        min-width: 40px;
+        margin-right: 5px;
+        line-height: 26px;
+        border-radius: 5px 0 0 5px;
+        padding: 0 7px;
+        height: 26px;
+        font-size: 11px;
+        font-family: $PRIMARY;
+        font-weight: $PRIMARY_BOLD;
+        background-color: darken($color: rgb(255, 241, 212), $amount: 10);
+      }
+    }
+    .testcase-type {
+      border-radius: 5px;
+      min-width: 50px;
+      width: 50px;
+      display: flex;
+      justify-content: center;
+      text-transform: uppercase;
+      align-items: center;
+      font-size: 11px;
+      font-family: $PRIMARY;
+      font-weight: $PRIMARY_MEDIUM;
+      i {
+        margin-right: 5px;
+      }
+    }
+    .ui {
+      border: 1.5px solid #804aec;
+      color: #804aec;
+    }
+    .api {
+      border: 1.5px solid #d86ed3;
+      color: #d86ed3;
+    }
+  }
+}
+
+.SortableHelper {
+  list-style: none;
+  box-shadow: 0 5px 50px #00000033;
+  background-color: #ffffffcc;
+  cursor: row-resize;
+}
+
+.testsuite-configuration-container {
+  display: flex;
+  flex: 1;
+  overflow-x: hidden;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  border-radius: 10px;
+  background: #f8fafb;
+  box-shadow: 0 5px 30px #0000000d;
+  .top {
+    z-index: 1;
+    box-shadow: 0 5px 30px #0000000d;
+    position: sticky;
+    top: 0;
+    padding: 15px 15px 0px 15px;
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+    background-color: white;
+  }
+  .notice-bar {
+    // margin-top: 10px;
+    flex-shrink: 0;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #f6e58d;
+    .content {
+      i {
+        margin-right: 5px;
+      }
+      height: 20px;
+      width: 400px;
+      font-family: $PRIMARY;
+      font-weight: $PRIMARY_MEDIUM;
+      color: #333;
+      font-size: 14px;
+    }
+  }
+}
+
+.email-setting {
+  margin-right: 10px;
+}
+
+.details-container {
+  padding: 20px;
+  background: white;
+  margin: 25px;
+  height: 100%;
+}
+
+.tags-input {
+  border: 1px solid #dcdede;
+  border-radius: 5px;
+  width: 100%;
+  padding: 5px 5px 0px;
+}
+
+.recipients-label {
+  margin-bottom: 3px !important;
+  display: flex !important;
+  flex-direction: row-reverse !important;
+  justify-content: flex-end !important;
+  font-family: "Rubik", sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 11px !important;
+  color: #777777 !important;
+}
+
+.input-tag-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.button-container {
+  margin-top: 20px;
+  // margin-left: 0px !important;
+}
+
+.save-btn {
+  margin-left: 0px !important;
+}
+
+.recipients-err {
+  border: 1px solid red !important;
+}
+
+.float-btn-notify {
+  width: 45px;
+  height: 45px;
+  border-radius: 30px;
+  // background-color: rgb(255, 152, 121);
+  background-image: linear-gradient(90deg, rgb(109, 21, 185), rgb(129, 82, 234));
+  position: absolute;
+  bottom: 7px;
+  /* left: 873px; */
+  z-index: 9999;
+  float: right;
+  right: 62px;
+  outline: none !important;
+}
+
+.float-btn-notify-tab {
+  min-height: 60px;
+  border-radius: 5px;
+  width: 275px;
+  background-color: $NOTIFY_BACKGROUND;
+  color: #ffff;
+  font-family: "Muli", sans-serif;
+  text-transform: capitalize;
+  box-shadow: 0 5px 50px #00000033;
+  position: absolute;
+  bottom: 58px;
+  /* left: 873px; */
+  z-index: 9999;
+  float: right;
+  right: 90px;
+  outline: none !important;
+}
+
+.suit-div {
+  // color: #ffff;
+  color: #0000008f;
+  font-size: 16px;
+  text-align: left;
+  padding-left: 20px;
+}
+
+.suite-panel {
+  background-color: #95a5a6;
+}

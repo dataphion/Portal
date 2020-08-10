@@ -1,0 +1,242 @@
+@import "../../base";
+
+.setting-body-container {
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 5px 30px #0000000d;
+  .setting-top-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .setting-top-left-container {
+      .setting-title-container {
+        font-family: $PRIMARY;
+        font-weight: $PRIMARY_BOLD;
+        font-size: 18px;
+        color: #3c6382;
+      }
+      .setting-sub-title-container {
+        font-weight: $SECONDARY_SEMI_BOLD;
+        font-size: 13px;
+        color: #555555;
+      }
+    }
+    .negative-button {
+      height: 34px;
+    }
+  }
+  .setting-form-container {
+    padding: 10px;
+    margin-bottom: 50px;
+    .form-row-flex {
+      .setting-form-application-url {
+        margin-bottom: 5px;
+        position: relative;
+        height: 40px;
+        width: 100%;
+        border-radius: 10px;
+        background: #f5f5f5;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        .setting-form-application-url-index {
+          height: 32px;
+          width: 32px;
+          border-radius: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #dddddd;
+          margin: 0 10px;
+          font-size: 12px;
+          font-weight: $SECONDARY_BOLD;
+          color: #aaaaaa;
+        }
+        .setting-form-application-url-text {
+          font-size: 14px;
+          font-weight: $SECONDARY_SEMI_BOLD;
+          color: #555555;
+        }
+
+        .setting-form-application-url-input {
+          padding: 4px 10px;
+          height: 30px;
+          width: calc(100% - 145px);
+          border: 1px solid #fff;
+          border-radius: 5px;
+          outline: 0;
+          transition-duration: 0.15s;
+
+          &:hover {
+            border: 1px solid #ccc;
+          }
+
+          &:focus,
+          &:active {
+            border: 1px solid #777;
+          }
+        }
+
+        .setting-form-application-url-icon {
+          font-size: 12px;
+          color: #777;
+          border: 1px solid #cccccc;
+          height: 32px;
+          width: 32px;
+          border-radius: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: absolute;
+          right: 10px;
+          transition-duration: 0.15s;
+
+          &:hover {
+            color: #333;
+            border: 1px solid #aaa;
+          }
+        }
+
+        .setting-form-application-url-icon.edit,
+        .setting-form-application-url-icon.save {
+          right: 50px;
+        }
+
+        .setting-form-application-url-icon.remove {
+          color: #ee5253;
+          border-color: #ee5253;
+
+          &:hover {
+            color: #ff6b6b;
+            border-color: #ff6b6b;
+          }
+        }
+
+        .setting-form-application-url-icon.save {
+          color: #1dd1a1;
+          border-color: #1dd1a1;
+
+          &:hover {
+            color: lighten($color: #1dd1a1, $amount: 10);
+            border-color: lighten($color: #1dd1a1, $amount: 10);
+          }
+        }
+      }
+    }
+  }
+}
+
+.setting-border-container {
+  border-bottom: 1px solid #e2e9ed;
+  width: 100%;
+  margin: 5px 0;
+}
+
+.ant-row.ant-form-item.hideme {
+  display: none;
+}
+
+.add-env {
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-env-btn {
+  width: 90px !important;
+}
+
+.plus-icon {
+  cursor: pointer;
+}
+
+// addenvironmentconfiguration.scss
+
+.select-env {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-variant: tabular-nums;
+  list-style: none;
+  -webkit-font-feature-settings: "tnum";
+  font-feature-settings: "tnum";
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 32px;
+  padding: 4px 11px;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+  line-height: 1.5;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  font-weight: 600 !important;
+  color: #333333 !important;
+  font-size: 14px !important;
+}
+
+.select-env:focus {
+  border-color: #40a9ff;
+  border-right-width: 1px !important;
+  outline: 0;
+  -webkit-box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  border-radius: 5px;
+}
+
+.select-env-err {
+  border-color: #f5222d;
+}
+
+.select-env:hover {
+  border-color: #40a9ff;
+  border-right-width: 1px !important;
+  outline: 0;
+  -webkit-box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  border-radius: 5px;
+  cursor: context-menu;
+}
+
+.header-row {
+  background-color: #dfe6e9;
+  border-radius: 2px;
+  padding: 10px;
+}
+
+.grid-style {
+  font-weight: 400 !important;
+}
+
+.dt-rows {
+  padding: 10px;
+  border-bottom: 1px solid #dfe6e9;
+  margin-left: none !important;
+  margin-right: none !important;
+  background-color: #ffff !important;
+}
+
+.config-modal {
+  width: 750px !important;
+  // height: 100px !important;
+}
+
+.source-from {
+  min-height: auto !important;
+  max-height: auto !important;
+}
+
+.input-forms {
+  margin: 5px 0px;
+}
+
+.rs-modal-body {
+  overflow: unset !important;
+}

@@ -1,0 +1,74 @@
+@import "../../../base";
+
+.condition-cell {
+  width: 230px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px #00000026;
+  overflow: hidden;
+  transition: $TRANSITION_SPEED;
+  height: 69px;
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  background: #ffffff;
+}
+
+.condition-cell-left {
+  margin-right: 10px;
+  height: 49px;
+  width: 49px;
+  background-image: url("../../../../Images/condition_bg.svg");
+}
+
+.iterator-cell-left {
+  margin-right: 10px;
+  height: 49px;
+  width: 49px;
+  background-image: url("../../../../Images/iterator_bg.svg");
+}
+
+.assertion-cell-left {
+  margin-right: 10px;
+  height: 49px;
+  width: 49px;
+  background-image: url("../../../../Images/assertion_bg.svg");
+}
+
+.variable-cell-left {
+  margin-right: 10px;
+  height: 49px;
+  width: 49px;
+  background-image: url("../../../../Images/variable_bg.svg");
+}
+
+.ui-testcase-cell-left {
+  margin-right: 10px;
+  height: 49px;
+  width: 49px;
+  background-image: url("../../../../Images/ui_testcase.svg");
+}
+
+.condition-cell-right {
+  width: 151px;
+  text-align: left;
+}
+
+.condition-cell-right-top {
+  margin-bottom: 6px;
+  font-family: $PRIMARY;
+  font-weight: $PRIMARY_MEDIUM;
+  font-size: 14px;
+  color: #2c4b6e;
+  text-transform: capitalize;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.condition-cell-right-bottom {
+  color: #555555;
+  font-weight: $SECONDARY_SEMI_BOLD;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

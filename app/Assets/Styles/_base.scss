@@ -1,0 +1,197 @@
+@import "./_vars";
+@import "./Custom/Lib_overrides.scss";
+
+* {
+  padding: 0;
+  margin: 0;
+  font-family: $SECONDARY;
+}
+
+.flex {
+  display: flex;
+}
+
+.v-center {
+  align-items: center;
+}
+.between {
+  justify-content: space-between;
+}
+
+.idea1 {
+  border: 1px dashed red;
+}
+
+.idea2 {
+  border: 1px dashed blue;
+}
+
+.idea2 {
+  border: 1px dashed yellow;
+}
+
+a {
+  text-decoration: none !important;
+  outline: none !important;
+}
+
+.main-container {
+  display: flex;
+  width: 100%;
+}
+
+.status-button {
+  display: flex;
+  align-items: center;
+  padding: 5px 20px;
+  border-radius: 30px;
+  font-size: 15px;
+  font-weight: $SECONDARY_SEMI_BOLD;
+  i {
+    margin-right: 7px;
+  }
+}
+
+.negative-button {
+  cursor: pointer;
+  min-width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 7px 20px;
+  border: 1px solid #333;
+  border-radius: 30px;
+  color: #333333;
+  font-size: 15px;
+  transition: $TRANSITION_SPEED;
+  font-weight: $SECONDARY_SEMI_BOLD;
+  &:hover {
+    transform: scale(1.05);
+    color: #ffffff;
+    background: #333;
+    .ant-dropdown-link {
+      color: #ffffff !important;
+    }
+  }
+  i {
+    margin-right: 7px;
+  }
+  &:active {
+    transform: scale(0.9);
+  }
+  .ant-dropdown-link {
+    display: flex;
+    align-items: center;
+    color: #333333 !important;
+    i {
+      margin-left: 5px !important;
+      margin-top: 3px !important;
+    }
+  }
+}
+
+.positive-button {
+  min-width: 120px;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 8px 20px;
+  border-radius: 30px;
+  color: #ffffff !important;
+  background-image: linear-gradient(275deg, $PRIMARY_COLOR, $SECONDARY_COLOR);
+  font-size: 15px;
+  transition: $TRANSITION_SPEED;
+  font-weight: $SECONDARY_SEMI_BOLD;
+  margin-left: 10px;
+  &:hover {
+    transform: scale(1.05);
+    background-image: linear-gradient(125deg, $PRIMARY_COLOR, $SECONDARY_COLOR);
+  }
+  i {
+    margin-right: 7px;
+  }
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.red-button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 5px 20px;
+  border-radius: 30px;
+  border: 1px solid #ee5253;
+  color: #ffffff !important;
+  background: #ee5253;
+  font-size: 15px;
+  transition: $TRANSITION_SPEED;
+  font-weight: $SECONDARY_SEMI_BOLD;
+  margin-left: 10px;
+  &:hover {
+    border: 1px solid #ff6b6b;
+    background: #ff6b6b;
+  }
+  i {
+    margin-right: 7px;
+  }
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.border-container {
+  border-bottom: 1px solid #eeeeee;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.row {
+  margin-bottom: 30px;
+}
+
+::-webkit-scrollbar {
+  height: 3px;
+  width: 3px;
+  background-color: white;
+}
+::-webkit-scrollbar-thumb {
+  margin-left: 10px;
+  background: $HIGHLIGHT_COLOR;
+  border-radius: 10px;
+}
+
+// Layout execution process
+@keyframes blink {
+  0% {
+    box-shadow: 0 5px 20px #ffaf40;
+  }
+  50% {
+    box-shadow: 0 5px 20px #00000026;
+  }
+  100% {
+    box-shadow: 0 5px 20px #ffaf40;
+  }
+}
+
+.layout-execution-started {
+  animation: blink 1s linear infinite;
+}
+
+.layout-execution-successfull {
+  box-shadow: 0 5px 20px #1dd1a199;
+}
+
+.layout-execution-fail {
+  box-shadow: 0 5px 20px #ff6b6b;
+}
+
+// React-loader-spinner library css edit
+.loader-css {
+  position: fixed !important;
+  top: calc(50% - 50px) !important;
+  left: calc(50% - 50px) !important;
+  z-index: 9999999999999 !important;
+}

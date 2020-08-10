@@ -1,0 +1,110 @@
+@import "../../../base";
+
+.api-cell {
+  width: 230px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px #00000026;
+  overflow: hidden;
+  transition: $TRANSITION_SPEED;
+}
+
+// .api-cell-get {
+//   &:hover {
+//     box-shadow: 0 5px 20px #1dd1a14d;
+//   }
+// }
+
+// .api-cell-post {
+//   &:hover {
+//     box-shadow: 0 5px 20px #f4ac0c4d;
+//   }
+// }
+
+// .api-cell-put {
+//   &:hover {
+//     box-shadow: 0 5px 20px #1890ff4d;
+//   }
+// }
+
+// .api-cell-patch {
+//   &:hover {
+//     box-shadow: 0 5px 20px #4bcffa4d;
+//   }
+// }
+
+// .api-cell-delete {
+//   &:hover {
+//     box-shadow: 0 5px 20px #ff6b6b4d;
+//   }
+// }
+
+.api-cell-header {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background: #ffffff;
+}
+.api-cell-header-conflict {
+  box-shadow: 0 5px 20px #b10000 !important;
+}
+
+.api-cell-header-method-btn {
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  font-size: 11px;
+  line-height: 100%;
+  margin-right: 9px;
+  font-weight: $SECONDARY_EXTRA_BOLD;
+}
+
+.api-cell-header-method-btn-get {
+  color: #1dd1a1;
+  border: 1px solid #1dd1a1;
+}
+
+.api-cell-header-method-btn-post {
+  color: #f4ac0c;
+  border: 1px solid #f4ac0c;
+}
+
+.api-cell-header-method-btn-put {
+  color: #1890ff;
+  border: 1px solid #1890ff;
+}
+
+.api-cell-header-method-btn-patch {
+  color: #4bcffa;
+  border: 1px solid #4bcffa;
+}
+
+.api-cell-header-method-btn-delete {
+  color: #ff6b6b;
+  border: 1px solid #ff6b6b;
+}
+
+.api-cell-header-method-title {
+  font-family: $PRIMARY;
+  font-weight: $PRIMARY_MEDIUM;
+  font-size: 14px;
+  color: #2c4b6e;
+  text-transform: capitalize;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.api-cell-footer {
+  background: #eeeeee;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.api-cell-footer-uri {
+  color: #555555;
+  font-weight: $SECONDARY_SEMI_BOLD;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

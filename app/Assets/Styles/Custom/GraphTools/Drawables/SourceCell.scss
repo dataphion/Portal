@@ -1,0 +1,76 @@
+@import "../../../base";
+
+.source-cell {
+  display: flex;
+  align-items: center;
+  width: 230px;
+  height: 69px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px #00000026;
+  overflow: hidden;
+  transition: $TRANSITION_SPEED;
+}
+
+.oracle-source-cell {
+  background-image: url("../../../../Images/oracle_bg.svg");
+  // &:hover {
+  //   box-shadow: 0 5px 20px #ff6b6b4d;
+  // }
+}
+
+.rabbitmq-source-cell {
+  background-image: url("../../../../Images/rabbitmq_bg.svg");
+  // &:hover {
+  //   box-shadow: 0 5px 20px #f989144d;
+  // }
+}
+
+.mysql-source-cell {
+  background-image: url("../../../../Images/mysql_bg.svg");
+  // &:hover {
+  //   box-shadow: 0 5px 20px #00c4e84d;
+  // }
+}
+
+.redis-source-cell {
+  background-image: url("../../../../Images/redis_bg.svg");
+  // &:hover {
+  //   box-shadow: 0 5px 20px #ff6b6b4d;
+  // }
+}
+
+.mongodb-source-cell {
+  background-image: url("../../../../Images/mongodb_bg.svg");
+  // &:hover {
+  //   box-shadow: 0 5px 20px #ff6b6b4d;
+  // }
+}
+
+.mssql-source-cell {
+  background-image: url("../../../../Images/mssql_bg.svg");
+  // &:hover {
+  //   box-shadow: 0 5px 20px #ff6b6b4d;
+  // }
+}
+
+.mssql-source-cell {
+  background-image: url("../../../../Images/postgres_bg.svg");
+  // &:hover {
+  //   box-shadow: 0 5px 20px #ff6b6b4d;
+  // }
+}
+
+.source-cell-title {
+  width: 230px;
+  padding-left: 100px;
+  font-family: $PRIMARY;
+  font-weight: $PRIMARY_MEDIUM;
+  font-size: 14px;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.col-margin {
+  margin: 15px 0px !important;
+}

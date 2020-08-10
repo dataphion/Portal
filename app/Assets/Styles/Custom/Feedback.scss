@@ -1,0 +1,18 @@
+@import "../base";
+
+.feedback-body-container {
+  padding: 30px 30px 0 30px;
+  overflow: hidden;
+  width: calc(100% - 44px);
+}
+
+.feedback-page-border {
+  border-bottom: 1px solid #eeeeee;
+  margin: 50px 0;
+}
+
+.feedback-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
