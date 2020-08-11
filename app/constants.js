@@ -1,14 +1,7 @@
 const host = "/";
-const apiExecuteHost = process.env.API_EXEC_HOST || "https://aitester.dataphion.com/api/Runtest";
-const sockethost = process.env.SOCKET_HOST || "https://admin.dataphion.com";
-const image_host = process.env.IMAGE_HOST || "https://aitester.dataphion.com";
-const error_image_host = process.env.ERROR_IMAGE_HOST || "https://admin.dataphion.com";
-
-// const host = process.env.HOST || "http://localhost:1337/";
-// const apiExecuteHost = process.env.API_EXEC_HOST || "http://localhost:9501/api/Runtest";
-// const sockethost = process.env.SOCKET_HOST || "http://localhost:1337";
-// const image_host = process.env.IMAGE_HOST || "http://localhost:4200";
-// const error_image_host = process.env.ERROR_IMAGE_HOST || "http://localhost:4200";
+const sockethost = "/socket.io";
+const image_host = "";
+const error_image_host = "";
 
 const constants = {
   error_image_host: error_image_host,

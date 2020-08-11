@@ -614,7 +614,7 @@ export default class TestcaseSteps extends React.Component {
       body: JSON.stringify({
         testcaseid: window.location.pathname.split("/")[5],
         // testsessionid: get_testsessionexecution_id_res.data.applications[0].testsuites[0].testsessionexecutions[0].id,
-        testsessionid: 2,
+        testsessionid: 1,
         environment_id: "",
         browser: this.state.selected_browser,
         protractor_host: `http://${selenium_address.data.applications[0].selenium_configure.host}:${selenium_address.data.applications[0].selenium_configure.port}/wd/hub`
