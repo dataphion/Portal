@@ -1,11 +1,18 @@
 const host = "/";
-const sockethost = "/socket.io";
 const image_host = "";
 const error_image_host = "";
 
+let protocol = window.location.protocol;
+let slashes = protocol.concat("//");
+let sockio_host = slashes.concat(window.location.hostname);
+const port = window.location.port
+if(port){
+  sockio_host +=":"+port;
+}
+
 const constants = {
   error_image_host: error_image_host,
-  socket_url: sockethost,
+  socket_url: sockio_host,
   image_host: image_host,
   extension_id: "ilifkjninjhohkiembejnfaanokppkaa",
   apiexecutehost: host + "api/testcases/api/Runtest",

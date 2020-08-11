@@ -27,6 +27,7 @@ export default class TestcaseSteps extends React.Component {
     this.myRef = React.createRef();
     this.state = {
       allData: [],
+      socket : socketIOClient(constants.socket_url),
       groupIds: [],
       stepsData: [],
       imageModal: false,
@@ -73,6 +74,7 @@ export default class TestcaseSteps extends React.Component {
       select_browser_err: false,
       group_steps: 0
     };
+
   }
 
   showMetaData = step => {
@@ -104,33 +106,32 @@ export default class TestcaseSteps extends React.Component {
   };
 
   componentDidMount() {
+    console.log("Inside component did mount");
     if (sessionStorage.getItem("id")) {
+      console.log("Session storage has ID..");
+      
       this.loadSteps();
-
-      //socket connection
-      const socket = socketIOClient(constants.socket_url);
-
       //socket code for record
-      socket.on(sessionStorage.getItem("id") + "_record", data => {
-        const testcase_id = window.location.pathname.split("/")[5];
 
-        if (data.testcase.id == testcase_id && data.testcase.sequence_number !== "1") {
-          this.setState({
-            stepsData: [...this.state.stepsData, data.testcase],
-            openUrlLoader: false
-          });
-        }
+      this.state.socket.on('connect', function (){
+        console.log('connected to Socket Server.... ');
+      }); 
+  
+      this.state.socket.on('disconnect', function (){
+        console.log('disconnected to Socket Server.... ');
       });
-      //socket code for play back proptector
-      socket.on(window.location.pathname.split("/")[5] + "_play_back", data => {
-        const testcase_id = window.location.pathname.split("/")[5];
+      const testcase_id = window.location.pathname.split("/")[5];
+      this.state.socket.on(testcase_id+"_play_back", (data) => {
+        console.log("Received message from Socket.io server");
+        console.log(data);
+
         //condition to check it has same testcase id and start only on playback
         if (data.testcase_id == testcase_id) {
           let new_step_data = this.state.stepsData;
           for (let find_id_sequence in new_step_data) {
             //condition for check after open url
             //condition for check objectrepo id is same
-
+  
             // ---------------------- IF TESTCASE GROUP FOUND IN RUNNING TESTCASE ----------
             if (!!new_step_data[find_id_sequence]["testcasecomponents"]) {
               let testcase_group = new_step_data[find_id_sequence]["testcasecomponents"];
@@ -200,6 +201,23 @@ export default class TestcaseSteps extends React.Component {
           }
         }
       });
+
+      this.state.socket.on(sessionStorage.getItem("id") + "_record", data => {
+        const testcase_id = window.location.pathname.split("/")[5];
+
+        if (data.testcase.id == testcase_id && data.testcase.sequence_number !== "1") {
+          this.setState({
+            stepsData: [...this.state.stepsData, data.testcase],
+            openUrlLoader: false
+          });
+        }
+      });
+      //socket code for play back proptector
+      console.log("Listening on Socket IO");
+      console.log(window.location.pathname.split("/")[5] + "_play_back");
+      console.log("----------------------");
+      // this.state.socket.on(window.location.pathname.split("/")[5] + "_play_back", data => {
+      
     } else {
       this.props.history.push("/login");
     }
@@ -613,7 +631,6 @@ export default class TestcaseSteps extends React.Component {
       },
       body: JSON.stringify({
         testcaseid: window.location.pathname.split("/")[5],
-        // testsessionid: get_testsessionexecution_id_res.data.applications[0].testsuites[0].testsessionexecutions[0].id,
         testsessionid: 1,
         environment_id: "",
         browser: this.state.selected_browser,

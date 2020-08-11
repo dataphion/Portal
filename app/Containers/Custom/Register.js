@@ -45,7 +45,7 @@ const Register = Form.create()(
       };
       try {
         await axios.post(constants.register, registerData);
-        await axios.post(constants.send_email, {'email': registerData.email});
+        // await axios.post(constants.send_email, {'email': registerData.email});
         this.props.history.push({
           pathname: "register-successful",
           parentData: "afterRegister"
