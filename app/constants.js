@@ -43,7 +43,7 @@ const constants = {
   smtpdetails: host + "api/smtpdetails",
   jobs: host + "api/jobs",
   seleniumConfigure: host + "api/selenium-configures",
-
+  send_email: host+ "api/auth/send-email-confirmation",
   // colors
   PRIMARY_COLOR: "#1039A6",
   SECONDARY_COLOR: "#6D15B9",

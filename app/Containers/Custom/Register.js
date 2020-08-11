@@ -19,14 +19,14 @@ const Register = Form.create()(
       }
     }
 
-    handleSave = () => {
+    handleSave = async () => {
       const form = this.props.form;
       let error = false;
       form.validateFields(err => {
         if (err) {
           error = true;
           return Alert.warning("Please fill required fields.");
-        } else if (!/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(form.getFieldValue("email"))) {
+        } else if (!/^([A-Za-z0-9_\-\.\+])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(form.getFieldValue("email"))) {
           error = true;
           return Alert.warning("Please fill valid Email.");
         }
@@ -41,22 +41,17 @@ const Register = Form.create()(
         password: form.getFieldValue("password"),
         email: form.getFieldValue("email"),
         designation: form.getFieldValue("designation"),
-        user_type: "public",
-        added_by: "self"
+        confirmed : false
       };
-      axios
-        .post(constants.register, registerData)
-        .then(response => {
-          sessionStorage.setItem("id", response.data.user.id);
-          sessionStorage.setItem("username", response.data.user.username);
-          sessionStorage.setItem("jwt", response.data.jwt);
-          this.props.history.push({
-            pathname: "register-successful",
-            parentData: "afterRegister"
-          });
-        })
-        .catch(error => {
-          this.setState({ loader: false });
+      try {
+        await axios.post(constants.register, registerData);
+        await axios.post(constants.send_email, {'email': registerData.email});
+        this.props.history.push({
+          pathname: "register-successful",
+          parentData: "afterRegister"
+        });
+      } catch (error) {
+        this.setState({ loader: false });
           const err = JSON.stringify(error);
           const msg = JSON.parse(err);
           if (msg.response.data.message === "Email is already taken.") {
@@ -64,8 +59,8 @@ const Register = Form.create()(
           } else {
             Alert.error("Something went wrong");
           }
-          console.log(error);
-        });
+        console.log(error);
+      } 
     };
 
     handleReset = () => {
