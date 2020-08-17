@@ -1,0 +1,38 @@
+{
+  "swaggerDefination": {
+    "servers": [
+      {
+        "url": "http://localhost:5000",
+        "description": "Development server"
+      },
+      {
+        "url": "http://localhost:5000",
+        "description": "Production server"
+      }
+    ],
+    "apis": [
+      {
+        "url": "/api/url1",
+        "method": "get",
+        "description": "",
+        "headers": {},
+        "response": {}
+      },
+      {
+        "url": "/api/url2",
+        "method": "post",
+        "headers": {},
+        "description": "",
+        "requestBody": {},
+        "response": {}
+      },
+      {
+        "url": "/api/url3/{_id}",
+        "method": "get",
+        "description": "",
+        "headers": {},
+        "response": {}
+      }
+    ]
+  }
+}

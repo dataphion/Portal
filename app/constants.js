@@ -1,14 +1,20 @@
-const host = "/";
-const image_host = "";
-const error_image_host = "";
+// const host = "/";
+// const image_host = "";
+// const error_image_host = "";
 
-let protocol = window.location.protocol;
-let slashes = protocol.concat("//");
-let sockio_host = slashes.concat(window.location.hostname);
-const port = window.location.port
-if(port){
-  sockio_host +=":"+port;
-}
+// let protocol = window.location.protocol;
+// let slashes = protocol.concat("//");
+// let sockio_host = slashes.concat(window.location.hostname);
+// const port = window.location.port;
+// if (port) {
+//   sockio_host += ":" + port;
+// }
+
+const host = "http://localhost:4200/";
+const apiExecuteHost = "http://localhost:9501/api/Runtest";
+const sockio_host = "http://localhost:4200";
+const image_host = "http://localhost:1337";
+const error_image_host = "http://localhost:1337";
 
 const constants = {
   error_image_host: error_image_host,
@@ -50,14 +56,14 @@ const constants = {
   smtpdetails: host + "api/smtpdetails",
   jobs: host + "api/jobs",
   seleniumConfigure: host + "api/selenium-configures",
-  send_email: host+ "api/auth/send-email-confirmation",
+  send_email: host + "api/auth/send-email-confirmation",
   // colors
   PRIMARY_COLOR: "#1039A6",
   SECONDARY_COLOR: "#6D15B9",
   HIGHLIGHT_COLOR: "#7346eb",
   HIGHLIGHT_END_COLOR: "#2a4a65",
   ORANGE: "#ff9879",
-  GREEN: "#1DD1A1",
+  GREEN: "#1DD1A1"
 };
 
 export default constants;

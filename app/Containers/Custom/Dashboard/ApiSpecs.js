@@ -7,6 +7,7 @@ import { Table } from "antd";
 import constants from "../../../constants";
 import { Link } from "react-router-dom";
 import DeletePopupModal from "../../../Components/DeletePopupModal";
+import ApiTransformation from "../../../Components/ApiTransformation";
 
 export default class ApiSpecs extends React.Component {
   constructor(props) {
@@ -15,13 +16,14 @@ export default class ApiSpecs extends React.Component {
       deleteConfirmation: false,
       apiSpecsId: "",
       conflictdata: {
-        data: [],
+        data: []
       },
       searchText: "",
       addedPack: [],
       loader: false,
       addSwaggerModal: false,
-      conflictConfirmation: false,
+      addApiTransformationModal: false,
+      conflictConfirmation: false
     };
   }
 
@@ -34,13 +36,9 @@ export default class ApiSpecs extends React.Component {
     }
   }
 
-  showconflict = (data) => {
+  showconflict = data => {
     console.log(data);
-    data.status == "success"
-      ? this.setState({ conflictConfirmation: true, conflictdata: data })
-      : data.status == "nochanges"
-      ? Alert.success("No changes.")
-      : "";
+    data.status == "success" ? this.setState({ conflictConfirmation: true, conflictdata: data }) : data.status == "nochanges" ? Alert.success("No changes.") : "";
   };
 
   loadAddedPack = () => {
@@ -49,22 +47,20 @@ export default class ApiSpecs extends React.Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json",
+        Accept: "application/json"
       },
       body: JSON.stringify({
-        query: `{applications(where:{user:{id:"${sessionStorage.getItem("id")}"}id:"${
-          window.location.pathname.split("/")[2]
-        }"}){endpointpacks{id,name,upload_type}}}`,
-      }),
+        query: `{applications(where:{user:{id:"${sessionStorage.getItem("id")}"}id:"${window.location.pathname.split("/")[2]}"}){endpointpacks{id,name,upload_type}}}`
+      })
     })
-      .then((response) => response.json())
-      .then((response) => {
+      .then(response => response.json())
+      .then(response => {
         this.setState({
           loader: false,
-          addedPack: response.data.applications[0].endpointpacks,
+          addedPack: response.data.applications[0].endpointpacks
         });
       })
-      .catch((error) => {
+      .catch(error => {
         Alert.error("Something went wrong");
         console.log(error);
       });
@@ -75,18 +71,18 @@ export default class ApiSpecs extends React.Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json",
+        Accept: "application/json"
       },
       body: JSON.stringify({
-        query: `mutation{deleteEndpointpack(input:{where:{id:"${this.state.apiSpecsId}"}}){endpointpack{id}}}`,
-      }),
+        query: `mutation{deleteEndpointpack(input:{where:{id:"${this.state.apiSpecsId}"}}){endpointpack{id}}}`
+      })
     })
-      .then((response) => response.json())
-      .then((response) => {
+      .then(response => response.json())
+      .then(response => {
         this.setState({ deleteConfirmation: false, apiSpecsId: "" });
         this.loadAddedPack();
       })
-      .catch((error) => {
+      .catch(error => {
         Alert.error("Something went wrong");
         console.log(error);
       });
@@ -111,20 +107,20 @@ export default class ApiSpecs extends React.Component {
         title: "Name",
         dataIndex: "name",
         key: "name",
-        sorter: (a, b) => a.name.localeCompare(b.name),
+        sorter: (a, b) => a.name.localeCompare(b.name)
       },
       {
         sorter: true,
         title: "Upload Type",
         dataIndex: "upload_type",
         key: "type",
-        sorter: (a, b) => a.type.localeCompare(b.type),
+        sorter: (a, b) => a.type.localeCompare(b.type)
       },
       {
         title: "Action",
         dataIndex: "id",
         key: "x",
-        render: (id) => (
+        render: id => (
           <div className="table-action-btn-container">
             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Update</Tooltip>}>
               <div
@@ -132,7 +128,7 @@ export default class ApiSpecs extends React.Component {
                 onClick={() =>
                   this.setState({
                     apiSpecsId: id,
-                    addSwaggerModal: true,
+                    addSwaggerModal: true
                   })
                 }
               >
@@ -145,8 +141,8 @@ export default class ApiSpecs extends React.Component {
               </div>
             </Whisper>
           </div>
-        ),
-      },
+        )
+      }
     ];
 
     return (
@@ -159,10 +155,18 @@ export default class ApiSpecs extends React.Component {
               <div className="breadcrumbs-items">></div>
               <div className="breadcrumbs-items">API SPECS</div>
             </div>
-            <div className="filter-panel-right-part">
-              <div onClick={() => this.setState({ addSwaggerModal: true })} className="positive-button">
-                <i className="fa fa-plus" />
-                Add Specs
+            <div style={{ display: "flex" }}>
+              <div className="filter-panel-right-part">
+                <div onClick={() => this.setState({ addApiTransformationModal: true })} className="positive-button">
+                  <i className="fa fa-exchange" />
+                  Transformation
+                </div>
+              </div>
+              <div className="filter-panel-right-part">
+                <div onClick={() => this.setState({ addSwaggerModal: true })} className="positive-button">
+                  <i className="fa fa-plus" />
+                  Add Specs
+                </div>
               </div>
             </div>
           </div>
@@ -173,14 +177,7 @@ export default class ApiSpecs extends React.Component {
                   <div className="testcase-filter-panel-search-btn">
                     <i className="fa fa-search" />
                   </div>
-                  <input
-                    autoFocus
-                    type="text"
-                    placeholder="Search name here"
-                    name="search"
-                    value={this.state.searchText}
-                    onChange={(e) => this.setState({ searchText: e.target.value })}
-                  />
+                  <input autoFocus type="text" placeholder="Search name here" name="search" value={this.state.searchText} onChange={e => this.setState({ searchText: e.target.value })} />
                 </div>
               </div>
               <div className="testcases-table">
@@ -189,18 +186,15 @@ export default class ApiSpecs extends React.Component {
             </div>
           </div>
         </div>
+        <ApiTransformation addApiTransformationModal={this.state.addApiTransformationModal} onHide={() => this.setState({ addApiTransformationModal: false })}></ApiTransformation>
         <AddSwaggerModal
           addSwaggerModal={this.state.addSwaggerModal}
           onHide={() => this.setState({ addSwaggerModal: false, apiSpecsId: "" })}
           spec_id={this.state.apiSpecsId}
           loadAddedPack={this.loadAddedPack}
-          showconflict={(e) => this.showconflict(e)}
+          showconflict={e => this.showconflict(e)}
         />
-        <DeletePopupModal
-          deleteConfirmation={this.state.deleteConfirmation}
-          onHide={() => this.setState({ deleteConfirmation: false, apiSpecsId: "" })}
-          delete={this.delete}
-        />
+        <DeletePopupModal deleteConfirmation={this.state.deleteConfirmation} onHide={() => this.setState({ deleteConfirmation: false, apiSpecsId: "" })} delete={this.delete} />
         <Loader status={this.state.loader} />
         <ConflictConfirmationModal
           conflictConfirmation={this.state.conflictConfirmation}
