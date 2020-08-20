@@ -26,7 +26,7 @@ const ApiSidebar = Form.create()(
         BodyFormDataAdd: [],
         AceEditorValue: [],
         AceEditorValidation: [],
-        showPassword: false,
+        showPassword: false
       };
     }
 
@@ -34,61 +34,61 @@ const ApiSidebar = Form.create()(
       if (this.props.selectedCellData.Method && this.props.selectedCellData.Method.value === "uitestcase") {
         this.setState({
           Method: this.props.selectedCellData.Method.value,
-          UiTestcaseName: this.props.selectedCellData.UiTestcaseName ? this.props.selectedCellData.UiTestcaseName.value : null,
+          UiTestcaseName: this.props.selectedCellData.UiTestcaseName ? this.props.selectedCellData.UiTestcaseName.value : null
         });
 
         fetch(constants.graphql, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Accept: "application/json",
+            Accept: "application/json"
           },
           body: JSON.stringify({
             query: `{applications(where:
               {user:{id:"${sessionStorage.getItem("id")}"},
               id:"${window.location.pathname.split("/")[2]}"})
-              {testcases(where:{type:"ui"}){id,name}}}`,
-          }),
+              {testcases(where:{type:"ui"}){id,name}}}`
+          })
         })
-          .then((response) => response.json())
-          .then((response) => {
+          .then(response => response.json())
+          .then(response => {
             this.setState({
-              UiTestcase: response.data.applications[0].testcases,
+              UiTestcase: response.data.applications[0].testcases
             });
           })
-          .catch((error) => {
+          .catch(error => {
             Alert.error("Something went wrong");
             console.log(error);
           });
       }
       if (this.props.selectedCellData.PathParametersAdd) {
         this.setState({
-          PathParametersAdd: JSON.parse(this.props.selectedCellData.PathParametersAdd.value),
+          PathParametersAdd: JSON.parse(this.props.selectedCellData.PathParametersAdd.value)
         });
       }
       if (this.props.selectedCellData.QueryParametersAdd) {
         this.setState({
-          QueryParametersAdd: JSON.parse(this.props.selectedCellData.QueryParametersAdd.value),
+          QueryParametersAdd: JSON.parse(this.props.selectedCellData.QueryParametersAdd.value)
         });
       }
       if (this.props.selectedCellData.HeadersAdd) {
         this.setState({
-          HeadersAdd: JSON.parse(this.props.selectedCellData.HeadersAdd.value),
+          HeadersAdd: JSON.parse(this.props.selectedCellData.HeadersAdd.value)
         });
       }
       if (this.props.selectedCellData.BodySelectedMenu) {
         this.setState({
-          BodySelectedMenu: this.props.selectedCellData.BodySelectedMenu.value,
+          BodySelectedMenu: this.props.selectedCellData.BodySelectedMenu.value
         });
       }
       if (this.props.selectedCellData.BodyFormDataAdd) {
         this.setState({
-          BodyFormDataAdd: JSON.parse(this.props.selectedCellData.BodyFormDataAdd.value),
+          BodyFormDataAdd: JSON.parse(this.props.selectedCellData.BodyFormDataAdd.value)
         });
       }
       if (this.props.selectedCellData.AceEditorValue) {
         this.setState({
-          AceEditorValue: JSON.parse(this.props.selectedCellData.AceEditorValue.value),
+          AceEditorValue: JSON.parse(this.props.selectedCellData.AceEditorValue.value)
         });
       }
 
@@ -96,24 +96,24 @@ const ApiSidebar = Form.create()(
         for (let i = 1; i < this.props.selectedCellData.Uri.value.split("{").length; i++) {
           this.state.PathParametersAdd.push({
             PathParametersKey: this.props.selectedCellData.Uri.value.split("{")[i].split("}")[0],
-            PathParametersValue: "",
+            PathParametersValue: ""
           });
         }
       }
     };
 
-    findDuplicate = (type) => {
+    findDuplicate = type => {
       const getKeys = [];
       if (type === "QueryParameters") {
-        this.state.QueryParametersAdd.map((obj) => getKeys.push(obj["QueryParametersKey"]));
+        this.state.QueryParametersAdd.map(obj => getKeys.push(obj["QueryParametersKey"]));
       } else if (type === "Headers") {
-        this.state.HeadersAdd.map((obj) => getKeys.push(obj["HeadersKey"]));
+        this.state.HeadersAdd.map(obj => getKeys.push(obj["HeadersKey"]));
       } else if (type === "BodyFormData") {
-        this.state.BodyFormDataAdd.map((obj) => getKeys.push(obj["BodyFormDataKey"]));
+        this.state.BodyFormDataAdd.map(obj => getKeys.push(obj["BodyFormDataKey"]));
       }
       return _(getKeys)
         .groupBy()
-        .pickBy((x) => x.length > 1)
+        .pickBy(x => x.length > 1)
         .keys()
         .value();
     };
@@ -122,7 +122,7 @@ const ApiSidebar = Form.create()(
       const form = this.props.form;
       // For form validation
       let error = false;
-      form.validateFields((err) => {
+      form.validateFields(err => {
         if (err) {
           error = true;
           return Alert.error("Please fill required fields.");
@@ -149,7 +149,7 @@ const ApiSidebar = Form.create()(
 
         // For AceEditor validation
         if (this.state.AceEditorValidation.length > 0) {
-          return this.state.AceEditorValidation.map((error) => {
+          return this.state.AceEditorValidation.map(error => {
             return Alert.error(error.text, 5000);
           });
         }
@@ -159,7 +159,7 @@ const ApiSidebar = Form.create()(
           let QueryParametersAdd = this.state.QueryParametersAdd;
           QueryParametersAdd.push({
             QueryParametersKey: form.getFieldValue("QueryParametersKey"),
-            QueryParametersValue: form.getFieldValue("QueryParametersValue"),
+            QueryParametersValue: form.getFieldValue("QueryParametersValue")
           });
           form.resetFields("QueryParametersKey");
           form.resetFields("QueryParametersValue");
@@ -168,7 +168,7 @@ const ApiSidebar = Form.create()(
           let HeadersAdd = this.state.HeadersAdd;
           HeadersAdd.push({
             HeadersKey: form.getFieldValue("HeadersKey"),
-            HeadersValue: form.getFieldValue("HeadersValue"),
+            HeadersValue: form.getFieldValue("HeadersValue")
           });
           form.resetFields("HeadersKey");
           form.resetFields("HeadersValue");
@@ -179,6 +179,7 @@ const ApiSidebar = Form.create()(
           Title: form.getFieldValue("Title"),
           Description: form.getFieldValue("Description"),
           Method: form.getFieldValue("Method"),
+          Host_url: form.getFieldValue("Host_url"),
           Uri: form.getFieldValue("Uri"),
           PathParametersAdd: this.state.PathParametersAdd,
           QueryParametersAdd: this.state.QueryParametersAdd,
@@ -187,14 +188,14 @@ const ApiSidebar = Form.create()(
           HeadersAdd: this.state.HeadersAdd,
           BodySelectedMenu: this.state.BodySelectedMenu,
           BodyFormDataAdd: this.state.BodyFormDataAdd,
-          AceEditorValue: this.state.AceEditorValue,
+          AceEditorValue: this.state.AceEditorValue
         });
       } else {
         this.props.handleConfirm({
           Title: form.getFieldValue("Title"),
           Description: form.getFieldValue("Description"),
           UiTestcase: form.getFieldValue("UiTestcase").split("//name")[0],
-          UiTestcaseName: this.state.UiTestcaseName,
+          UiTestcaseName: this.state.UiTestcaseName
         });
       }
       this.hideModal();
@@ -212,7 +213,7 @@ const ApiSidebar = Form.create()(
         BodyFormDataAdd: [],
         AceEditorValue: [],
         AceEditorValidation: [],
-        showPassword: false,
+        showPassword: false
       });
       this.props.form.resetFields();
       this.props.handleCancel();
@@ -224,11 +225,11 @@ const ApiSidebar = Form.create()(
         if (this.state.QueryParametersAdd.length === 0) {
           this.state.QueryParametersAdd.push({
             QueryParametersKey: form.getFieldValue("QueryParametersKey"),
-            QueryParametersValue: form.getFieldValue("QueryParametersValue"),
+            QueryParametersValue: form.getFieldValue("QueryParametersValue")
           });
         } else {
           let Checker = true;
-          this.state.QueryParametersAdd.map((data) => {
+          this.state.QueryParametersAdd.map(data => {
             if (data.QueryParametersKey === form.getFieldValue("QueryParametersKey")) {
               Checker = false;
             }
@@ -236,7 +237,7 @@ const ApiSidebar = Form.create()(
           if (Checker) {
             this.state.QueryParametersAdd.push({
               QueryParametersKey: form.getFieldValue("QueryParametersKey"),
-              QueryParametersValue: form.getFieldValue("QueryParametersValue"),
+              QueryParametersValue: form.getFieldValue("QueryParametersValue")
             });
           } else {
             return Alert.error(`Dupalicate key "${form.getFieldValue("QueryParametersKey")}"`);
@@ -261,21 +262,21 @@ const ApiSidebar = Form.create()(
                     {getFieldDecorator("QueryParametersKey" + index, {
                       rules: [
                         {
-                          required: true,
-                        },
+                          required: true
+                        }
                       ],
-                      initialValue: Data.QueryParametersKey,
-                    })(<Input onChange={(e) => (this.state.QueryParametersAdd[index].QueryParametersKey = e.target.value)} />)}
+                      initialValue: Data.QueryParametersKey
+                    })(<Input onChange={e => (this.state.QueryParametersAdd[index].QueryParametersKey = e.target.value)} />)}
                   </Form.Item>
                   <Form.Item>
                     {getFieldDecorator("QueryParametersValue" + index, {
                       rules: [
                         {
-                          required: true,
-                        },
+                          required: true
+                        }
                       ],
-                      initialValue: Data.QueryParametersValue,
-                    })(<Input onChange={(e) => (this.state.QueryParametersAdd[index].QueryParametersValue = e.target.value)} />)}
+                      initialValue: Data.QueryParametersValue
+                    })(<Input onChange={e => (this.state.QueryParametersAdd[index].QueryParametersValue = e.target.value)} />)}
                   </Form.Item>
                   <div onClick={() => this.QueryParametersRemove(index)} className="sidebar-body-regular-row-right-btn">
                     <i className="fa fa-minus " />
@@ -288,7 +289,7 @@ const ApiSidebar = Form.create()(
       }
     };
 
-    QueryParametersRemove = (index) => {
+    QueryParametersRemove = index => {
       let QueryParametersRemove = this.state.QueryParametersAdd;
       QueryParametersRemove.splice(index, 1);
       this.setState({ QueryParametersAdd: QueryParametersRemove });
@@ -300,11 +301,11 @@ const ApiSidebar = Form.create()(
         if (this.state.HeadersAdd.length === 0) {
           this.state.HeadersAdd.push({
             HeadersKey: form.getFieldValue("HeadersKey"),
-            HeadersValue: form.getFieldValue("HeadersValue"),
+            HeadersValue: form.getFieldValue("HeadersValue")
           });
         } else {
           let Checker = true;
-          this.state.HeadersAdd.map((data) => {
+          this.state.HeadersAdd.map(data => {
             if (data.HeadersKey === form.getFieldValue("HeadersKey")) {
               Checker = false;
             }
@@ -312,7 +313,7 @@ const ApiSidebar = Form.create()(
           if (Checker) {
             this.state.HeadersAdd.push({
               HeadersKey: form.getFieldValue("HeadersKey"),
-              HeadersValue: form.getFieldValue("HeadersValue"),
+              HeadersValue: form.getFieldValue("HeadersValue")
             });
           } else {
             return Alert.error(`Dupalicate key "${form.getFieldValue("HeadersKey")}"`);
@@ -337,21 +338,21 @@ const ApiSidebar = Form.create()(
                     {getFieldDecorator("HeadersKey" + index, {
                       rules: [
                         {
-                          required: true,
-                        },
+                          required: true
+                        }
                       ],
-                      initialValue: Data.HeadersKey,
-                    })(<Input onChange={(e) => (this.state.HeadersAdd[index].HeadersKey = e.target.value)} />)}
+                      initialValue: Data.HeadersKey
+                    })(<Input onChange={e => (this.state.HeadersAdd[index].HeadersKey = e.target.value)} />)}
                   </Form.Item>
                   <Form.Item>
                     {getFieldDecorator("HeadersValue" + index, {
                       rules: [
                         {
-                          required: true,
-                        },
+                          required: true
+                        }
                       ],
-                      initialValue: Data.HeadersValue,
-                    })(<Input onChange={(e) => (this.state.HeadersAdd[index].HeadersValue = e.target.value)} />)}
+                      initialValue: Data.HeadersValue
+                    })(<Input onChange={e => (this.state.HeadersAdd[index].HeadersValue = e.target.value)} />)}
                   </Form.Item>
                   <div onClick={() => this.HeadersRemove(index)} className="sidebar-body-regular-row-right-btn">
                     <i className="fa fa-minus " />
@@ -364,13 +365,13 @@ const ApiSidebar = Form.create()(
       }
     };
 
-    HeadersRemove = (index) => {
+    HeadersRemove = index => {
       let HeadersRemove = this.state.HeadersAdd;
       HeadersRemove.splice(index, 1);
       this.setState({ HeadersAdd: HeadersRemove });
     };
 
-    BodySelectedMenu = (Selected) => {
+    BodySelectedMenu = Selected => {
       let BodySelectedMenu = this.state.BodySelectedMenu;
       if (Selected === "None") {
         BodySelectedMenu = "None";
@@ -409,8 +410,8 @@ const ApiSidebar = Form.create()(
             className="animated fadeIn"
             mode={this.state.BodySelectedMenu.toLowerCase()}
             theme="monokai"
-            onValidate={(e) => this.setState({ AceEditorValidation: e })}
-            onChange={(value) => this.setState({ AceEditorValue: value })}
+            onValidate={e => this.setState({ AceEditorValidation: e })}
+            onChange={value => this.setState({ AceEditorValue: value })}
             fontSize={14}
             showPrintMargin={true}
             showGutter={true}
@@ -422,19 +423,19 @@ const ApiSidebar = Form.create()(
               enableLiveAutocompletion: true,
               enableSnippets: true,
               showLineNumbers: true,
-              tabSize: 2,
+              tabSize: 2
             }}
           />
         );
       }
     };
 
-    BodyFormDataAdd = (Type) => {
+    BodyFormDataAdd = Type => {
       let BodyFormDataAdd = this.state.BodyFormDataAdd;
       BodyFormDataAdd.push({
         BodyFormDataKey: "",
         BodyFormDataType: Type,
-        BodyFormDataValue: "",
+        BodyFormDataValue: ""
       });
       this.setState({ BodyFormDataAdd: BodyFormDataAdd });
     };
@@ -457,34 +458,34 @@ const ApiSidebar = Form.create()(
                     {getFieldDecorator("BodyFormDataKey" + index, {
                       rules: [
                         {
-                          required: true,
-                        },
+                          required: true
+                        }
                       ],
-                      initialValue: Data.BodyFormDataKey,
-                    })(<Input onChange={(e) => (this.state.BodyFormDataAdd[index].BodyFormDataKey = e.target.value)} />)}
+                      initialValue: Data.BodyFormDataKey
+                    })(<Input onChange={e => (this.state.BodyFormDataAdd[index].BodyFormDataKey = e.target.value)} />)}
                   </Form.Item>
                   {Data.BodyFormDataType === "Text" ? (
                     <Form.Item>
                       {getFieldDecorator("BodyFormDataValue" + index, {
                         rules: [
                           {
-                            required: true,
-                          },
+                            required: true
+                          }
                         ],
-                        initialValue: Data.BodyFormDataValue,
-                      })(<Input onChange={(e) => (this.state.BodyFormDataAdd[index].BodyFormDataValue = e.target.value)} />)}
+                        initialValue: Data.BodyFormDataValue
+                      })(<Input onChange={e => (this.state.BodyFormDataAdd[index].BodyFormDataValue = e.target.value)} />)}
                     </Form.Item>
                   ) : (
                     <Form.Item>
                       {getFieldDecorator("BodyFormDataValue" + index, {
                         rules: [
                           {
-                            required: true,
-                          },
+                            required: true
+                          }
                         ],
-                        initialValue: Data.BodyFormDataValue,
+                        initialValue: Data.BodyFormDataValue
                       })(
-                        <Upload showUploadList={false} action="" onChange={(e) => (this.state.BodyFormDataAdd[index].BodyFormDataValue = e.file)}>
+                        <Upload showUploadList={false} action="" onChange={e => (this.state.BodyFormDataAdd[index].BodyFormDataValue = e.file)}>
                           <Button>
                             <Icon type="upload" />
                             <b>{Data.BodyFormDataValue.name ? " " + Data.BodyFormDataValue.name : " Upload"}</b>
@@ -504,7 +505,7 @@ const ApiSidebar = Form.create()(
       }
     };
 
-    BodyFormDataRemove = (index) => {
+    BodyFormDataRemove = index => {
       let BodyFormDataRemove = this.state.BodyFormDataAdd;
       BodyFormDataRemove.splice(index, 1);
       this.setState({ BodyFormDataAdd: BodyFormDataRemove });
@@ -536,41 +537,69 @@ const ApiSidebar = Form.create()(
                   {getFieldDecorator("Title", {
                     rules: [
                       {
-                        required: true,
-                      },
+                        required: true
+                      }
                     ],
-                    initialValue: this.props.selectedCellData.Title ? this.props.selectedCellData.Title.value : "",
+                    initialValue: this.props.selectedCellData.Title ? this.props.selectedCellData.Title.value : ""
                   })(<Input placeholder="Title" autoFocus />)}
                 </Form.Item>
                 <Form.Item>
                   {getFieldDecorator("Description", {
-                    initialValue: this.props.selectedCellData.Description ? this.props.selectedCellData.Description.value : "",
+                    initialValue: this.props.selectedCellData.Description ? this.props.selectedCellData.Description.value : ""
                   })(<Input placeholder="Description" />)}
                 </Form.Item>
               </div>
 
               {this.state.Method !== "uitestcase" ? (
                 <div className="sidebar-body-second-row">
-                  <div className="sidebar-body-second-row-method">
+                  <div className="sidebar-body-second-row-method" style={{ width: 180 }}>
                     <Form.Item>
                       {getFieldDecorator("Method", {
-                        initialValue: this.props.selectedCellData.Method ? this.props.selectedCellData.Method.value : "",
+                        rules: [
+                          {
+                            required: true
+                          }
+                        ],
+                        initialValue: this.props.selectedCellData.Method ? this.props.selectedCellData.Method.value : ""
                       })(
                         <Input
-                          disabled
+                          disabled={this.props.selectedCellData.custom_api && this.props.selectedCellData.custom_api.value === "true" ? false : true}
                           style={{
                             textAlign: "center",
-                            textTransform: "uppercase",
+                            textTransform: "uppercase"
                           }}
+                          placeholder="METHOD"
                         />
                       )}
                     </Form.Item>
                   </div>
+                  {this.props.selectedCellData.custom_api && this.props.selectedCellData.custom_api.value === "true" ? (
+                    <div className="sidebar-body-second-row-uri" style={{ marginRight: 10 }}>
+                      <Form.Item>
+                        {getFieldDecorator("Host_url", {
+                          rules: [
+                            {
+                              required: true
+                            }
+                          ],
+                          initialValue: this.props.selectedCellData.Host_url ? this.props.selectedCellData.Host_url.value : ""
+                        })(<Input placeholder="http://localhost:3000" />)}
+                      </Form.Item>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
                   <div className="sidebar-body-second-row-uri">
                     <Form.Item>
                       {getFieldDecorator("Uri", {
-                        initialValue: this.props.selectedCellData.Uri ? this.props.selectedCellData.Uri.value : "",
-                      })(<Input disabled />)}
+                        rules: [
+                          {
+                            required: true
+                          }
+                        ],
+                        initialValue: this.props.selectedCellData.Uri ? this.props.selectedCellData.Uri.value : ""
+                      })(<Input placeholder="/api/endpoint" disabled={this.props.selectedCellData.custom_api && this.props.selectedCellData.custom_api.value === "true" ? false : true} />)}
                     </Form.Item>
                   </div>
                 </div>
@@ -598,21 +627,21 @@ const ApiSidebar = Form.create()(
                             {getFieldDecorator("PathParametersKey" + index, {
                               rules: [
                                 {
-                                  required: true,
-                                },
+                                  required: true
+                                }
                               ],
-                              initialValue: Data.PathParametersKey,
+                              initialValue: Data.PathParametersKey
                             })(<Input disabled />)}
                           </Form.Item>
                           <Form.Item>
                             {getFieldDecorator("PathParametersValue" + index, {
                               rules: [
                                 {
-                                  required: true,
-                                },
+                                  required: true
+                                }
                               ],
-                              initialValue: Data.PathParametersValue,
-                            })(<Input onChange={(e) => (this.state.PathParametersAdd[index].PathParametersValue = e.target.value)} />)}
+                              initialValue: Data.PathParametersValue
+                            })(<Input onChange={e => (this.state.PathParametersAdd[index].PathParametersValue = e.target.value)} />)}
                           </Form.Item>
                           <div className="sidebar-body-regular-row-right-blank-btn" />
                         </div>
@@ -650,23 +679,19 @@ const ApiSidebar = Form.create()(
                     <div className="sidebar-body-regular-row">
                       <Form.Item label="USERNAME">
                         {getFieldDecorator("AuthorizationUsername", {
-                          initialValue: this.props.selectedCellData.AuthorizationUsername
-                            ? this.props.selectedCellData.AuthorizationUsername.value
-                            : "",
+                          initialValue: this.props.selectedCellData.AuthorizationUsername ? this.props.selectedCellData.AuthorizationUsername.value : ""
                         })(<Input autoComplete="new-password" />)}
                       </Form.Item>
                       <Form.Item label="PASSWORD">
                         {getFieldDecorator("AuthorizationPassword", {
-                          initialValue: this.props.selectedCellData.AuthorizationPassword
-                            ? this.props.selectedCellData.AuthorizationPassword.value
-                            : "",
+                          initialValue: this.props.selectedCellData.AuthorizationPassword ? this.props.selectedCellData.AuthorizationPassword.value : ""
                         })(<Input type={this.state.showPassword ? "text" : "password"} autoComplete="new-password" />)}
                       </Form.Item>
 
                       <div
                         onClick={() =>
                           this.setState({
-                            showPassword: !this.state.showPassword,
+                            showPassword: !this.state.showPassword
                           })
                         }
                         className="sidebar-body-regular-row-right-btn"
@@ -699,26 +724,12 @@ const ApiSidebar = Form.create()(
                 ) : null}
 
                 {this.state.Method !== "uitestcase" ? (
-                  <div
-                    className={
-                      this.props.selectedCellData.Method
-                        ? this.props.selectedCellData.Method.value === "get"
-                          ? "display-none-div"
-                          : "sidebar-body-divider"
-                        : ""
-                    }
-                  />
+                  <div className={this.props.selectedCellData.Method ? (this.props.selectedCellData.Method.value === "get" ? "display-none-div" : "sidebar-body-divider") : ""} />
                 ) : null}
 
                 {this.state.Method !== "uitestcase" ? (
                   <Collapse.Panel
-                    className={
-                      this.props.selectedCellData.Method
-                        ? this.props.selectedCellData.Method.value === "get"
-                          ? "display-none-div"
-                          : "body-background"
-                        : ""
-                    }
+                    className={this.props.selectedCellData.Method ? (this.props.selectedCellData.Method.value === "get" ? "display-none-div" : "body-background") : ""}
                     header="BODY"
                     key="5"
                   >
@@ -726,46 +737,31 @@ const ApiSidebar = Form.create()(
                       <div className="sidebar-body-regular-row-body-menu">
                         <div
                           onClick={() => this.BodySelectedMenu("None")}
-                          className={
-                            "sidebar-body-regular-row-body-menu-items " +
-                            (this.state.BodySelectedMenu === "None" ? "sidebar-body-regular-row-body-menu-items-active" : "")
-                          }
+                          className={"sidebar-body-regular-row-body-menu-items " + (this.state.BodySelectedMenu === "None" ? "sidebar-body-regular-row-body-menu-items-active" : "")}
                         >
                           None
                         </div>
                         <div
                           onClick={() => this.BodySelectedMenu("FormData")}
-                          className={
-                            "sidebar-body-regular-row-body-menu-items " +
-                            (this.state.BodySelectedMenu === "FormData" ? "sidebar-body-regular-row-body-menu-items-active" : "")
-                          }
+                          className={"sidebar-body-regular-row-body-menu-items " + (this.state.BodySelectedMenu === "FormData" ? "sidebar-body-regular-row-body-menu-items-active" : "")}
                         >
                           Form Data
                         </div>
                         <div
                           onClick={() => this.BodySelectedMenu("XML")}
-                          className={
-                            "sidebar-body-regular-row-body-menu-items " +
-                            (this.state.BodySelectedMenu === "XML" ? "sidebar-body-regular-row-body-menu-items-active" : "")
-                          }
+                          className={"sidebar-body-regular-row-body-menu-items " + (this.state.BodySelectedMenu === "XML" ? "sidebar-body-regular-row-body-menu-items-active" : "")}
                         >
                           XML
                         </div>
                         <div
                           onClick={() => this.BodySelectedMenu("JSON")}
-                          className={
-                            "sidebar-body-regular-row-body-menu-items " +
-                            (this.state.BodySelectedMenu === "JSON" ? "sidebar-body-regular-row-body-menu-items-active" : "")
-                          }
+                          className={"sidebar-body-regular-row-body-menu-items " + (this.state.BodySelectedMenu === "JSON" ? "sidebar-body-regular-row-body-menu-items-active" : "")}
                         >
                           JSON
                         </div>
                         <div
                           onClick={() => this.BodySelectedMenu("TEXT")}
-                          className={
-                            "sidebar-body-regular-row-body-menu-items " +
-                            (this.state.BodySelectedMenu === "TEXT" ? "sidebar-body-regular-row-body-menu-items-active" : "")
-                          }
+                          className={"sidebar-body-regular-row-body-menu-items " + (this.state.BodySelectedMenu === "TEXT" ? "sidebar-body-regular-row-body-menu-items-active" : "")}
                         >
                           TEXT
                         </div>
@@ -775,24 +771,55 @@ const ApiSidebar = Form.create()(
                   </Collapse.Panel>
                 ) : null}
 
+                {this.state.Method === "custom-api" ? (
+                  <Collapse.Panel header="Custom API" key="6">
+                    <Form.Item>
+                      {getFieldDecorator("UiTestcase", {
+                        rules: [
+                          {
+                            required: true
+                          }
+                        ],
+                        initialValue:
+                          this.props.selectedCellData.UiTestcase && this.state.UiTestcaseName ? this.props.selectedCellData.UiTestcase.value.concat(`//name${this.state.UiTestcaseName}`) : ""
+                      })(
+                        <Select
+                          onChange={e => {
+                            this.setState({
+                              UiTestcaseName: e.split("//name")[1]
+                            });
+                          }}
+                        >
+                          {this.state.UiTestcase.map((data, index) => {
+                            const value = `${data.id}//name${data.name}`;
+                            return (
+                              <Select.Option key={index} value={value}>
+                                {data.name}
+                              </Select.Option>
+                            );
+                          })}
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </Collapse.Panel>
+                ) : null}
+
                 {this.state.Method === "uitestcase" ? (
                   <Collapse.Panel header="UI TESTCASE" key="6">
                     <Form.Item>
                       {getFieldDecorator("UiTestcase", {
                         rules: [
                           {
-                            required: true,
-                          },
+                            required: true
+                          }
                         ],
                         initialValue:
-                          this.props.selectedCellData.UiTestcase && this.state.UiTestcaseName
-                            ? this.props.selectedCellData.UiTestcase.value.concat(`//name${this.state.UiTestcaseName}`)
-                            : "",
+                          this.props.selectedCellData.UiTestcase && this.state.UiTestcaseName ? this.props.selectedCellData.UiTestcase.value.concat(`//name${this.state.UiTestcaseName}`) : ""
                       })(
                         <Select
-                          onChange={(e) => {
+                          onChange={e => {
                             this.setState({
-                              UiTestcaseName: e.split("//name")[1],
+                              UiTestcaseName: e.split("//name")[1]
                             });
                           }}
                         >

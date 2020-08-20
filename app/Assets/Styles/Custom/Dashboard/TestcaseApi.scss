@@ -205,3 +205,40 @@ td.mxPopupMenuItem {
   height: 25px !important;
   font-size: 13px;
 }
+
+.custom-api-drag {
+  .graph-left-panel-drag-data-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+    margin: 25px 0 10px 15px;
+  }
+
+  .graph-left-panel-draggable-element {
+    border: 1px solid #feca57 !important;
+    transition: all 0.3s !important;
+    width: 115px !important;
+    height: 25px !important;
+    background: none;
+    margin-right: 5px;
+    font-size: 12px;
+    margin-top: 0 !important;
+    border-radius: 5px !important;
+
+    &:hover{
+      background: #482cda;
+    }
+  }
+
+  .graph-left-panel-drag-data-desc {
+    cursor: default;
+    flex: 1;
+    color: #ffffff;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
+  }
+}

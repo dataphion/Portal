@@ -38,7 +38,7 @@ import {
   mxCompactTreeLayout,
   mxOutline,
   mxCodec,
-  mxCellHighlight,
+  mxCellHighlight
 } from "mxgraph-js";
 const undoManager = new mxUndoManager();
 var ALLOW_EDGE = true;
@@ -89,7 +89,7 @@ const TestcaseApi = Form.create()(
         visible: false,
         relvisible: false,
         relationgraph: {},
-        conflictconfirmation: false,
+        conflictconfirmation: false
       };
     }
 
@@ -107,7 +107,7 @@ const TestcaseApi = Form.create()(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
+          Accept: "application/json"
         },
         body: JSON.stringify({
           query: `{applications(where:
@@ -125,8 +125,8 @@ const TestcaseApi = Form.create()(
                 }
               }
 
-            }}`,
-        }),
+            }}`
+        })
       });
       const api_resp = await api_req.json();
       let list = [];
@@ -151,6 +151,7 @@ const TestcaseApi = Form.create()(
 
     // This function is for load graph and load all graph require functions
     LoadGraph = () => {
+      // console.log("load grapgh function called --->");
       var container = ReactDOM.findDOMNode(this.refs.divGraph);
       // Checks if the browser is supported
       if (!mxClient.isBrowserSupported()) {
@@ -164,7 +165,7 @@ const TestcaseApi = Form.create()(
         this.setState(
           {
             graph: graph,
-            dragElt: this.getEditPreview(),
+            dragElt: this.getEditPreview()
           },
           () => {
             const layout = new mxCompactTreeLayout(graph, false);
@@ -189,28 +190,31 @@ const TestcaseApi = Form.create()(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
+          Accept: "application/json"
         },
         body: JSON.stringify({
-          query: `{applications(where:{user:{id:"${sessionStorage.getItem("id")}"},id:"${
-            window.location.pathname.split("/")[2]
-          }"}){name,testcases(where:{id:"${window.location.pathname.split("/")[5]}"}){name,
+          query: `{applications(where:{user:{id:"${sessionStorage.getItem("id")}"},id:"${window.location.pathname.split("/")[2]}"}){name,testcases(where:{id:"${
+            window.location.pathname.split("/")[5]
+          }"}){name,
             flow{
               graph_xml,id
               endpoints{
                 id
                 conflict
-                conflict_message
+                conflict_message,
+                endpoint,
+                method
               }
             }
-          }}}`,
-        }),
+          }}}`
+        })
       })
-        .then((response) => response.json())
-        .then((response) => {
+        .then(response => response.json())
+        .then(response => {
+          // console.log("response --->", response);
           if (response.data.applications[0].testcases[0].flow) {
             this.setState({
-              graphId: response.data.applications[0].testcases[0].flow.id,
+              graphId: response.data.applications[0].testcases[0].flow.id
             });
             try {
               var loadGraph = mxUtils.parseXml(response.data.applications[0].testcases[0].flow.graph_xml);
@@ -221,17 +225,17 @@ const TestcaseApi = Form.create()(
           }
           this.setState({
             loader: false,
-            createdGraphData: response.data.applications[0],
+            createdGraphData: response.data.applications[0]
           });
         })
-        .catch((error) => {
+        .catch(error => {
           Alert.error("Something went wrong");
           console.log(error);
         });
 
       // Socket for real time
       const socket = socketIOClient(constants.socket_url);
-      socket.on("broadcast", (data) => {
+      socket.on("broadcast", data => {
         this.setState({ apiExecuteStatus: "inProgress" });
         if (data.status === "started") {
           // Add execution started class in cell
@@ -267,7 +271,7 @@ const TestcaseApi = Form.create()(
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Accept: "application/json",
+              Accept: "application/json"
             },
             body: JSON.stringify({
               query: `{
@@ -284,18 +288,17 @@ const TestcaseApi = Form.create()(
                     source_result
                   }
                 }
-              }`,
-            }),
+              }`
+            })
           })
-            .then((response) => response.json())
-            .then((response) => {
+            .then(response => response.json())
+            .then(response => {
               let executionResponse = this.state.executionLogs;
-              executionResponse[
-                `${response.data.testcaseexecutions[0].flowsteps[0].name}_${response.data.testcaseexecutions[0].flowsteps[0].index}`
-              ] = response.data.testcaseexecutions[0].flowsteps[0];
+              executionResponse[`${response.data.testcaseexecutions[0].flowsteps[0].name}_${response.data.testcaseexecutions[0].flowsteps[0].index}`] =
+                response.data.testcaseexecutions[0].flowsteps[0];
               this.setState({ executionLogs: executionResponse });
             })
-            .catch((error) => {
+            .catch(error => {
               Alert.error("Something went wrong");
               console.log(error);
             });
@@ -312,36 +315,32 @@ const TestcaseApi = Form.create()(
       return dragElt;
     };
 
-    setLayoutSetting = (layout) => {
+    setLayoutSetting = layout => {
       layout.parallelEdgeSpacing = 10;
       layout.useBoundingBox = false;
       layout.edgeRouting = false;
       layout.levelDistance = 60;
       layout.nodeDistance = 10;
       layout.parallelEdgeSpacing = 10;
-      layout.isVertexMovable = function (cell) {
+      layout.isVertexMovable = function(cell) {
         return true;
       };
-      layout.localEdgeProcessing = function (node) {};
+      layout.localEdgeProcessing = function(node) {};
     };
 
     loadGlobalSetting = () => {
       // Enable alignment lines to help locate
       mxGraphHandler.prototype.guidesEnabled = true;
       // Alt disables guides
-      mxGuide.prototype.isEnabledForEvent = function (evt) {
+      mxGuide.prototype.isEnabledForEvent = function(evt) {
         return !mxEvent.isAltDown(evt);
       };
       // Specifies if waypoints should snap to the routing centers of terminals
       mxEdgeHandler.prototype.snapToTerminals = true;
-      mxConstraintHandler.prototype.pointImage = new mxImage(
-        "https://uploads.codesandbox.io/uploads/user/4bf4b6b3-3aa9-4999-8b70-bbc1b287a968/-q_3-point.gif",
-        5,
-        5
-      );
+      mxConstraintHandler.prototype.pointImage = new mxImage("https://uploads.codesandbox.io/uploads/user/4bf4b6b3-3aa9-4999-8b70-bbc1b287a968/-q_3-point.gif", 5, 5);
     };
 
-    setGraphSetting = (clicked) => {
+    setGraphSetting = clicked => {
       const { graph } = this.state;
       const that = this;
       graph.gridSize = 10;
@@ -355,14 +354,14 @@ const TestcaseApi = Form.create()(
       graph.centerZoom = true;
       graph.autoSizeCellsOnAdd = false;
       const keyHandler = new mxKeyHandler(graph);
-      keyHandler.getFunction = function (evt) {
+      keyHandler.getFunction = function(evt) {
         if (evt !== null) {
           return mxEvent.isControlDown(evt) || (mxClient.IS_MAC && evt.metaKey) ? this.controlKeys[evt.keyCode] : this.normalKeys[evt.keyCode];
         }
         return null;
       };
 
-      const listener = function (sender, evt) {
+      const listener = function(sender, evt) {
         undoManager.undoableEditHappened(evt.getProperty("edit"));
       };
       graph.getModel().addListener(mxEvent.UNDO, listener);
@@ -370,7 +369,7 @@ const TestcaseApi = Form.create()(
       // undoManager.size = 2;
 
       // Mouse handler
-      mxEvent.addMouseWheelListener(function (evt, up) {
+      mxEvent.addMouseWheelListener(function(evt, up) {
         for (const i in evt.path) {
           if (evt.path[i].className === "graph-board") {
             if (up) {
@@ -383,42 +382,42 @@ const TestcaseApi = Form.create()(
       });
 
       graph.addMouseListener({
-        mouseDown: function (sender, evt) {
+        mouseDown: function(sender, evt) {
           if (that.state.apiExecuteStatus === "inProgress") {
             Alert.warning("Editable mode disabled while executing.", 10000);
           }
         },
-        mouseMove: function (sender, evt) {},
-        mouseUp: function (sender, evt) {},
+        mouseMove: function(sender, evt) {},
+        mouseUp: function(sender, evt) {}
       });
 
       // Keyboard Shorcut Delete (Delete Key)
-      keyHandler.bindKey(46, function (evt) {
+      keyHandler.bindKey(46, function(evt) {
         graph.removeCells();
       });
 
       // Keyboard Shorcut Zoom (+) (Control + Plus Key or Command + Plus Key)
-      keyHandler.bindControlKey(187, function (evt) {
+      keyHandler.bindControlKey(187, function(evt) {
         graph.zoomIn();
       });
 
       // Keyboard Shorcut Zoom (-) (Control + Minus or Command + Minus Key)
-      keyHandler.bindControlKey(189, function (evt) {
+      keyHandler.bindControlKey(189, function(evt) {
         graph.zoomOut();
       });
 
       // Keyboard Shorcut Restore (Control + R or Command + 0)
-      keyHandler.bindControlKey(48, function (evt) {
+      keyHandler.bindControlKey(48, function(evt) {
         graph.zoomActual();
       });
 
       // Keyboard Shorcut Undo (Control + Z or Command + Z)
-      keyHandler.bindControlKey(90, function (evt) {
+      keyHandler.bindControlKey(90, function(evt) {
         undoManager.undo();
       });
 
       // Keyboard Shorcut Undo (Control + Y or Command + Y)
-      keyHandler.bindControlKey(89, function (evt) {
+      keyHandler.bindControlKey(89, function(evt) {
         undoManager.redo();
       });
 
@@ -435,7 +434,7 @@ const TestcaseApi = Form.create()(
       }
 
       new mxRubberband(graph);
-      graph.getTooltipForCell = function (cell) {
+      graph.getTooltipForCell = function(cell) {
         if (cell.value !== "Edge") {
           if (cell.value.attributes.Type.value === "api") {
             if (cell.getAttribute("Method") === "uitestcase") {
@@ -502,17 +501,20 @@ const TestcaseApi = Form.create()(
         }
       };
 
-      graph.popupMenuHandler.factoryMethod = function (menu, cell, evt) {
+      graph.popupMenuHandler.factoryMethod = function(menu, cell, evt) {
         return that.createPopupMenu(graph, menu, cell, evt);
       };
 
-      graph.convertValueToString = function (cell) {
+      graph.convertValueToString = function(cell) {
         if (mxUtils.isNode(cell.value) && cell.value.nodeName.toLowerCase() === "taskobject") {
-          if (cell.getAttribute("EndpointId")) {
-            that.highlightcell(cell).then((response) => {
-              cell.value.setAttribute("Conflict", response);
-            });
+          if (!cell.getAttribute("custom_api")) {
+            if (cell.getAttribute("EndpointId")) {
+              that.highlightcell(cell).then(response => {
+                cell.value.setAttribute("Conflict", response);
+              });
+            }
           }
+
           let CreateCell = new NewCell();
           let CreatedCell = CreateCell.NewCell(graph, cell);
 
@@ -522,7 +524,7 @@ const TestcaseApi = Form.create()(
       };
     };
 
-    highlightcell = (cell) => {
+    highlightcell = cell => {
       return new Promise((resolve, reject) => {
         const { graph } = this.state;
         const that = this;
@@ -530,7 +532,7 @@ const TestcaseApi = Form.create()(
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Accept: "application/json",
+            Accept: "application/json"
           },
           body: JSON.stringify({
             query: `{
@@ -539,11 +541,11 @@ const TestcaseApi = Form.create()(
                 conflict
                 conflict_message
               }
-            }`,
-          }),
+            }`
+          })
         })
-          .then((response) => response.json())
-          .then((response) => {
+          .then(response => response.json())
+          .then(response => {
             if (response.data.endpoints[0].conflict) {
               var highlight = new mxCellHighlight(graph, "#ff7675", 2);
               highlight.highlight(graph.view.getState(cell));
@@ -552,7 +554,7 @@ const TestcaseApi = Form.create()(
               resolve(false);
             }
           })
-          .catch((error) => {
+          .catch(error => {
             Alert.error("Something went wrong");
             console.log(error);
           });
@@ -563,16 +565,16 @@ const TestcaseApi = Form.create()(
       const that = this;
       if (cell) {
         if (cell.edge === true || cell.edge === 1) {
-          menu.addItem("Delete Connection", null, function () {
+          menu.addItem("Delete Connection", null, function() {
             graph.removeCells([cell]);
             mxEvent.consume(evt);
             that.showNotification("error", "Connection Deleted");
           });
         } else {
-          menu.addItem("Properties", null, function () {
+          menu.addItem("Properties", null, function() {
             that.selectionChanged(graph, value);
           });
-          menu.addItem("Delete", null, function () {
+          menu.addItem("Delete", null, function() {
             graph.removeCells([cell]);
             mxEvent.consume(evt);
             that.showNotification("error", "Element Deleted");
@@ -593,18 +595,18 @@ const TestcaseApi = Form.create()(
       Notification[type]({
         placement: "bottomRight",
         title: Massage,
-        description: Description,
+        description: Description
       });
     };
 
     settingConnection = () => {
       const { graph } = this.state;
-      mxConstraintHandler.prototype.intersects = function (icon, point, source, existingEdge) {
+      mxConstraintHandler.prototype.intersects = function(icon, point, source, existingEdge) {
         return !source || existingEdge || mxUtils.intersects(icon.bounds, point);
       };
 
       var mxConnectionHandlerUpdateEdgeState = mxConnectionHandler.prototype.updateEdgeState;
-      mxConnectionHandler.prototype.updateEdgeState = function (pt, constraint) {
+      mxConnectionHandler.prototype.updateEdgeState = function(pt, constraint) {
         try {
           // if (ALLOW_EDGE) {
           if (pt !== null && this.previous !== null) {
@@ -634,15 +636,15 @@ const TestcaseApi = Form.create()(
         } catch (error) {}
       };
       if (graph.connectionHandler.connectImage === null) {
-        graph.connectionHandler.isConnectableCell = function (cell) {
+        graph.connectionHandler.isConnectableCell = function(cell) {
           return false;
         };
-        mxEdgeHandler.prototype.isConnectableCell = function (cell) {
+        mxEdgeHandler.prototype.isConnectableCell = function(cell) {
           return graph.connectionHandler.isConnectableCell(cell);
         };
       }
 
-      graph.getAllConnectionConstraints = function (terminal) {
+      graph.getAllConnectionConstraints = function(terminal) {
         if (terminal && this.model.isVertex(terminal.cell)) {
           // if (terminal.cell.value.getAttribute("Method") === "conditions") {
           // if (terminal.cell.hasOwnProperty("edges") && terminal.cell.edges.length > 1) {
@@ -652,7 +654,7 @@ const TestcaseApi = Form.create()(
             new mxConnectionConstraint(new mxPoint(0.5, 0), true),
             new mxConnectionConstraint(new mxPoint(0, 0.5), true),
             new mxConnectionConstraint(new mxPoint(1, 0.5), true),
-            new mxConnectionConstraint(new mxPoint(0.5, 1), true),
+            new mxConnectionConstraint(new mxPoint(0.5, 1), true)
           ];
           // }
 
@@ -688,7 +690,7 @@ const TestcaseApi = Form.create()(
       graph.setDisconnectOnMove(false);
 
       // Connect preview
-      graph.connectionHandler.createEdgeState = function (me) {
+      graph.connectionHandler.createEdgeState = function(me) {
         var edge = graph.createEdge(null, null, "Edge", null, null, "edgeStyle=orthogonalEdgeStyle;strokeColor=#cccccc;strokeWidth=3;rounded=1");
 
         return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
@@ -698,26 +700,19 @@ const TestcaseApi = Form.create()(
     createDragElement = () => {
       const { graph } = this.state;
       const tasksDrag = ReactDOM.findDOMNode(this.refs.mxSidebar).querySelectorAll(".graph-left-panel-draggable-element");
-      Array.prototype.slice.call(tasksDrag).forEach((ele) => {
+      Array.prototype.slice.call(tasksDrag).forEach(ele => {
         const value = ele.getAttribute("value");
-        let ds = mxUtils.makeDraggable(
-          ele,
-          this.graphF,
-          (graph, evt, target, x, y) => this.funct(graph, evt, target, x, y, value),
-          this.state.dragElt,
-          null,
-          null,
-          graph.autoscroll,
-          true
-        );
-        ds.isGuidesEnabled = function () {
+        // console.log(value);
+
+        let ds = mxUtils.makeDraggable(ele, this.graphF, (graph, evt, target, x, y) => this.funct(graph, evt, target, x, y, value), this.state.dragElt, null, null, graph.autoscroll, true);
+        ds.isGuidesEnabled = function() {
           return graph.graphHandler.guidesEnabled;
         };
         ds.createDragElement = mxDragSource.prototype.createDragElement;
       });
     };
 
-    graphF = (evt) => {
+    graphF = evt => {
       const { graph } = this.state;
       var x = mxEvent.getClientX(evt);
       var y = mxEvent.getClientY(evt);
@@ -729,6 +724,7 @@ const TestcaseApi = Form.create()(
     };
 
     funct = (graph, evt, target, x, y, value) => {
+      // console.log(value);
 
       var doc = mxUtils.createXmlDocument();
       var obj = doc.createElement("TaskObject");
@@ -741,6 +737,7 @@ const TestcaseApi = Form.create()(
       if (JSON.parse(value).Uri) {
         obj.setAttribute("Uri", JSON.parse(value).Uri);
       }
+      obj.setAttribute("custom_api", JSON.parse(value).custom_api);
       obj.setAttribute("Method", JSON.parse(value).Method);
       obj.setAttribute("Title", "");
       obj.setAttribute("Type", JSON.parse(value).Type);
@@ -754,10 +751,12 @@ const TestcaseApi = Form.create()(
     selectionChanged = (graph, value) => {
       const cell = graph.getSelectionCell();
       if (cell && cell.value !== "Edge") {
+        // console.log(cell);
+
         this.setState({
           sidebarModal: true,
           currentNode: cell,
-          selectedCellData: cell.value.attributes,
+          selectedCellData: cell.value.attributes
         });
         if (cell.getAttribute("Type") === "api") {
           this.setState({ selectedPanel: "api" });
@@ -768,11 +767,11 @@ const TestcaseApi = Form.create()(
           for (const key of allCells[cell.id].children) {
             conditionChilds.push({
               id: allCells[key].id,
-              name: allCells[key].properties.Title,
+              name: allCells[key].properties.Title
             });
           }
           this.setState({
-            conditionChilds: conditionChilds,
+            conditionChilds: conditionChilds
           });
         } else if (cell.getAttribute("Type") === "source") {
           this.setState({ selectedPanel: "source" });
@@ -780,7 +779,8 @@ const TestcaseApi = Form.create()(
       }
     };
 
-    handleConfirm = (fields) => {
+    handleConfirm = fields => {
+      // console.log(fields.Host_url);
 
       const { graph } = this.state;
       const cell = graph.getSelectionCell();
@@ -789,6 +789,7 @@ const TestcaseApi = Form.create()(
       if (cell.getAttribute("Type") === "api") {
         if (cell.getAttribute("Method") !== "uitestcase") {
           this.applyHandler(graph, cell, "Method", fields.Method);
+          this.applyHandler(graph, cell, "Host_url", fields.Host_url);
           this.applyHandler(graph, cell, "Uri", fields.Uri);
           this.applyHandler(graph, cell, "PathParametersAdd", JSON.stringify(fields.PathParametersAdd));
           this.applyHandler(graph, cell, "QueryParametersAdd", JSON.stringify(fields.QueryParametersAdd));
@@ -862,7 +863,7 @@ const TestcaseApi = Form.create()(
       }
     };
 
-    NamedNodeToJSON = (attributes) => {
+    NamedNodeToJSON = attributes => {
       let respJson = {};
       for (let i = 0; i < attributes.length; i++) {
         let attr = attributes[i];
@@ -883,7 +884,7 @@ const TestcaseApi = Form.create()(
         if (respJson.BodySelectedMenu === "FormData") {
           if (respJson.BodyFormDataAdd.length > 0) {
             HeadersAdd["Content-Type"] = "form/url-encoded";
-            respJson.BodyFormDataAdd.map((data) => {
+            respJson.BodyFormDataAdd.map(data => {
               if (data.BodyFormDataType === "File") {
                 HeadersAdd["Content-Type"] = "multipart/form-data";
               }
@@ -924,7 +925,7 @@ const TestcaseApi = Form.create()(
       return respJson;
     };
 
-    PostXMLorJSON = (purpose) => {
+    PostXMLorJSON = async purpose => {
       const { graph } = this.state;
       let allCells = {};
       for (const cell of graph.getChildVertices(graph.getDefaultParent())) {
@@ -954,6 +955,9 @@ const TestcaseApi = Form.create()(
           console.log(error);
         }
       }
+      
+      // console.log("api cells --->", allCells);
+
 
       if (purpose === "graphSave" || purpose === "graphRun") {
         let endpointids = [];
@@ -963,10 +967,7 @@ const TestcaseApi = Form.create()(
               return Alert.warning("Don't allow elements without children!");
             } else if (allCells[key].id !== allCells.root && allCells[key].parent.length <= 0) {
               return Alert.warning("Don't allow elements without parent!");
-            } else if (
-              (allCells[key].children.length > 1 || allCells[key].parent.length > 1) &&
-              allCells[key]["properties"]["Method"] !== "conditions"
-            ) {
+            } else if ((allCells[key].children.length > 1 || allCells[key].parent.length > 1) && allCells[key]["properties"]["Method"] !== "conditions") {
               return Alert.warning("Don't allow multiple parent or children to one component!");
             }
           }
@@ -980,12 +981,75 @@ const TestcaseApi = Form.create()(
               }
             }
           }
-          if (
-            typeof allCells[key] === "object" &&
-            allCells[key]["properties"]["Type"] === "api" &&
-            allCells[key]["properties"]["Method"] !== "uitestcase"
-          ) {
-            endpointids.push(allCells[key]["properties"]["EndpointId"]);
+
+          // ---------------CUSTOM APIS REGISTER ENDPOINS_ID & ENDPOINTSPACK_ID -------------------------
+          if (typeof allCells[key] === "object" && allCells[key]["properties"]["Type"] === "api" && allCells[key]["properties"]["Method"] !== "uitestcase") {
+          //  console.log(typeof allCells[key]["properties"]["custom_api"]);
+            if (allCells[key]["properties"]["custom_api"]) {
+
+              // check if entry exist
+              let getEndpointsPack = await axios.get(constants.endpointpacks)
+              let endpoints = await axios.get(constants.endpoints)
+              // console.log(endpoints);
+
+              let pack_id_found = false
+              let pack_id = null
+              let endpoint_id_found = false
+              let endpoint_id = null
+              // debugger
+              for (const pack of getEndpointsPack.data) {
+                if(allCells[key]["properties"]["Host_url"] === pack['host_url'] && parseInt(window.location.pathname.split("/")[2]) === pack['application']["id"]){
+                  pack_id = pack['id']
+                  pack_id_found = true
+
+                  for (const endpoint of pack['endpoints']) {
+                    if(endpoint['endpoint'] === allCells[key]["properties"]["Uri"] && endpoint['method'] === allCells[key]["properties"]["Method"])
+                    endpoint_id = endpoint['id']
+                    endpoint_id_found = true
+                    break
+                  }
+                  break
+                }
+              }
+
+              if(!pack_id_found || pack_id === null){
+                // entry in endpointpack
+                let body = {
+                  name: "custom_api",
+                  upload_type: "custom",
+                  host_url: allCells[key]["properties"]["Host_url"],
+                  application: window.location.pathname.split("/")[2]
+                };
+                const post_endpointpack = await axios.post(`${constants.endpointpacks}`, body);
+                pack_id = post_endpointpack.data.id
+              }
+
+              if(!endpoint_id_found || endpoint_id === null){
+              // entry in endpoints
+              let endpoint_body = {
+                method: allCells[key]["properties"]["Method"],
+                endpoint: allCells[key]["properties"]["Uri"],
+                endpointpack: pack_id,
+                responses: null,
+                tags: null,
+                consumes: null,
+                produces: null,
+                parameters: null
+              };
+              const post_endpoint = await axios.post(constants.endpoints, endpoint_body);
+              endpoint_id = post_endpoint.data.id
+              }
+
+              // update allcell flow object
+              allCells[key]["properties"]['EndpointPackId'] = pack_id
+              allCells[key]["properties"]['EndpointId'] = endpoint_id
+              endpointids.push(endpoint_id);
+              // -------------------------------------REGISTERED-------------------
+            } else {
+              endpointids.push(allCells[key]["properties"]["EndpointId"]);
+            }
+
+            // --------------------
 
             if (allCells[key]["properties"]["Conflict"]) {
               if (!this.state.conflictconfirmation) {
@@ -1008,7 +1072,7 @@ const TestcaseApi = Form.create()(
             return {
               id: allCells[key]["properties"]["EndpointId"],
               name: allCells[key]["properties"]["Uri"],
-              method: allCells[key]["properties"]["Method"],
+              method: allCells[key]["properties"]["Method"]
             };
           }
         }
@@ -1016,18 +1080,18 @@ const TestcaseApi = Form.create()(
       return null;
     };
 
-    capturegroups = async (connect) => {
+    capturegroups = async connect => {
       const pattern = /\{\{(\w+)\.(\w+)\.?(.*?)\}\}/gim;
       let test = pattern.exec(connect);
       return test;
     };
 
-    PostRelationGraph = async (allCells) => {
+    PostRelationGraph = async allCells => {
       const pattern = /\{\{(\w+)\.(\w+)\.?(.*?)\}\}/gim;
       let nodes = [];
       let edges = [];
       let relationgraph = {
-        graph: {},
+        graph: {}
       };
       for (const key in allCells) {
         if (allCells[key].hasOwnProperty("properties")) {
@@ -1040,7 +1104,7 @@ const TestcaseApi = Form.create()(
             method: allCells[key]["properties"]["Method"] ? allCells[key]["properties"]["Method"] : "",
             // image: url,
             // shape: "image",
-            connections: [],
+            connections: []
           };
           for (const prop_key in properties) {
             if (properties.hasOwnProperty(prop_key)) {
@@ -1051,7 +1115,7 @@ const TestcaseApi = Form.create()(
                 let connection_data = {
                   node_name: "",
                   node_request: "",
-                  datakey: "",
+                  datakey: ""
                 };
                 const capturedgroups = await this.capturegroups(connect);
                 if (capturedgroups !== undefined && capturedgroups !== null) {
@@ -1081,7 +1145,7 @@ const TestcaseApi = Form.create()(
               node_request: "",
               data_key: "",
               node_name: "",
-              application: this.props.location.pathname.split("/")[2],
+              application: this.props.location.pathname.split("/")[2]
             };
             if (connection.node_name == "parent") {
               if (allCells[node.node_id].parent[0] && allCells[allCells[node.node_id].parent[0]].properties.Type == "api") {
@@ -1114,20 +1178,20 @@ const TestcaseApi = Form.create()(
       }
       const options = {
         layout: {
-          hierarchical: false,
+          hierarchical: false
         },
         edges: {
-          color: "#000000",
+          color: "#000000"
         },
-        height: "500px",
+        height: "500px"
       };
       const events = {
-        select: function (event) {
+        select: function(event) {
           var { nodes, edges } = event;
-        },
+        }
       };
       const flags = new Set();
-      const unique_nodes = nodes.filter((node) => {
+      const unique_nodes = nodes.filter(node => {
         if (flags.has(node.id)) {
           return false;
         }
@@ -1135,18 +1199,17 @@ const TestcaseApi = Form.create()(
         return true;
       });
       relationgraph.graph["nodes"] = unique_nodes;
-      const unique_edges = [...new Set(edges.map((item) => item))];
+      const unique_edges = [...new Set(edges.map(item => item))];
       relationgraph.graph["edges"] = unique_edges;
       relationgraph["options"] = options;
       relationgraph["events"] = events;
       let relbodyData = {
-        edges: unique_edges,
+        edges: unique_edges
       };
       axios
         .post(constants.relationgraph + "/creates", relbodyData)
-        .then((response) => {
-        })
-        .catch(function (error) {
+        .then(response => {})
+        .catch(function(error) {
           Alert.error("Something went wrong");
           console.log(error);
         });
@@ -1172,17 +1235,17 @@ const TestcaseApi = Form.create()(
           graph_json: allCells,
           graph_xml: graphXML,
           endpoints: endpointids,
-          testcase: this.props.location.pathname.split("/")[5],
+          testcase: this.props.location.pathname.split("/")[5]
         };
         axios
           .post(constants.flows, bodyData)
-          .then((response) => {
+          .then(response => {
             that.setState({ graphId: response.data.id, loader: false });
             if (purpose === "graphSave") {
               Alert.success("Layout saved successfully.");
             }
           })
-          .catch(function (error) {
+          .catch(function(error) {
             Alert.error("Something went wrong");
             console.log(error);
           });
@@ -1190,18 +1253,18 @@ const TestcaseApi = Form.create()(
         let bodyData = {
           graph_json: allCells,
           graph_xml: graphXML,
-          endpoints: endpointids,
+          endpoints: endpointids
         };
         axios
           .put(constants.flows + `/${this.state.graphId}`, bodyData)
-          .then((response) => {
+          .then(response => {
             this.setState({ loader: false });
             // this.setState({ loader: false,relationgraph: relationgraph,relvisible:true });
             if (purpose === "graphSave") {
               Alert.success("Layout updated successfully.");
             }
           })
-          .catch(function (error) {
+          .catch(function(error) {
             Alert.error("Something went wrong");
             console.log(error);
           });
@@ -1219,7 +1282,7 @@ const TestcaseApi = Form.create()(
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Accept: "application/json",
+            Accept: "application/json"
           },
           body: JSON.stringify({
             query: `{applications(where: { id: "${window.location.pathname.split("/")[2]}" }) {
@@ -1228,33 +1291,33 @@ const TestcaseApi = Form.create()(
                 id
               }
             }
-          }}`,
-          }),
+          }}`
+          })
         })
-          .then((response) => response.json())
-          .then((response) => {
+          .then(response => response.json())
+          .then(response => {
             const apiExecuteBody = {
               id: this.state.graphId,
               testsessionid: response.data.applications[0].testsuites[0].testsessionexecutions[0].id,
               testcaseid: window.location.pathname.split("/")[5],
-              environment_id: this.state.selected_environment,
+              environment_id: this.state.selected_environment
             };
 
             axios
               .post(constants.apiexecutehost, apiExecuteBody)
-              .then((response) => {
+              .then(response => {
                 this.setState({
                   executionLogs: {},
-                  loader: false,
+                  loader: false
                 });
                 Alert.success("Layout Execution started.");
               })
-              .catch(function (error) {
+              .catch(function(error) {
                 Alert.error("Something went wrong");
                 console.log(error);
               });
           })
-          .catch((error) => {
+          .catch(error => {
             Alert.error("Something went wrong");
             console.log(error);
           });
@@ -1279,14 +1342,7 @@ const TestcaseApi = Form.create()(
 
     RenderSidebar = () => {
       if (this.state.selectedPanel === "api") {
-        return (
-          <ApiSidebar
-            selectedCellData={this.state.selectedCellData}
-            visible={this.state.sidebarModal}
-            handleCancel={this.handleCancel}
-            handleConfirm={this.handleConfirm}
-          />
-        );
+        return <ApiSidebar selectedCellData={this.state.selectedCellData} visible={this.state.sidebarModal} handleCancel={this.handleCancel} handleConfirm={this.handleConfirm} />;
       } else if (this.state.selectedPanel === "controls") {
         return (
           <ControlSidebar
@@ -1343,10 +1399,10 @@ const TestcaseApi = Form.create()(
       this.setState({ visible: false, relvisible: false, relationgraph: {}, conflictconfirmation: false });
     };
 
-    handleChange = (e) => {
+    handleChange = e => {
       this.setState({
         selected_environment: e.target.value,
-        select_env_err: false,
+        select_env_err: false
       });
     };
 
@@ -1380,7 +1436,7 @@ const TestcaseApi = Form.create()(
                 icon="remind"
                 style={{
                   color: "#ff6b6b",
-                  fontSize: 24,
+                  fontSize: 24
                 }}
               />
               <div className="cconflict-modal-body-text">
@@ -1418,9 +1474,9 @@ const TestcaseApi = Form.create()(
                   rules: [
                     {
                       required: true,
-                      message: "Please input your environment!",
-                    },
-                  ],
+                      message: "Please input your environment!"
+                    }
+                  ]
                 })(
                   <select className={this.state.select_env_err ? "select-env-err select-env" : "select-env"} onChange={this.handleChange}>
                     <option value="">Select Environment</option>
@@ -1453,7 +1509,7 @@ const TestcaseApi = Form.create()(
     };
 
     render() {
-
+      // console.log("graph object ----->", this.state.graph);
       return (
         <React.Fragment>
           <div className="main-container animated fadeIn">
@@ -1468,11 +1524,7 @@ const TestcaseApi = Form.create()(
                 </div>
               </div>
               <div ref="mxSidebar" className="graph-left-panel">
-                <LeftPanelElements
-                  createDragElement={this.createDragElement}
-                  parentProps={this.props.location.pathname}
-                  selectedPanel={(e) => this.setState({ selectedPanel: e })}
-                />
+                <LeftPanelElements createDragElement={this.createDragElement} parentProps={this.props.location.pathname} selectedPanel={e => this.setState({ selectedPanel: e })} />
               </div>
               <div className="dashboard-sidebar-profile-container">
                 <div
@@ -1480,16 +1532,12 @@ const TestcaseApi = Form.create()(
                   onMouseEnter={() => this.setState({ profileContainer: true })}
                   onClick={() =>
                     this.setState({
-                      profileContainer: !this.state.profileContainer,
+                      profileContainer: !this.state.profileContainer
                     })
                   }
                 >
                   <img
-                    src={
-                      sessionStorage.getItem("profile")
-                        ? sessionStorage.getItem("profile")
-                        : "http://www.haverhill-ps.org/wp-content/uploads/sites/12/2013/11/user.png"
-                    }
+                    src={sessionStorage.getItem("profile") ? sessionStorage.getItem("profile") : "http://www.haverhill-ps.org/wp-content/uploads/sites/12/2013/11/user.png"}
                     width="100%"
                     height="100%"
                   />
@@ -1501,9 +1549,7 @@ const TestcaseApi = Form.create()(
               </div>
               <div
                 onMouseLeave={() => this.setState({ profileContainer: false })}
-                className={
-                  "hover-header-profile-container animated fadeIn " + (this.state.profileContainer ? " hidden-hover-header-profile-container" : "")
-                }
+                className={"hover-header-profile-container animated fadeIn " + (this.state.profileContainer ? " hidden-hover-header-profile-container" : "")}
               >
                 <div className="hover-header-profile-body">
                   <Link to="/profile" className="hover-header-profile-body-row">
@@ -1518,11 +1564,7 @@ const TestcaseApi = Form.create()(
                   <div className="hover-header-profile-header-name">{`Hi, ${sessionStorage.getItem("username")}`}</div>
                   <div className="hover-header-profile-header-profile">
                     <img
-                      src={
-                        sessionStorage.getItem("profile")
-                          ? sessionStorage.getItem("profile")
-                          : "http://www.haverhill-ps.org/wp-content/uploads/sites/12/2013/11/user.png"
-                      }
+                      src={sessionStorage.getItem("profile") ? sessionStorage.getItem("profile") : "http://www.haverhill-ps.org/wp-content/uploads/sites/12/2013/11/user.png"}
                       width="100%"
                       height="100%"
                     />
@@ -1540,16 +1582,14 @@ const TestcaseApi = Form.create()(
                     {this.state.createdGraphData.name}
                   </Link>
                   <div className="breadcrumbs-items">{this.state.createdGraphData.name ? ">" : ""}</div>
-                  <div className="breadcrumbs-items">
-                    {this.state.createdGraphData.testcases ? this.state.createdGraphData.testcases[0].name : ""}
-                  </div>
+                  <div className="breadcrumbs-items">{this.state.createdGraphData.testcases ? this.state.createdGraphData.testcases[0].name : ""}</div>
                 </div>
                 <div className="filter-panel-right-part">
                   <div
                     onClick={() =>
                       this.setState({
                         sidebarModal: true,
-                        selectedPanel: "logs",
+                        selectedPanel: "logs"
                       })
                     }
                     className="negative-button animated zoomIn faster"

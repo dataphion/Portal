@@ -137,6 +137,8 @@ export default class LeftPanelElements extends React.Component {
   };
 
   renderEndpoints = (endpoint, index, EndpointPackId) => {
+    // console.log(endpoint);
+
     const endpointKey = endpoint.key;
     return (
       <div className="graph-left-panel-drag-container" key={index}>
@@ -164,7 +166,8 @@ export default class LeftPanelElements extends React.Component {
                 Uri: DataKey,
                 Method: Data.method,
                 Type: "api",
-                id: Data.id
+                id: Data.id,
+                custom_api: false
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api get-method-btn"
             >
@@ -187,7 +190,8 @@ export default class LeftPanelElements extends React.Component {
                 Uri: DataKey,
                 Method: Data.method,
                 Type: "api",
-                id: Data.id
+                id: Data.id,
+                custom_api: false
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api post-method-btn"
             >
@@ -210,7 +214,8 @@ export default class LeftPanelElements extends React.Component {
                 Uri: DataKey,
                 Method: Data.method,
                 Type: "api",
-                id: Data.id
+                id: Data.id,
+                custom_api: false
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api put-method-btn"
             >
@@ -233,7 +238,8 @@ export default class LeftPanelElements extends React.Component {
                 Uri: DataKey,
                 Method: Data.method,
                 Type: "api",
-                id: Data.id
+                id: Data.id,
+                custom_api: false
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api patch-method-btn"
             >
@@ -256,7 +262,8 @@ export default class LeftPanelElements extends React.Component {
                 Uri: DataKey,
                 Method: Data.method,
                 Type: "api",
-                id: Data.id
+                id: Data.id,
+                custom_api: false
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api delete-method-btn"
             >
@@ -326,6 +333,18 @@ export default class LeftPanelElements extends React.Component {
             </div>
             <div
               className="button-container"
+              style={this.state.activeTastcase === "custom-api" ? { background: "#ffffff33" } : {}}
+              onClick={() =>
+                this.setState({ activeTastcase: "custom-api" }, () => {
+                  this.props.selectedPanel(this.state.activePanel);
+                  this.props.createDragElement();
+                })
+              }
+            >
+              Custom
+            </div>
+            <div
+              className="button-container"
               style={this.state.activeTastcase === "ui" ? { background: "#ffffff33" } : {}}
               onClick={() =>
                 this.setState({ activeTastcase: "ui" }, () => {
@@ -359,9 +378,10 @@ export default class LeftPanelElements extends React.Component {
               />
             </div> */}
             {this.state.endpointPacks.map((data, index) => {
+              // console.log(data);
 
               const EndpointPackId = data.id;
-              if (data.name) {
+              if (data.name && data.name !== "custom_api") {
                 return (
                   <div className="endpoint-pack-accordion-dropdown animated zoomIn faster" key={index}>
                     <div onClick={() => this.expandRow(index)} className="endpoint-pack-accordion">
@@ -398,6 +418,32 @@ export default class LeftPanelElements extends React.Component {
                 </Whisper>
                 <div className="graph-left-panel-drag-data-desc larg-desc">UI Testcases</div>
               </div>
+            </div>
+          </div>
+        ) : null}
+
+        {this.state.activePanel === "api" && this.state.activeTastcase === "custom-api" ? (
+          <div className="custom-api-drag">
+            <div className="graph-left-panel-drag-data-container">
+              <Whisper placement="bottom" trigger="click" speaker={this.Tooltip("Drag & Drop")}>
+                <div
+                  value={JSON.stringify({
+                    EndpointPackId: "",
+                    EndpointId: "",
+                    Uri: "",
+                    Method: "",
+                    Type: "api",
+                    id: "",
+                    custom_api: true
+                  })}
+                  className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api get-method-btn"
+                >
+                  Custom API
+                </div>
+              </Whisper>
+              {/* <div className="graph-left-panel-drag-data-desc" title="description">
+              description
+            </div> */}
             </div>
           </div>
         ) : null}
