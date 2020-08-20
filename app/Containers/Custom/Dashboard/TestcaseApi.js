@@ -159,9 +159,7 @@ const TestcaseApi = Form.create()(
       } else {
         var graph = new mxGraph(container);
 
-        var outlineContainer = document.getElementById(
-          "dashboard_outline_container"
-        );
+        var outlineContainer = document.getElementById("dashboard_outline_container");
         this.outline = new mxOutline(graph, outlineContainer);
         this.outline.updateOnPan = true;
         this.setState(
@@ -195,11 +193,7 @@ const TestcaseApi = Form.create()(
           Accept: "application/json",
         },
         body: JSON.stringify({
-          query: `{applications(where:{user:{id:"${sessionStorage.getItem(
-            "id"
-          )}"},id:"${
-            window.location.pathname.split("/")[2]
-          }"}){name,testcases(where:{id:"${
+          query: `{applications(where:{user:{id:"${sessionStorage.getItem("id")}"},id:"${window.location.pathname.split("/")[2]}"}){name,testcases(where:{id:"${
             window.location.pathname.split("/")[5]
           }"}){name,
             flow{
@@ -223,9 +217,7 @@ const TestcaseApi = Form.create()(
               graphId: response.data.applications[0].testcases[0].flow.id,
             });
             try {
-              var loadGraph = mxUtils.parseXml(
-                response.data.applications[0].testcases[0].flow.graph_xml
-              );
+              var loadGraph = mxUtils.parseXml(response.data.applications[0].testcases[0].flow.graph_xml);
               var codec = new mxCodec(loadGraph);
               codec.decode(loadGraph.documentElement, graph.getModel());
             } finally {
@@ -247,35 +239,21 @@ const TestcaseApi = Form.create()(
         this.setState({ apiExecuteStatus: "inProgress" });
         if (data.status === "started") {
           // Add execution started class in cell
-          document
-            .getElementById(`graph-cell-${data.id}`)
-            .classList.add("layout-execution-started");
+          document.getElementById(`graph-cell-${data.id}`).classList.add("layout-execution-started");
         } else if (data.status === "successfull") {
           // Remove execution started class in cell
-          document
-            .getElementById(`graph-cell-${data.id}`)
-            .classList.remove("layout-execution-started");
+          document.getElementById(`graph-cell-${data.id}`).classList.remove("layout-execution-started");
           // Remove execution fail class in cell
-          document
-            .getElementById(`graph-cell-${data.id}`)
-            .classList.remove("layout-execution-fail");
+          document.getElementById(`graph-cell-${data.id}`).classList.remove("layout-execution-fail");
           // Add execution successfull class in cell
-          document
-            .getElementById(`graph-cell-${data.id}`)
-            .classList.add("layout-execution-successfull");
+          document.getElementById(`graph-cell-${data.id}`).classList.add("layout-execution-successfull");
         } else if (data.status === "fail") {
           // Remove execution successfull class in cell
-          document
-            .getElementById(`graph-cell-${data.id}`)
-            .classList.remove("layout-execution-successfull");
+          document.getElementById(`graph-cell-${data.id}`).classList.remove("layout-execution-successfull");
           // Remove execution started class in cell
-          document
-            .getElementById(`graph-cell-${data.id}`)
-            .classList.remove("layout-execution-started");
+          document.getElementById(`graph-cell-${data.id}`).classList.remove("layout-execution-started");
           // Add execution fail class in cell
-          document
-            .getElementById(`graph-cell-${data.id}`)
-            .classList.add("layout-execution-fail");
+          document.getElementById(`graph-cell-${data.id}`).classList.add("layout-execution-fail");
           // this.setState({ apiExecuteStatus: "completed" });
           // Alert.error("Layout execution failed.");
         } else if (data.status === "completed") {
@@ -316,9 +294,8 @@ const TestcaseApi = Form.create()(
             .then((response) => response.json())
             .then((response) => {
               let executionResponse = this.state.executionLogs;
-              executionResponse[
-                `${response.data.testcaseexecutions[0].flowsteps[0].name}_${response.data.testcaseexecutions[0].flowsteps[0].index}`
-              ] = response.data.testcaseexecutions[0].flowsteps[0];
+              executionResponse[`${response.data.testcaseexecutions[0].flowsteps[0].name}_${response.data.testcaseexecutions[0].flowsteps[0].index}`] =
+                response.data.testcaseexecutions[0].flowsteps[0];
               this.setState({ executionLogs: executionResponse });
             })
             .catch((error) => {
@@ -360,11 +337,7 @@ const TestcaseApi = Form.create()(
       };
       // Specifies if waypoints should snap to the routing centers of terminals
       mxEdgeHandler.prototype.snapToTerminals = true;
-      mxConstraintHandler.prototype.pointImage = new mxImage(
-        "https://uploads.codesandbox.io/uploads/user/4bf4b6b3-3aa9-4999-8b70-bbc1b287a968/-q_3-point.gif",
-        5,
-        5
-      );
+      mxConstraintHandler.prototype.pointImage = new mxImage("https://uploads.codesandbox.io/uploads/user/4bf4b6b3-3aa9-4999-8b70-bbc1b287a968/-q_3-point.gif", 5, 5);
     };
 
     setGraphSetting = (clicked) => {
@@ -383,9 +356,7 @@ const TestcaseApi = Form.create()(
       const keyHandler = new mxKeyHandler(graph);
       keyHandler.getFunction = function (evt) {
         if (evt !== null) {
-          return mxEvent.isControlDown(evt) || (mxClient.IS_MAC && evt.metaKey)
-            ? this.controlKeys[evt.keyCode]
-            : this.normalKeys[evt.keyCode];
+          return mxEvent.isControlDown(evt) || (mxClient.IS_MAC && evt.metaKey) ? this.controlKeys[evt.keyCode] : this.normalKeys[evt.keyCode];
         }
         return null;
       };
@@ -535,10 +506,7 @@ const TestcaseApi = Form.create()(
       };
 
       graph.convertValueToString = function (cell) {
-        if (
-          mxUtils.isNode(cell.value) &&
-          cell.value.nodeName.toLowerCase() === "taskobject"
-        ) {
+        if (mxUtils.isNode(cell.value) && cell.value.nodeName.toLowerCase() === "taskobject") {
           if (!cell.getAttribute("custom_api")) {
             if (cell.getAttribute("EndpointId")) {
               that.highlightcell(cell).then((response) => {
@@ -633,39 +601,22 @@ const TestcaseApi = Form.create()(
 
     settingConnection = () => {
       const { graph } = this.state;
-      mxConstraintHandler.prototype.intersects = function (
-        icon,
-        point,
-        source,
-        existingEdge
-      ) {
-        return (
-          !source || existingEdge || mxUtils.intersects(icon.bounds, point)
-        );
+      mxConstraintHandler.prototype.intersects = function (icon, point, source, existingEdge) {
+        return !source || existingEdge || mxUtils.intersects(icon.bounds, point);
       };
 
-      var mxConnectionHandlerUpdateEdgeState =
-        mxConnectionHandler.prototype.updateEdgeState;
-      mxConnectionHandler.prototype.updateEdgeState = function (
-        pt,
-        constraint
-      ) {
+      var mxConnectionHandlerUpdateEdgeState = mxConnectionHandler.prototype.updateEdgeState;
+      mxConnectionHandler.prototype.updateEdgeState = function (pt, constraint) {
         try {
           // if (ALLOW_EDGE) {
           if (pt !== null && this.previous !== null) {
-            var constraints = this.graph.getAllConnectionConstraints(
-              this.previous
-            );
+            var constraints = this.graph.getAllConnectionConstraints(this.previous);
             var nearestConstraint = null;
             var dist = null;
             for (var i = 0; i < constraints.length; i++) {
-              var cp = this.graph.getConnectionPoint(
-                this.previous,
-                constraints[i]
-              );
+              var cp = this.graph.getConnectionPoint(this.previous, constraints[i]);
               if (cp !== null) {
-                var tmp =
-                  (cp.x - pt.x) * (cp.x - pt.x) + (cp.y - pt.y) * (cp.y - pt.y);
+                var tmp = (cp.x - pt.x) * (cp.x - pt.x) + (cp.y - pt.y) * (cp.y - pt.y);
 
                 if (dist === null || tmp < dist) {
                   nearestConstraint = constraints[i];
@@ -707,10 +658,7 @@ const TestcaseApi = Form.create()(
           ];
           // }
 
-          return [
-            new mxConnectionConstraint(new mxPoint(0.5, 0), true),
-            new mxConnectionConstraint(new mxPoint(0.5, 1), true),
-          ];
+          return [new mxConnectionConstraint(new mxPoint(0.5, 0), true), new mxConnectionConstraint(new mxPoint(0.5, 1), true)];
         }
         return null;
       };
@@ -743,43 +691,20 @@ const TestcaseApi = Form.create()(
 
       // Connect preview
       graph.connectionHandler.createEdgeState = function (me) {
-        var edge = graph.createEdge(
-          null,
-          null,
-          "Edge",
-          null,
-          null,
-          "edgeStyle=orthogonalEdgeStyle;strokeColor=#cccccc;strokeWidth=3;rounded=1"
-        );
+        var edge = graph.createEdge(null, null, "Edge", null, null, "edgeStyle=orthogonalEdgeStyle;strokeColor=#cccccc;strokeWidth=3;rounded=1");
 
-        return new mxCellState(
-          this.graph.view,
-          edge,
-          this.graph.getCellStyle(edge)
-        );
+        return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
       };
     };
 
     createDragElement = () => {
       const { graph } = this.state;
-      const tasksDrag = ReactDOM.findDOMNode(
-        this.refs.mxSidebar
-      ).querySelectorAll(".graph-left-panel-draggable-element");
+      const tasksDrag = ReactDOM.findDOMNode(this.refs.mxSidebar).querySelectorAll(".graph-left-panel-draggable-element");
       Array.prototype.slice.call(tasksDrag).forEach((ele) => {
         const value = ele.getAttribute("value");
         // console.log(value);
 
-        let ds = mxUtils.makeDraggable(
-          ele,
-          this.graphF,
-          (graph, evt, target, x, y) =>
-            this.funct(graph, evt, target, x, y, value),
-          this.state.dragElt,
-          null,
-          null,
-          graph.autoscroll,
-          true
-        );
+        let ds = mxUtils.makeDraggable(ele, this.graphF, (graph, evt, target, x, y) => this.funct(graph, evt, target, x, y, value), this.state.dragElt, null, null, graph.autoscroll, true);
         ds.isGuidesEnabled = function () {
           return graph.graphHandler.guidesEnabled;
         };
@@ -818,16 +743,7 @@ const TestcaseApi = Form.create()(
       obj.setAttribute("Type", JSON.parse(value).Type);
       var parent = graph.getDefaultParent();
 
-      let cell = graph.insertVertex(
-        parent,
-        target,
-        obj,
-        x,
-        y,
-        229,
-        67,
-        "rounded=1;fillColor=#cccccc;strokeColor=none;"
-      );
+      let cell = graph.insertVertex(parent, target, obj, x, y, 229, 67, "rounded=1;fillColor=#cccccc;strokeColor=none;");
       graph.setSelectionCell(cell);
       this.selectionChanged(graph, value);
     };
@@ -875,212 +791,62 @@ const TestcaseApi = Form.create()(
           this.applyHandler(graph, cell, "Method", fields.Method);
           this.applyHandler(graph, cell, "Host_url", fields.Host_url);
           this.applyHandler(graph, cell, "Uri", fields.Uri);
-          this.applyHandler(
-            graph,
-            cell,
-            "PathParametersAdd",
-            JSON.stringify(fields.PathParametersAdd)
-          );
-          this.applyHandler(
-            graph,
-            cell,
-            "QueryParametersAdd",
-            JSON.stringify(fields.QueryParametersAdd)
-          );
-          this.applyHandler(
-            graph,
-            cell,
-            "AuthorizationUsername",
-            fields.AuthorizationUsername
-          );
-          this.applyHandler(
-            graph,
-            cell,
-            "AuthorizationPassword",
-            fields.AuthorizationPassword
-          );
-          this.applyHandler(
-            graph,
-            cell,
-            "HeadersAdd",
-            JSON.stringify(fields.HeadersAdd)
-          );
-          this.applyHandler(
-            graph,
-            cell,
-            "BodySelectedMenu",
-            fields.BodySelectedMenu
-          );
-          this.applyHandler(
-            graph,
-            cell,
-            "BodyFormDataAdd",
-            JSON.stringify(fields.BodyFormDataAdd)
-          );
-          this.applyHandler(
-            graph,
-            cell,
-            "AceEditorValue",
-            JSON.stringify(fields.AceEditorValue)
-          );
+          this.applyHandler(graph, cell, "PathParametersAdd", JSON.stringify(fields.PathParametersAdd));
+          this.applyHandler(graph, cell, "QueryParametersAdd", JSON.stringify(fields.QueryParametersAdd));
+          this.applyHandler(graph, cell, "AuthorizationUsername", fields.AuthorizationUsername);
+          this.applyHandler(graph, cell, "AuthorizationPassword", fields.AuthorizationPassword);
+          this.applyHandler(graph, cell, "HeadersAdd", JSON.stringify(fields.HeadersAdd));
+          this.applyHandler(graph, cell, "BodySelectedMenu", fields.BodySelectedMenu);
+          this.applyHandler(graph, cell, "BodyFormDataAdd", JSON.stringify(fields.BodyFormDataAdd));
+          this.applyHandler(graph, cell, "AceEditorValue", JSON.stringify(fields.AceEditorValue));
         } else {
           this.applyHandler(graph, cell, "UiTestcase", fields.UiTestcase);
-          this.applyHandler(
-            graph,
-            cell,
-            "UiTestcaseName",
-            fields.UiTestcaseName
-          );
+          this.applyHandler(graph, cell, "UiTestcaseName", fields.UiTestcaseName);
         }
       } else if (cell.getAttribute("Type") === "controls") {
         if (cell.getAttribute("Method") === "conditions") {
-          this.applyHandler(
-            graph,
-            cell,
-            "ConditionsAdd",
-            JSON.stringify(fields.ConditionsAdd)
-          );
-          this.applyHandler(
-            graph,
-            cell,
-            "ConditionsParse",
-            JSON.stringify(fields.ConditionsParse)
-          );
+          this.applyHandler(graph, cell, "ConditionsAdd", JSON.stringify(fields.ConditionsAdd));
+          this.applyHandler(graph, cell, "ConditionsParse", JSON.stringify(fields.ConditionsParse));
         } else if (cell.getAttribute("Method") === "iterator") {
           this.applyHandler(graph, cell, "ExecutionMode", fields.ExecutionMode);
         } else if (cell.getAttribute("Method") === "assertion") {
-          this.applyHandler(
-            graph,
-            cell,
-            "AssertionParse",
-            JSON.stringify(fields.AssertionParse)
-          );
-          this.applyHandler(
-            graph,
-            cell,
-            "AssertionAdd",
-            JSON.stringify(fields.AssertionAdd)
-          );
+          this.applyHandler(graph, cell, "AssertionParse", JSON.stringify(fields.AssertionParse));
+          this.applyHandler(graph, cell, "AssertionAdd", JSON.stringify(fields.AssertionAdd));
         } else if (cell.getAttribute("Method") === "variable") {
-          this.applyHandler(
-            graph,
-            cell,
-            "VariableAdd",
-            JSON.stringify(fields.VariableAdd)
-          );
+          this.applyHandler(graph, cell, "VariableAdd", JSON.stringify(fields.VariableAdd));
         }
       } else if (cell.getAttribute("Type") === "source") {
-        this.applyHandler(
-          graph,
-          cell,
-          "AceEditorValue",
-          JSON.stringify(fields.AceEditorValue)
-        );
+        this.applyHandler(graph, cell, "AceEditorValue", JSON.stringify(fields.AceEditorValue));
         this.applyHandler(graph, cell, "DatabaseType", fields.DatabaseType);
         this.applyHandler(graph, cell, "OracleSourceId", fields.OracleSourceId);
         this.applyHandler(graph, cell, "OracleDatabase", fields.OracleDatabase);
-        this.applyHandler(
-          graph,
-          cell,
-          "RabbitmqSourceId",
-          fields.RabbitmqSourceId
-        );
-        this.applyHandler(
-          graph,
-          cell,
-          "RabbitmqQueueName",
-          fields.RabbitmqQueueName
-        );
+        this.applyHandler(graph, cell, "RabbitmqSourceId", fields.RabbitmqSourceId);
+        this.applyHandler(graph, cell, "RabbitmqQueueName", fields.RabbitmqQueueName);
         this.applyHandler(graph, cell, "RabbitmqType", fields.RabbitmqType);
         this.applyHandler(graph, cell, "rmqData", fields.AceEditorValue);
-        this.applyHandler(
-          graph,
-          cell,
-          "publishDataSelected",
-          fields.publishDataSelected
-        );
+        this.applyHandler(graph, cell, "publishDataSelected", fields.publishDataSelected);
         this.applyHandler(graph, cell, "MysqlSourceId", fields.MysqlSourceId);
         this.applyHandler(graph, cell, "MysqlDatabase", fields.MysqlDatabase);
         this.applyHandler(graph, cell, "MssqlSourceId", fields.MssqlSourceId);
         this.applyHandler(graph, cell, "MssqlDatabase", fields.MssqlDatabase);
         this.applyHandler(graph, cell, "MongoSourceId", fields.MongoSourceId);
         this.applyHandler(graph, cell, "MongoDatabase", fields.MongoDatabase);
-        this.applyHandler(
-          graph,
-          cell,
-          "PostgresDatabase",
-          fields.PostgresDatabase
-        );
-        this.applyHandler(
-          graph,
-          cell,
-          "CassandraDatabase",
-          fields.CassandraDatabase
-        );
-        this.applyHandler(
-          graph,
-          cell,
-          "PostgresSourceId",
-          fields.PostgresSourceId
-        );
-        this.applyHandler(
-          graph,
-          cell,
-          "CassandraSourceId",
-          fields.CassandraSourceId
-        );
+        this.applyHandler(graph, cell, "PostgresDatabase", fields.PostgresDatabase);
+        this.applyHandler(graph, cell, "CassandraDatabase", fields.CassandraDatabase);
+        this.applyHandler(graph, cell, "PostgresSourceId", fields.PostgresSourceId);
+        this.applyHandler(graph, cell, "CassandraSourceId", fields.CassandraSourceId);
 
         this.applyHandler(graph, cell, "RedisSourceId", fields.RedisSourceId);
         this.applyHandler(graph, cell, "RedisDatabase", fields.RedisDatabase);
         this.applyHandler(graph, cell, "QueryType", fields.QueryType);
-        this.applyHandler(
-          graph,
-          cell,
-          "OracleQueryTemplate",
-          fields.OracleQueryTemplate
-        );
-        this.applyHandler(
-          graph,
-          cell,
-          "RabbimqQueryTemplate",
-          fields.RabbimqQueryTemplate
-        );
-        this.applyHandler(
-          graph,
-          cell,
-          "MysqlQueryTemplate",
-          fields.MysqlQueryTemplate
-        );
-        this.applyHandler(
-          graph,
-          cell,
-          "PostgresQueryTemplate",
-          fields.PostgresQueryTemplate
-        );
-        this.applyHandler(
-          graph,
-          cell,
-          "CassandraQueryTemplate",
-          fields.CassandraQueryTemplate
-        );
-        this.applyHandler(
-          graph,
-          cell,
-          "MssqlQueryTemplate",
-          fields.MssqlQueryTemplate
-        );
-        this.applyHandler(
-          graph,
-          cell,
-          "MongoQueryTemplate",
-          fields.MongoQueryTemplate
-        );
-        this.applyHandler(
-          graph,
-          cell,
-          "RedisQueryTemplate",
-          fields.RedisQueryTemplate
-        );
+        this.applyHandler(graph, cell, "OracleQueryTemplate", fields.OracleQueryTemplate);
+        this.applyHandler(graph, cell, "RabbimqQueryTemplate", fields.RabbimqQueryTemplate);
+        this.applyHandler(graph, cell, "MysqlQueryTemplate", fields.MysqlQueryTemplate);
+        this.applyHandler(graph, cell, "PostgresQueryTemplate", fields.PostgresQueryTemplate);
+        this.applyHandler(graph, cell, "CassandraQueryTemplate", fields.CassandraQueryTemplate);
+        this.applyHandler(graph, cell, "MssqlQueryTemplate", fields.MssqlQueryTemplate);
+        this.applyHandler(graph, cell, "MongoQueryTemplate", fields.MongoQueryTemplate);
+        this.applyHandler(graph, cell, "RedisQueryTemplate", fields.RedisQueryTemplate);
         this.applyHandler(graph, cell, "WrittenQuery", fields.WrittenQuery);
       }
 
@@ -1147,8 +913,7 @@ const TestcaseApi = Form.create()(
         }
 
         for (const data of respJson.QueryParametersAdd) {
-          QueryParametersAdd[data.QueryParametersKey] =
-            data.QueryParametersValue;
+          QueryParametersAdd[data.QueryParametersKey] = data.QueryParametersValue;
         }
 
         respJson.BodyFormDataAdd = BodyFormDataAdd;
@@ -1197,55 +962,32 @@ const TestcaseApi = Form.create()(
         let endpointids = [];
         for (const key of Object.keys(allCells)) {
           if (typeof allCells[key] === "object") {
-            if (
-              allCells[key].id === allCells.root &&
-              allCells[key].children.length <= 0
-            ) {
+            if (allCells[key].id === allCells.root && allCells[key].children.length <= 0) {
               return Alert.warning("Don't allow elements without children!");
-            } else if (
-              allCells[key].id !== allCells.root &&
-              allCells[key].parent.length <= 0
-            ) {
+            } else if (allCells[key].id !== allCells.root && allCells[key].parent.length <= 0) {
               return Alert.warning("Don't allow elements without parent!");
-            } else if (
-              (allCells[key].children.length > 1 ||
-                allCells[key].parent.length > 1) &&
-              allCells[key]["properties"]["Method"] !== "conditions"
-            ) {
-              return Alert.warning(
-                "Don't allow multiple parent or children to one component!"
-              );
+            } else if ((allCells[key].children.length > 1 || allCells[key].parent.length > 1) && allCells[key]["properties"]["Method"] !== "conditions") {
+              return Alert.warning("Don't allow multiple parent or children to one component!");
             }
           }
 
-          if (
-            typeof allCells[key] === "object" &&
-            allCells[key]["properties"]["Type"] === "controls"
-          ) {
+          if (typeof allCells[key] === "object" && allCells[key]["properties"]["Type"] === "controls") {
             if (allCells[key]["properties"]["Method"] === "conditions") {
-              for (const key of allCells[key]["properties"][
-                "ConditionsParse"
-              ]) {
+              for (const key of allCells[key]["properties"]["ConditionsParse"]) {
                 if (!key.selected_condition_id) {
-                  return Alert.warning(
-                    "Condition must have path, Where it's true!"
-                  );
+                  return Alert.warning("Condition must have path, Where it's true!");
                 }
               }
             }
           }
 
           // ---------------CUSTOM APIS REGISTER ENDPOINS_ID & ENDPOINTSPACK_ID -------------------------
-          if (
-            typeof allCells[key] === "object" &&
-            allCells[key]["properties"]["Type"] === "api" &&
-            allCells[key]["properties"]["Method"] !== "uitestcase"
-          ) {
+          if (typeof allCells[key] === "object" && allCells[key]["properties"]["Type"] === "api" && allCells[key]["properties"]["Method"] !== "uitestcase") {
             //  console.log(typeof allCells[key]["properties"]["custom_api"]);
             if (allCells[key]["properties"]["custom_api"]) {
               // check if entry exist
               let getEndpointsPack = await axios.get(constants.endpointpacks);
-              let endpoints = await axios.get(constants.endpoints);
+              // let endpoints = await axios.get(constants.endpoints);
               // console.log(endpoints);
 
               let pack_id_found = false;
@@ -1254,22 +996,12 @@ const TestcaseApi = Form.create()(
               let endpoint_id = null;
               // debugger
               for (const pack of getEndpointsPack.data) {
-                if (
-                  allCells[key]["properties"]["Host_url"] ===
-                    pack["host_url"] &&
-                  parseInt(window.location.pathname.split("/")[2]) ===
-                    pack["application"]["id"]
-                ) {
+                if (allCells[key]["properties"]["Host_url"] === pack["host_url"] && parseInt(window.location.pathname.split("/")[2]) === pack["application"]["id"]) {
                   pack_id = pack["id"];
                   pack_id_found = true;
 
                   for (const endpoint of pack["endpoints"]) {
-                    if (
-                      endpoint["endpoint"] ===
-                        allCells[key]["properties"]["Uri"] &&
-                      endpoint["method"] ===
-                        allCells[key]["properties"]["Method"]
-                    ) {
+                    if (endpoint["endpoint"] === allCells[key]["properties"]["Uri"] && endpoint["method"] === allCells[key]["properties"]["Method"]) {
                       endpoint_id = endpoint["id"];
                       endpoint_id_found = true;
                       break;
@@ -1279,8 +1011,6 @@ const TestcaseApi = Form.create()(
                 }
               }
 
-              console.log(endpoint_id);
-
               if (!pack_id_found || pack_id === null) {
                 // entry in endpointpack
                 let body = {
@@ -1289,10 +1019,7 @@ const TestcaseApi = Form.create()(
                   host_url: allCells[key]["properties"]["Host_url"],
                   application: window.location.pathname.split("/")[2],
                 };
-                const post_endpointpack = await axios.post(
-                  `${constants.endpointpacks}`,
-                  body
-                );
+                const post_endpointpack = await axios.post(`${constants.endpointpacks}`, body);
                 pack_id = post_endpointpack.data.id;
               }
 
@@ -1308,10 +1035,7 @@ const TestcaseApi = Form.create()(
                   produces: null,
                   parameters: null,
                 };
-                const post_endpoint = await axios.post(
-                  constants.endpoints,
-                  endpoint_body
-                );
+                const post_endpoint = await axios.post(constants.endpoints, endpoint_body);
                 endpoint_id = post_endpoint.data.id;
               }
 
@@ -1343,10 +1067,7 @@ const TestcaseApi = Form.create()(
     findnode = (allCells, node_name) => {
       for (const key in allCells) {
         if (allCells[key].hasOwnProperty("properties")) {
-          if (
-            allCells[key]["properties"]["Title"] == node_name &&
-            allCells[key]["properties"]["Type"] == "api"
-          ) {
+          if (allCells[key]["properties"]["Title"] == node_name && allCells[key]["properties"]["Type"] == "api") {
             return {
               id: allCells[key]["properties"]["EndpointId"],
               name: allCells[key]["properties"]["Uri"],
@@ -1375,15 +1096,11 @@ const TestcaseApi = Form.create()(
         if (allCells[key].hasOwnProperty("properties")) {
           let properties = allCells[key]["properties"];
           let node_data = {
-            id: allCells[key]["properties"]["EndpointId"]
-              ? allCells[key]["properties"]["EndpointId"]
-              : allCells[key]["id"],
+            id: allCells[key]["properties"]["EndpointId"] ? allCells[key]["properties"]["EndpointId"] : allCells[key]["id"],
             label: properties["Uri"] || properties["Title"],
             title: properties["Description"],
             node_id: allCells[key]["id"],
-            method: allCells[key]["properties"]["Method"]
-              ? allCells[key]["properties"]["Method"]
-              : "",
+            method: allCells[key]["properties"]["Method"] ? allCells[key]["properties"]["Method"] : "",
             // image: url,
             // shape: "image",
             connections: [],
@@ -1430,22 +1147,13 @@ const TestcaseApi = Form.create()(
               application: this.props.location.pathname.split("/")[2],
             };
             if (connection.node_name == "parent") {
-              if (
-                allCells[node.node_id].parent[0] &&
-                allCells[allCells[node.node_id].parent[0]].properties.Type ==
-                  "api"
-              ) {
-                edge.destination =
-                  allCells[
-                    allCells[node.node_id].parent[0]
-                  ].properties.EndpointId;
+              if (allCells[node.node_id].parent[0] && allCells[allCells[node.node_id].parent[0]].properties.Type == "api") {
+                edge.destination = allCells[allCells[node.node_id].parent[0]].properties.EndpointId;
                 edge.node_request = connection.node_request;
                 edge.node_name = connection.node_name;
                 edge.data_key = connection.datakey;
-                edge.destination_label =
-                  allCells[allCells[node.node_id].parent[0]].properties.Uri;
-                edge.destination_method =
-                  allCells[allCells[node.node_id].parent[0]].properties.Method;
+                edge.destination_label = allCells[allCells[node.node_id].parent[0]].properties.Uri;
+                edge.destination_method = allCells[allCells[node.node_id].parent[0]].properties.Method;
                 edges.push(edge);
               }
             } else {
@@ -1576,9 +1284,7 @@ const TestcaseApi = Form.create()(
             Accept: "application/json",
           },
           body: JSON.stringify({
-            query: `{applications(where: { id: "${
-              window.location.pathname.split("/")[2]
-            }" }) {
+            query: `{applications(where: { id: "${window.location.pathname.split("/")[2]}" }) {
             testsuites(where: { suite_name: "default" }) {
               testsessionexecutions {
                 id
@@ -1591,9 +1297,7 @@ const TestcaseApi = Form.create()(
           .then((response) => {
             const apiExecuteBody = {
               id: this.state.graphId,
-              testsessionid:
-                response.data.applications[0].testsuites[0]
-                  .testsessionexecutions[0].id,
+              testsessionid: response.data.applications[0].testsuites[0].testsessionexecutions[0].id,
               testcaseid: window.location.pathname.split("/")[5],
               environment_id: this.state.selected_environment,
             };
@@ -1620,20 +1324,10 @@ const TestcaseApi = Form.create()(
     };
 
     RemoveDynamicClass = () => {
-      let successfull = document.getElementsByClassName(
-        "layout-execution-successfull"
-      );
-      while (successfull.length)
-        successfull[0].className = successfull[0].className.replace(
-          /\blayout-execution-successfull\b/g,
-          ""
-        );
+      let successfull = document.getElementsByClassName("layout-execution-successfull");
+      while (successfull.length) successfull[0].className = successfull[0].className.replace(/\blayout-execution-successfull\b/g, "");
       let fail = document.getElementsByClassName("layout-execution-fail");
-      while (fail.length)
-        fail[0].className = fail[0].className.replace(
-          /\blayout-execution-fail\b/g,
-          ""
-        );
+      while (fail.length) fail[0].className = fail[0].className.replace(/\blayout-execution-fail\b/g, "");
     };
 
     handleCancel = () => {
@@ -1647,14 +1341,7 @@ const TestcaseApi = Form.create()(
 
     RenderSidebar = () => {
       if (this.state.selectedPanel === "api") {
-        return (
-          <ApiSidebar
-            selectedCellData={this.state.selectedCellData}
-            visible={this.state.sidebarModal}
-            handleCancel={this.handleCancel}
-            handleConfirm={this.handleConfirm}
-          />
-        );
+        return <ApiSidebar selectedCellData={this.state.selectedCellData} visible={this.state.sidebarModal} handleCancel={this.handleCancel} handleConfirm={this.handleConfirm} />;
       } else if (this.state.selectedPanel === "controls") {
         return (
           <ControlSidebar
@@ -1682,11 +1369,7 @@ const TestcaseApi = Form.create()(
             handleCancel={this.handleCancel}
             handleConfirm={this.handleConfirm}
             logs={this.state.executionLogs}
-            clearLogs={() =>
-              this.setState({ executionLogs: {}, sidebarModal: false }, () =>
-                this.RemoveDynamicClass()
-              )
-            }
+            clearLogs={() => this.setState({ executionLogs: {}, sidebarModal: false }, () => this.RemoveDynamicClass())}
           />
         );
       }
@@ -1729,12 +1412,7 @@ const TestcaseApi = Form.create()(
 
     setrelationgraph = () => {
       return (
-        <Modal
-          title="Basic Modal"
-          show={this.state.relvisible}
-          onHide={this.handleModalCancel}
-          className="config-modal"
-        >
+        <Modal title="Basic Modal" show={this.state.relvisible} onHide={this.handleModalCancel} className="config-modal">
           <Modal.Header>
             <Modal.Title>Relationship Graph</Modal.Title>
           </Modal.Header>
@@ -1755,11 +1433,7 @@ const TestcaseApi = Form.create()(
 
     conflictConfirmation = () => {
       return (
-        <Modal
-          show={this.state.conflictconfirmation}
-          onHide={this.handleModalCancel}
-          className="cconflict-modal"
-        >
+        <Modal show={this.state.conflictconfirmation} onHide={this.handleModalCancel} className="cconflict-modal">
           <Modal.Body className="cconflict-modal-body">
             <div className="cconflict-modal-body-container">
               <Icon
@@ -1780,10 +1454,7 @@ const TestcaseApi = Form.create()(
               <div onClick={this.handleModalCancel} className="negative-button">
                 <i className="fa fa-close" /> Cancel
               </div>
-              <div
-                onClick={() => this.PostXMLorJSON("graphSave")}
-                className="positive-button"
-              >
+              <div onClick={() => this.PostXMLorJSON("graphSave")} className="positive-button">
                 <i className="fa fa-check" />
                 Save
               </div>
@@ -1796,12 +1467,7 @@ const TestcaseApi = Form.create()(
     setEnvironment = () => {
       const { getFieldDecorator } = this.props.form;
       return (
-        <Modal
-          title="Basic Modal"
-          show={this.state.visible}
-          onHide={this.handleModalCancel}
-          className="config-modal"
-        >
+        <Modal title="Basic Modal" show={this.state.visible} onHide={this.handleModalCancel} className="config-modal">
           <Modal.Header>
             <Modal.Title>Select Environment</Modal.Title>
           </Modal.Header>
@@ -1816,14 +1482,7 @@ const TestcaseApi = Form.create()(
                     },
                   ],
                 })(
-                  <select
-                    className={
-                      this.state.select_env_err
-                        ? "select-env-err select-env"
-                        : "select-env"
-                    }
-                    onChange={this.handleChange}
-                  >
+                  <select className={this.state.select_env_err ? "select-env-err select-env" : "select-env"} onChange={this.handleChange}>
                     <option value="">Select Environment</option>
 
                     {this.state.Environments_list.map((data, index) => {
@@ -1869,11 +1528,7 @@ const TestcaseApi = Form.create()(
                 </div>
               </div>
               <div ref="mxSidebar" className="graph-left-panel">
-                <LeftPanelElements
-                  createDragElement={this.createDragElement}
-                  parentProps={this.props.location.pathname}
-                  selectedPanel={(e) => this.setState({ selectedPanel: e })}
-                />
+                <LeftPanelElements createDragElement={this.createDragElement} parentProps={this.props.location.pathname} selectedPanel={(e) => this.setState({ selectedPanel: e })} />
               </div>
               <div className="dashboard-sidebar-profile-container">
                 <div
@@ -1886,55 +1541,34 @@ const TestcaseApi = Form.create()(
                   }
                 >
                   <img
-                    src={
-                      sessionStorage.getItem("profile")
-                        ? sessionStorage.getItem("profile")
-                        : "http://www.haverhill-ps.org/wp-content/uploads/sites/12/2013/11/user.png"
-                    }
+                    src={sessionStorage.getItem("profile") ? sessionStorage.getItem("profile") : "http://www.haverhill-ps.org/wp-content/uploads/sites/12/2013/11/user.png"}
                     width="100%"
                     height="100%"
                   />
                 </div>
-                <div className="dashboard-sidebar-profile-name">{`Hi, ${sessionStorage.getItem(
-                  "username"
-                )}`}</div>
+                <div className="dashboard-sidebar-profile-name">{`Hi, ${sessionStorage.getItem("username")}`}</div>
                 <Link to="/profile" className="dashboard-sidebar-profile-btn">
                   <i className="fa fa-gear" />
                 </Link>
               </div>
               <div
                 onMouseLeave={() => this.setState({ profileContainer: false })}
-                className={
-                  "hover-header-profile-container animated fadeIn " +
-                  (this.state.profileContainer
-                    ? " hidden-hover-header-profile-container"
-                    : "")
-                }
+                className={"hover-header-profile-container animated fadeIn " + (this.state.profileContainer ? " hidden-hover-header-profile-container" : "")}
               >
                 <div className="hover-header-profile-body">
                   <Link to="/profile" className="hover-header-profile-body-row">
                     My Profile
                   </Link>
-                  <Link
-                    to="/login"
-                    onClick={() => this.logout()}
-                    className="hover-header-profile-body-row"
-                  >
+                  <Link to="/login" onClick={() => this.logout()} className="hover-header-profile-body-row">
                     Logout
                   </Link>
                 </div>
                 <div className="header-border" />
                 <div className="hover-header-profile-header">
-                  <div className="hover-header-profile-header-name">{`Hi, ${sessionStorage.getItem(
-                    "username"
-                  )}`}</div>
+                  <div className="hover-header-profile-header-name">{`Hi, ${sessionStorage.getItem("username")}`}</div>
                   <div className="hover-header-profile-header-profile">
                     <img
-                      src={
-                        sessionStorage.getItem("profile")
-                          ? sessionStorage.getItem("profile")
-                          : "http://www.haverhill-ps.org/wp-content/uploads/sites/12/2013/11/user.png"
-                      }
+                      src={sessionStorage.getItem("profile") ? sessionStorage.getItem("profile") : "http://www.haverhill-ps.org/wp-content/uploads/sites/12/2013/11/user.png"}
                       width="100%"
                       height="100%"
                     />
@@ -1942,33 +1576,17 @@ const TestcaseApi = Form.create()(
                 </div>
               </div>
             </div>
-            <div
-              className="body-container"
-              style={{ overflow: "hidden", height: "100vh" }}
-            >
+            <div className="body-container" style={{ overflow: "hidden", height: "100vh" }}>
               <div className="filter-panel-container">
                 <div className="breadcrumbs-container">
                   <i className="fa fa-map-marker" />
                   <Link to="/">APPLICATIONS</Link>
-                  <div className="breadcrumbs-items">
-                    {this.state.createdGraphData.name ? ">" : ""}
-                  </div>
-                  <Link
-                    to={`/dashboard/${
-                      window.location.pathname.split("/")[2]
-                    }/test-cases`}
-                    className="breadcrumbs-items"
-                  >
+                  <div className="breadcrumbs-items">{this.state.createdGraphData.name ? ">" : ""}</div>
+                  <Link to={`/dashboard/${window.location.pathname.split("/")[2]}/test-cases`} className="breadcrumbs-items">
                     {this.state.createdGraphData.name}
                   </Link>
-                  <div className="breadcrumbs-items">
-                    {this.state.createdGraphData.name ? ">" : ""}
-                  </div>
-                  <div className="breadcrumbs-items">
-                    {this.state.createdGraphData.testcases
-                      ? this.state.createdGraphData.testcases[0].name
-                      : ""}
-                  </div>
+                  <div className="breadcrumbs-items">{this.state.createdGraphData.name ? ">" : ""}</div>
+                  <div className="breadcrumbs-items">{this.state.createdGraphData.testcases ? this.state.createdGraphData.testcases[0].name : ""}</div>
                 </div>
                 <div className="filter-panel-right-part">
                   <div
@@ -1999,10 +1617,7 @@ const TestcaseApi = Form.create()(
                       Run
                     </div>
                   )}
-                  <div
-                    onClick={() => this.PostXMLorJSON("graphSave")}
-                    className="positive-button"
-                  >
+                  <div onClick={() => this.PostXMLorJSON("graphSave")} className="positive-button">
                     <i className="fa fa-save" />
                     Save
                   </div>
