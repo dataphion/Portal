@@ -23,7 +23,7 @@ let spinnerOptions = {
   left: "125px",
   shadow: false,
   hwaccel: false,
-  position: "absolute"
+  position: "absolute",
 };
 
 export default class LeftPanelElements extends React.Component {
@@ -37,18 +37,18 @@ export default class LeftPanelElements extends React.Component {
           endpoints: [
             {
               key: "",
-              value: ""
-            }
-          ]
-        }
+              value: "",
+            },
+          ],
+        },
       ],
       loaded: true,
       activePanel: "api",
-      activeTastcase: "api"
+      activeTastcase: "api",
     };
   }
 
-  Tooltip = tooltip => {
+  Tooltip = (tooltip) => {
     return <Tooltip>{tooltip}</Tooltip>;
   };
 
@@ -62,20 +62,20 @@ export default class LeftPanelElements extends React.Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
+        Accept: "application/json",
       },
       body: JSON.stringify({
-        query: `{endpointpacks(where:{application:{id:"${this.props.parentProps.split("/")[2]}"}}){id,name,endpoints{id,endpoint,method,description,summary}}}`
-      })
+        query: `{endpointpacks(where:{application:{id:"${this.props.parentProps.split("/")[2]}"}}){id,name,endpoints{id,endpoint,method,description,summary}}}`,
+      }),
     })
-      .then(response => response.json())
-      .then(response => {
+      .then((response) => response.json())
+      .then((response) => {
         const formatedPacks = [];
         for (const data of response.data.endpointpacks) {
           let endpoints = []; //for store formated JSON object Array
           for (const api of data.endpoints) {
             //find current index of endpoint(URL) as a key from JSON object Array
-            var index = _.findIndex(endpoints, function(o) {
+            var index = _.findIndex(endpoints, function (o) {
               return o.key == api.endpoint;
             });
             if (index < 0) {
@@ -87,11 +87,11 @@ export default class LeftPanelElements extends React.Component {
               valueArray.push({
                 id: api.id,
                 method: api.method,
-                description: api.description || api.summary
+                description: api.description || api.summary,
               });
               var obj = {
                 key: api.endpoint,
-                value: valueArray
+                value: valueArray,
               };
               //push json object to Main JSON Object Array
               endpoints.push(obj);
@@ -106,7 +106,7 @@ export default class LeftPanelElements extends React.Component {
               value.push({
                 id: api.id,
                 method: api.method,
-                description: api.description || api.summary
+                description: api.description || api.summary,
               });
               //store new object to  JSON object Array
               endpoints[index] = object;
@@ -118,19 +118,19 @@ export default class LeftPanelElements extends React.Component {
             id: data.id,
             name: data.name,
             expanded: false,
-            endpoints: endpoints
+            endpoints: endpoints,
           });
         }
         this.setState({ endpointPacks: formatedPacks, loaded: true });
         this.props.createDragElement();
       })
-      .catch(error => {
+      .catch((error) => {
         Alert.error("Something went wrong");
         console.log(error);
       });
   };
 
-  expandRow = index => {
+  expandRow = (index) => {
     let endpointPacks = this.state.endpointPacks;
     endpointPacks[index]["expanded"] = !endpointPacks[index]["expanded"];
     this.setState({ endpointPacks: endpointPacks });
@@ -167,7 +167,7 @@ export default class LeftPanelElements extends React.Component {
                 Method: Data.method,
                 Type: "api",
                 id: Data.id,
-                custom_api: false
+                custom_api: false,
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api get-method-btn"
             >
@@ -191,7 +191,7 @@ export default class LeftPanelElements extends React.Component {
                 Method: Data.method,
                 Type: "api",
                 id: Data.id,
-                custom_api: false
+                custom_api: false,
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api post-method-btn"
             >
@@ -215,7 +215,7 @@ export default class LeftPanelElements extends React.Component {
                 Method: Data.method,
                 Type: "api",
                 id: Data.id,
-                custom_api: false
+                custom_api: false,
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api put-method-btn"
             >
@@ -239,7 +239,7 @@ export default class LeftPanelElements extends React.Component {
                 Method: Data.method,
                 Type: "api",
                 id: Data.id,
-                custom_api: false
+                custom_api: false,
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api patch-method-btn"
             >
@@ -263,7 +263,7 @@ export default class LeftPanelElements extends React.Component {
                 Method: Data.method,
                 Type: "api",
                 id: Data.id,
-                custom_api: false
+                custom_api: false,
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api delete-method-btn"
             >
@@ -409,7 +409,7 @@ export default class LeftPanelElements extends React.Component {
                   <div
                     value={JSON.stringify({
                       Method: "uitestcase",
-                      Type: "api"
+                      Type: "api",
                     })}
                     className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source uitestcase-bg"
                   >
@@ -425,7 +425,7 @@ export default class LeftPanelElements extends React.Component {
         {this.state.activePanel === "api" && this.state.activeTastcase === "custom-api" ? (
           <div className="custom-api-drag">
             <div className="graph-left-panel-drag-data-container">
-              <Whisper placement="bottom" trigger="click" speaker={this.Tooltip("Drag & Drop")}>
+              <Whisper placement="top" trigger="click" speaker={this.Tooltip("Drag & Drop")}>
                 <div
                   value={JSON.stringify({
                     EndpointPackId: "",
@@ -434,11 +434,12 @@ export default class LeftPanelElements extends React.Component {
                     Method: "",
                     Type: "api",
                     id: "",
-                    custom_api: true
+                    custom_api: true,
                   })}
-                  className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api get-method-btn"
+                  id="rest-api-drag-cls"
+                  className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api get-method-btn rest-api-drag-cls"
                 >
-                  Custom API
+                  Rest API
                 </div>
               </Whisper>
               {/* <div className="graph-left-panel-drag-data-desc" title="description">
@@ -462,7 +463,7 @@ export default class LeftPanelElements extends React.Component {
                   <div
                     value={JSON.stringify({
                       Method: "conditions",
-                      Type: "controls"
+                      Type: "controls",
                     })}
                     className="graph-left-panel-draggable-element graph-left-panel-draggable-element-conditions"
                   >
@@ -478,7 +479,7 @@ export default class LeftPanelElements extends React.Component {
                   <div
                     value={JSON.stringify({
                       Method: "iterator",
-                      Type: "controls"
+                      Type: "controls",
                     })}
                     className="graph-left-panel-draggable-element graph-left-panel-draggable-element-conditions"
                   >
@@ -496,7 +497,7 @@ export default class LeftPanelElements extends React.Component {
                   <div
                     value={JSON.stringify({
                       Method: "assertion",
-                      Type: "controls"
+                      Type: "controls",
                     })}
                     className="graph-left-panel-draggable-element graph-left-panel-draggable-element-conditions"
                   >
@@ -514,7 +515,7 @@ export default class LeftPanelElements extends React.Component {
                   <div
                     value={JSON.stringify({
                       Method: "variable",
-                      Type: "controls"
+                      Type: "controls",
                     })}
                     className="graph-left-panel-draggable-element graph-left-panel-draggable-element-conditions"
                   >
@@ -547,7 +548,7 @@ export default class LeftPanelElements extends React.Component {
                   <div
                     value={JSON.stringify({
                       Method: "mssql",
-                      Type: "source"
+                      Type: "source",
                     })}
                     className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source mssql-bg"
                   >
@@ -561,7 +562,7 @@ export default class LeftPanelElements extends React.Component {
                   <div
                     value={JSON.stringify({
                       Method: "mongodb",
-                      Type: "source"
+                      Type: "source",
                     })}
                     className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source mongodb-bg"
                   >
@@ -575,7 +576,7 @@ export default class LeftPanelElements extends React.Component {
                   <div
                     value={JSON.stringify({
                       Method: "mysql",
-                      Type: "source"
+                      Type: "source",
                     })}
                     className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source mysql-bg"
                   >
@@ -589,7 +590,7 @@ export default class LeftPanelElements extends React.Component {
                   <div
                     value={JSON.stringify({
                       Method: "oracle",
-                      Type: "source"
+                      Type: "source",
                     })}
                     className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source oracle-bg"
                   >
@@ -603,7 +604,7 @@ export default class LeftPanelElements extends React.Component {
                   <div
                     value={JSON.stringify({
                       Method: "rabbitmq",
-                      Type: "source"
+                      Type: "source",
                     })}
                     className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source rabbitmq-bg"
                   >
@@ -617,7 +618,7 @@ export default class LeftPanelElements extends React.Component {
                   <div
                     value={JSON.stringify({
                       Method: "redis",
-                      Type: "source"
+                      Type: "source",
                     })}
                     className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source redis-bg"
                   >
@@ -631,7 +632,7 @@ export default class LeftPanelElements extends React.Component {
                   <div
                     value={JSON.stringify({
                       Method: "postgres",
-                      Type: "source"
+                      Type: "source",
                     })}
                     className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source postgres-bg"
                   >
@@ -645,7 +646,7 @@ export default class LeftPanelElements extends React.Component {
                   <div
                     value={JSON.stringify({
                       Method: "cassandra",
-                      Type: "source"
+                      Type: "source",
                     })}
                     className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source cassandra-bg"
                   >
@@ -653,6 +654,20 @@ export default class LeftPanelElements extends React.Component {
                   </div>
                 </Whisper>
                 <div className="graph-left-panel-drag-data-desc larg-desc">Cassandra</div>
+              </div>
+              <div className="graph-left-panel-drag-data-container">
+                <Whisper placement="bottom" trigger="click" speaker={this.Tooltip("Drag & Drop")}>
+                  <div
+                    value={JSON.stringify({
+                      Method: "kafka",
+                      Type: "source",
+                    })}
+                    className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source kafka-bg"
+                  >
+                    Kafka
+                  </div>
+                </Whisper>
+                <div className="graph-left-panel-drag-data-desc larg-desc">Kafka</div>
               </div>
             </div>
           </div>

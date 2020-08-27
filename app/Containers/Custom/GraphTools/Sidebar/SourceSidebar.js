@@ -20,6 +20,7 @@ const SourceSidebar = Form.create()(
         rabbitmq_type: "",
         publishDataSelected: "None",
         AceEditorValue: [],
+        ExpectedKafkaReponse: [],
         AceEditorValidation: [],
         sourcetype: "",
         source_name: "",
@@ -41,8 +42,12 @@ const SourceSidebar = Form.create()(
     };
 
     RenderBodySelectedMenu = () => {
+      console.log(this.state.publishDataSelected);
       const form = this.props.form;
-      if ((this.state.publishDataSelected === "JSON" || this.state.publishDataSelected === "TEXT") && form.getFieldValue("RabbitmqType") === "pub") {
+      if (
+        ((this.state.publishDataSelected === "JSON" || this.state.publishDataSelected === "TEXT") && form.getFieldValue("RabbitmqType") === "pub") ||
+        ((this.state.publishDataSelected === "JSON" || this.state.publishDataSelected === "TEXT") && form.getFieldValue("KafkaType") === "pub")
+      ) {
         return (
           <AceEditor
             className="animated fadeIn"
@@ -83,6 +88,11 @@ const SourceSidebar = Form.create()(
       if (this.props.selectedCellData.rmqData) {
         this.setState({
           AceEditorValue: this.props.selectedCellData.rmqData.value,
+        });
+      }
+      if (this.props.selectedCellData.ExpectedKafkaReponse) {
+        this.setState({
+          ExpectedKafkaReponse: this.props.selectedCellData.ExpectedKafkaReponse.value,
         });
       }
       this.setState({
@@ -130,7 +140,9 @@ const SourceSidebar = Form.create()(
         DatabaseType: this.props.selectedCellData.Method.value,
         OracleSourceId: form.getFieldValue("OracleSourceId"),
         RabbitmqQueueName: form.getFieldValue("RabbitmqQueueName"),
+        KafkaTopicName: form.getFieldValue("KafkaTopicName"),
         RabbitmqSourceId: form.getFieldValue("RabbitmqSourceId"),
+        KafkaSourceId: form.getFieldValue("KafkaSourceId"),
         MysqlSourceId: form.getFieldValue("MysqlSourceId"),
         MssqlSourceId: form.getFieldValue("MssqlSourceId"),
         MongoSourceId: form.getFieldValue("MongoSourceId"),
@@ -139,6 +151,7 @@ const SourceSidebar = Form.create()(
         CassandraSourceId: form.getFieldValue("CassandraSourceId"),
 
         QueryType: this.state.BodySelectedMenu,
+        publishDataSelected: this.state.publishDataSelected,
         MongoQueryTemplate: form.getFieldValue("MongoQueryTemplate"),
         OracleQueryTemplate: form.getFieldValue("OracleQueryTemplate"),
         MysqlQueryTemplate: form.getFieldValue("MysqlQueryTemplate"),
@@ -148,10 +161,14 @@ const SourceSidebar = Form.create()(
         RedisQueryTemplate: form.getFieldValue("RedisQueryTemplate"),
         WrittenQuery: form.getFieldValue("WrittenQuery"),
         AceEditorValue: this.state.AceEditorValue,
+        ExpectedKafkaReponse: this.state.ExpectedKafkaReponse,
         RabbitmqType: form.getFieldValue("RabbitmqType"),
-        publishDataSelected: this.state.publishDataSelected,
+        KafkaType: form.getFieldValue("KafkaType"),
+        kafkaValidation: form.getFieldValue("kafkaValidation"),
+        KafkaWaitingTime: form.getFieldValue("KafkaWaitingTime"),
+        PollingInterval: form.getFieldValue("PollingInterval"),
+        // ExpectedKafkaReponse: this.state.ExpectedKafkaReponse,
       };
-
 
       if (this.state.sourcetype === "oracle") {
         resp["OracleDatabase"] = this.state.source_name;
@@ -170,7 +187,6 @@ const SourceSidebar = Form.create()(
       } else if (this.state.sourcetype === "cassandra") {
         resp["CassandraDatabase"] = this.state.source_name;
       }
-
 
       this.props.handleConfirm(resp);
 
@@ -192,6 +208,8 @@ const SourceSidebar = Form.create()(
         rabbitmq_type: "",
         publishDataSelected: "None",
         AceEditorValue: [],
+        ExpectedKafkaReponse: [],
+
         AceEditorValidation: [],
         sourcetype: "",
         source_name: "",
@@ -217,6 +235,7 @@ const SourceSidebar = Form.create()(
     };
 
     RenderDatabase = () => {
+      console.log(this.props.selectedCellData.Method.value);
       const { getFieldDecorator } = this.props.form;
       if (this.props.selectedCellData.Method) {
         if (this.props.selectedCellData.Method.value === "oracle") {
@@ -370,28 +389,211 @@ const SourceSidebar = Form.create()(
                     <div className="sidebar-body-regular-row-body-menu">
                       <div
                         onClick={() => this.BodySelectionMenu("None")}
-                        className={
-                          "sidebar-body-regular-row-body-menu-items " +
-                          (this.state.publishDataSelected === "None" ? "sidebar-body-regular-row-body-menu-items-active" : "")
-                        }
+                        className={"sidebar-body-regular-row-body-menu-items " + (this.state.publishDataSelected === "None" ? "sidebar-body-regular-row-body-menu-items-active" : "")}
                       >
                         None
                       </div>
                       <div
                         onClick={() => this.BodySelectionMenu("JSON")}
-                        className={
-                          "sidebar-body-regular-row-body-menu-items " +
-                          (this.state.publishDataSelected === "JSON" ? "sidebar-body-regular-row-body-menu-items-active" : "")
-                        }
+                        className={"sidebar-body-regular-row-body-menu-items " + (this.state.publishDataSelected === "JSON" ? "sidebar-body-regular-row-body-menu-items-active" : "")}
                       >
                         JSON
                       </div>
                       <div
                         onClick={() => this.BodySelectionMenu("TEXT")}
-                        className={
-                          "sidebar-body-regular-row-body-menu-items " +
-                          (this.state.publishDataSelected === "TEXT" ? "sidebar-body-regular-row-body-menu-items-active" : "")
-                        }
+                        className={"sidebar-body-regular-row-body-menu-items " + (this.state.publishDataSelected === "TEXT" ? "sidebar-body-regular-row-body-menu-items-active" : "")}
+                      >
+                        TEXT
+                      </div>
+                    </div>
+                  </div>
+                </Row>
+              ) : (
+                ""
+              )}
+              {this.RenderBodySelectedMenu()}
+            </div>
+          );
+        } else if (this.props.selectedCellData.Method.value === "kafka") {
+          const form = this.props.form;
+
+          return (
+            <div>
+              <Row>
+                <Col xs={12}>
+                  <div className="sidebar-body-regular-row">
+                    <Form.Item label="Select Source">
+                      {getFieldDecorator("KafkaSourceId", {
+                        rules: [
+                          {
+                            required: true,
+                          },
+                        ],
+                        initialValue: this.props.selectedCellData.KafkaSourceId ? this.props.selectedCellData.KafkaSourceId.value : "",
+                      })(
+                        <Select onChange={(val, e) => this.handleSourceChange(val, e, "rabbitmq")}>
+                          {this.state.source.length > 0
+                            ? this.state.source.map((Data, index) => {
+                                if (Data.database_type === "kafka") {
+                                  return (
+                                    <Select.Option key={index} value={Data.id}>
+                                      {Data.source_name}
+                                    </Select.Option>
+                                  );
+                                }
+                              })
+                            : ""}
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </div>
+                </Col>
+                <Col xs={12}>
+                  <div className="sidebar-body-regular-row">
+                    <Form.Item label="Topic Name">
+                      {getFieldDecorator("KafkaTopicName", {
+                        rules: [
+                          {
+                            required: true,
+                            message: "Queue",
+                          },
+                        ],
+                        initialValue: this.props.selectedCellData.KafkaTopicName ? this.props.selectedCellData.KafkaTopicName.value : "",
+                      })(<Input />)}
+                    </Form.Item>
+                  </div>
+                </Col>
+              </Row>
+              <Row className="col-margin">
+                <Col>
+                  <Form.Item label="Type">
+                    {getFieldDecorator("KafkaType", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "Please input your type!",
+                        },
+                      ],
+                      initialValue: this.props.selectedCellData.KafkaType ? this.props.selectedCellData.KafkaType.value : "",
+                    })(
+                      <select className={this.state.rabbitmq_type_err ? "select-env-err select-env" : "select-env"}>
+                        <option value="">select type</option>
+                        <option value="pub">Publisher</option>
+                        <option value="sub">Consumer</option>
+                      </select>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              {form.getFieldValue("KafkaType") === "sub" ? (
+                <div>
+                  <Row className="col-margin">
+                    <Col xs={12}>
+                      <div className="sidebar-body-regular-row">
+                        <Form.Item label="Maximum Timeout(min)">
+                          {getFieldDecorator("KafkaWaitingTime", {
+                            rules: [
+                              {
+                                required: true,
+                              },
+                            ],
+                            initialValue: this.props.selectedCellData.KafkaWaitingTime ? this.props.selectedCellData.KafkaWaitingTime.value : "",
+                          })(<Input type="number" />)}
+                        </Form.Item>
+                      </div>
+                    </Col>
+                    <Col xs={12}>
+                      <div className="sidebar-body-regular-row">
+                        <Form.Item label="Polling Interval(s)">
+                          {getFieldDecorator("PollingInterval", {
+                            rules: [
+                              {
+                                required: true,
+                              },
+                            ],
+                            initialValue: this.props.selectedCellData.PollingInterval ? this.props.selectedCellData.PollingInterval.value : "",
+                          })(<Input type="number" />)}
+                        </Form.Item>
+                      </div>
+                    </Col>
+                  </Row>
+                  <Row className="col-margin">
+                    <Col>
+                      <Form.Item label="Validation">
+                        {getFieldDecorator("kafkaValidation", {
+                          rules: [
+                            {
+                              required: true,
+                              message: "Please input your type!",
+                            },
+                          ],
+                          initialValue: this.props.selectedCellData.kafkaValidation ? this.props.selectedCellData.kafkaValidation.value : "",
+                        })(
+                          <select className={this.state.rabbitmq_type_err ? "select-env-err select-env" : "select-env"}>
+                            <option disabled value="">
+                              Validation Type
+                            </option>
+                            <option value="response">Response Validation</option>
+                            <option value="index">Index validation</option>
+                          </select>
+                        )}
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  {form.getFieldValue("kafkaValidation") === "response" ? (
+                    <Row className="col-margin">
+                      <Col>
+                        <div className="sidebar-body-regular-row ace-editor-container">
+                          <span className="custom-ace-editor-label">Expected Response</span>
+                          <AceEditor
+                            className="animated fadeIn"
+                            mode={this.state.publishDataSelected.toLowerCase()}
+                            theme="monokai"
+                            onValidate={(e) => this.setState({ AceEditorValidation: e })}
+                            onChange={(value) => this.setState({ ExpectedKafkaReponse: value })}
+                            fontSize={14}
+                            showPrintMargin={true}
+                            showGutter={true}
+                            highlightActiveLine={true}
+                            style={{ width: "100%", height: "300px", borderRadius: "10px" }}
+                            value={`${this.state.ExpectedKafkaReponse}`}
+                            setOptions={{
+                              enableBasicAutocompletion: true,
+                              enableLiveAutocompletion: true,
+                              enableSnippets: true,
+                              showLineNumbers: true,
+                              tabSize: 2,
+                            }}
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              ) : (
+                ""
+              )}
+              {form.getFieldValue("KafkaType") === "pub" ? (
+                <Row className="col-margin">
+                  <div className="sidebar-body-regular-row-body-menu-container">
+                    <div className="sidebar-body-regular-row-body-menu">
+                      <div
+                        onClick={() => this.BodySelectionMenu("None")}
+                        className={"sidebar-body-regular-row-body-menu-items " + (this.state.publishDataSelected === "None" ? "sidebar-body-regular-row-body-menu-items-active" : "")}
+                      >
+                        None
+                      </div>
+                      <div
+                        onClick={() => this.BodySelectionMenu("JSON")}
+                        className={"sidebar-body-regular-row-body-menu-items " + (this.state.publishDataSelected === "JSON" ? "sidebar-body-regular-row-body-menu-items-active" : "")}
+                      >
+                        JSON
+                      </div>
+                      <div
+                        onClick={() => this.BodySelectionMenu("TEXT")}
+                        className={"sidebar-body-regular-row-body-menu-items " + (this.state.publishDataSelected === "TEXT" ? "sidebar-body-regular-row-body-menu-items-active" : "")}
                       >
                         TEXT
                       </div>
@@ -741,26 +943,20 @@ const SourceSidebar = Form.create()(
     RenderQuery = () => {
       const { getFieldDecorator } = this.props.form;
       if (this.props.selectedCellData.Method) {
-        if (this.props.selectedCellData.Method.value !== "rabbitmq") {
+        if (this.props.selectedCellData.Method.value !== "rabbitmq" && this.props.selectedCellData.Method.value !== "kafka") {
           return (
             <Collapse.Panel header="QUERY" key="2">
               <div className="sidebar-body-regular-row-body-menu-container">
                 <div className="sidebar-body-regular-row-body-menu">
                   <div
                     onClick={() => this.BodySelectedMenu("QueryTemplate")}
-                    className={
-                      "sidebar-body-regular-row-body-menu-items " +
-                      (this.state.BodySelectedMenu === "QueryTemplate" ? "sidebar-body-regular-row-body-menu-items-active" : "")
-                    }
+                    className={"sidebar-body-regular-row-body-menu-items " + (this.state.BodySelectedMenu === "QueryTemplate" ? "sidebar-body-regular-row-body-menu-items-active" : "")}
                   >
                     Use Template
                   </div>
                   <div
                     onClick={() => this.BodySelectedMenu("WriteQuery")}
-                    className={
-                      "sidebar-body-regular-row-body-menu-items " +
-                      (this.state.BodySelectedMenu === "WriteQuery" ? "sidebar-body-regular-row-body-menu-items-active" : "")
-                    }
+                    className={"sidebar-body-regular-row-body-menu-items " + (this.state.BodySelectedMenu === "WriteQuery" ? "sidebar-body-regular-row-body-menu-items-active" : "")}
                   >
                     Raw Query
                   </div>
@@ -1032,13 +1228,12 @@ const SourceSidebar = Form.create()(
     };
 
     render() {
-
       const { getFieldDecorator } = this.props.form;
       return (
         <Drawer size="md" placement="right" show={this.props.visible} onHide={this.hideModal} onEnter={this.SidebarEnter}>
           <div className="animated fadeIn slow">
             <div className="sidebar-header-container">
-              <div className="sidebar-header-title">Configure Databases</div>
+              <div className="sidebar-header-title">{this.props.selectedCellData.Method && this.props.selectedCellData.Method.value === "kafka" ? "Configure Kafka" : "Configure Database"}</div>
               <div className="sidebar-header-btn-container">
                 <div className="source-register-sidebar-btn-container">
                   <Link
@@ -1048,11 +1243,7 @@ const SourceSidebar = Form.create()(
                     className="source-register-sidebar-btn"
                   >
                     <i className="fa fa-plus" />
-                    {this.props.selectedCellData.Method
-                      ? this.props.selectedCellData.Method.value === "rabbitmq"
-                        ? " Add Queue"
-                        : " Add Source/Query"
-                      : ""}
+                    {this.props.selectedCellData.Method ? (this.props.selectedCellData.Method.value === "rabbitmq" ? " Add Queue" : " Add Source/Query") : ""}
                   </Link>
                 </div>
                 <div onClick={this.hideModal} className="sidebar-header-btn-close">
@@ -1089,9 +1280,14 @@ const SourceSidebar = Form.create()(
                   defaultActiveKey={["1", "2"]}
                   expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
                 >
-                  <Collapse.Panel header="DATABASES" key="1">
-                    {this.RenderDatabase()}
-                  </Collapse.Panel>
+                  {this.props.selectedCellData.Method && this.props.selectedCellData.Method.value === "kafka" ? (
+                    <div style={{ padding: 20 }}>{this.RenderDatabase()}</div>
+                  ) : (
+                    <Collapse.Panel header="DATABASES" key="1">
+                      {this.RenderDatabase()}
+                    </Collapse.Panel>
+                  )}
+
                   <div className="sidebar-body-divider" />
                   {this.RenderQuery()}
                 </Collapse>

@@ -29,8 +29,11 @@ export default class SourceCell {
       SourceCell.setAttribute("class", "source-cell mssql-source-cell");
       SourceCellTitle.innerHTML = cell.getAttribute("PostgresDatabase", "");
     } else if (cell.getAttribute("Method").toLowerCase() === "cassandra") {
-      SourceCell.setAttribute("class", "source-cell mssql-source-cell");
+      SourceCell.setAttribute("class", "source-cell cassandra-source-cell");
       SourceCellTitle.innerHTML = cell.getAttribute("CassandraDatabase", "");
+    } else if (cell.getAttribute("Method").toLowerCase() === "kafka") {
+      SourceCell.setAttribute("class", "source-cell kafka-source-cell");
+      SourceCellTitle.innerHTML = cell.getAttribute("Title", "");
     }
     SourceCellTitle.setAttribute("class", "source-cell-title");
 

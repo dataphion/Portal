@@ -20,9 +20,13 @@ const AddDataSources = Form.create()(
           { label: "Postgres", value: "postgres" },
           {
             label: "Cassandra",
-            value: "cassandra"
-          }
-        ]
+            value: "cassandra",
+          },
+          {
+            label: "Kafka",
+            value: "kafka",
+          },
+        ],
       };
     }
 
@@ -36,14 +40,14 @@ const AddDataSources = Form.create()(
         password: form.getFieldValue("Password"),
         database: form.getFieldValue("Database"),
         queue_name: form.getFieldValue("QueueName"),
-        database_type: this.props.DatabaseType
+        database_type: this.props.DatabaseType,
       };
     };
 
     testSourceConnection = () => {
       const form = this.props.form;
       let error = false;
-      form.validateFields(err => {
+      form.validateFields((err) => {
         if (err) {
           error = true;
           return Alert.warning("Please fill required fields.");
@@ -56,7 +60,7 @@ const AddDataSources = Form.create()(
       const formData = this.getCurrentData();
       axios
         .post(constants.dbregistrationsCheck, formData)
-        .then(response => {
+        .then((response) => {
           if (response.data.status === "success") {
             Alert.success("Connection has been established successfully.");
           } else {
@@ -75,7 +79,7 @@ const AddDataSources = Form.create()(
             }
           }
         })
-        .catch(error => {
+        .catch((error) => {
           Alert.error("Something went wrong");
         });
     };
@@ -83,7 +87,7 @@ const AddDataSources = Form.create()(
     handleSave = () => {
       const form = this.props.form;
       let error = false;
-      form.validateFields(err => {
+      form.validateFields((err) => {
         if (err) {
           error = true;
           return Alert.warning("Please fill required fields.");
@@ -97,10 +101,10 @@ const AddDataSources = Form.create()(
         type: this.props.DatabaseType,
         name: form.getFieldValue("SourceName"),
         description: form.getFieldValue("description"),
-        application: window.location.pathname.split("/")[2]
+        application: window.location.pathname.split("/")[2],
       };
 
-      axios.post(constants.sourceregistration, data).then(response => {
+      axios.post(constants.sourceregistration, data).then((response) => {
         this.props.ModalCancel();
         this.props.updateData();
       });
@@ -150,7 +154,7 @@ const AddDataSources = Form.create()(
                     <label className="data-source-label">Select Data Sources</label>
                     <span className="required-field">*</span>
                   </div>
-                  <select autoFocus id="source-database" value={this.props.DatabaseType} className="source-database-option" onChange={e => this.props.SelectDatabase(e)}>
+                  <select autoFocus id="source-database" value={this.props.DatabaseType} className="source-database-option" onChange={(e) => this.props.SelectDatabase(e)}>
                     <option disabled value="selected_data_source" selected>
                       Select Data Source
                     </option>
@@ -172,20 +176,20 @@ const AddDataSources = Form.create()(
                 {getFieldDecorator("SourceName", {
                   rules: [
                     {
-                      required: true
-                    }
+                      required: true,
+                    },
                   ],
-                  initialValue: Object.keys(this.props.UpdateRequestData).length > 0 ? this.props.UpdateRequestData.source_name : ""
+                  initialValue: Object.keys(this.props.UpdateRequestData).length > 0 ? this.props.UpdateRequestData.source_name : "",
                 })(<Input />)}
               </Form.Item>
               <Form.Item label="Description">
                 {getFieldDecorator("description", {
                   rules: [
                     {
-                      required: true
-                    }
+                      required: true,
+                    },
                   ],
-                  initialValue: Object.keys(this.props.UpdateRequestData).length > 0 ? this.props.UpdateRequestData.description : ""
+                  initialValue: Object.keys(this.props.UpdateRequestData).length > 0 ? this.props.UpdateRequestData.description : "",
                 })(<TextArea rows={4} />)}
               </Form.Item>
               {/* <Form.Item label="IP">

@@ -492,6 +492,8 @@ const TestcaseApi = Form.create()(
                   ? "PostgresDatabase"
                   : cell.getAttribute("DatabaseType") === "cassandra"
                   ? "CassandraDatabase"
+                  : cell.getAttribute("DatabaseType") === "kafka"
+                  ? "KafkaTopicName"
                   : ""
               ) +
               "</div>" +
@@ -821,10 +823,18 @@ const TestcaseApi = Form.create()(
         this.applyHandler(graph, cell, "OracleSourceId", fields.OracleSourceId);
         this.applyHandler(graph, cell, "OracleDatabase", fields.OracleDatabase);
         this.applyHandler(graph, cell, "RabbitmqSourceId", fields.RabbitmqSourceId);
+        this.applyHandler(graph, cell, "KafkaSourceId", fields.KafkaSourceId);
         this.applyHandler(graph, cell, "RabbitmqQueueName", fields.RabbitmqQueueName);
+        this.applyHandler(graph, cell, "KafkaTopicName", fields.KafkaTopicName);
         this.applyHandler(graph, cell, "RabbitmqType", fields.RabbitmqType);
+        this.applyHandler(graph, cell, "KafkaType", fields.KafkaType);
+        this.applyHandler(graph, cell, "kafkaValidation", fields.kafkaValidation);
+        this.applyHandler(graph, cell, "KafkaWaitingTime", fields.KafkaWaitingTime);
+        this.applyHandler(graph, cell, "PollingInterval", fields.PollingInterval);
         this.applyHandler(graph, cell, "rmqData", fields.AceEditorValue);
+        this.applyHandler(graph, cell, "ExpectedKafkaReponse", fields.ExpectedKafkaReponse);
         this.applyHandler(graph, cell, "publishDataSelected", fields.publishDataSelected);
+
         this.applyHandler(graph, cell, "MysqlSourceId", fields.MysqlSourceId);
         this.applyHandler(graph, cell, "MysqlDatabase", fields.MysqlDatabase);
         this.applyHandler(graph, cell, "MssqlSourceId", fields.MssqlSourceId);
@@ -833,6 +843,7 @@ const TestcaseApi = Form.create()(
         this.applyHandler(graph, cell, "MongoDatabase", fields.MongoDatabase);
         this.applyHandler(graph, cell, "PostgresDatabase", fields.PostgresDatabase);
         this.applyHandler(graph, cell, "CassandraDatabase", fields.CassandraDatabase);
+        this.applyHandler(graph, cell, "KafkaTopicName", fields.KafkaTopicName);
         this.applyHandler(graph, cell, "PostgresSourceId", fields.PostgresSourceId);
         this.applyHandler(graph, cell, "CassandraSourceId", fields.CassandraSourceId);
 

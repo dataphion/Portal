@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background: #222f3e;
+  background: #293a65;
   height: 40px;
   position: sticky;
   top: 0;
@@ -90,6 +90,18 @@
     -webkit-box-shadow: inset 0 0 0px 9999px #203752;
     -webkit-text-fill-color: #ffffff;
   }
+}
+
+#rest-api-drag-cls {
+  border: 1px solid white !important;
+  width: 200px !important;
+  height: 38px !important;
+  border-radius: 3px !important;
+}
+
+.rest-api-drag-cls:hover {
+  background: linear-gradient(90deg, rgb(109, 21, 185), rgb(129, 82, 234)) !important;
+  color: white !important;
 }
 
 .graph-left-panel-drag-container {
@@ -264,6 +276,12 @@
         background-repeat: no-repeat !important;
         background-size: 80% 80% !important;
         background-image: url("../../../Images/Cassandra_logo.svg") !important;
+      }
+      .kafka-bg {
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+        background-size: 80% 80% !important;
+        background-image: url("../../../Images/kafka-bg.png") !important;
       }
       .mongodb-bg {
         background-position: center !important;

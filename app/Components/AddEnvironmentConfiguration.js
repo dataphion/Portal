@@ -128,11 +128,7 @@ const AddEnvironmentConfiguration = Form.create()(
                   initialValue: this.props.editConfigurationData ? this.props.editConfigurationData.env : "",
                 })(
                   <select
-                    className={
-                      this.props.form.getFieldValue("environment") === "" || this.props.form.getFieldValue("environment") === undefined
-                        ? "select-env-err select-env"
-                        : "select-env"
-                    }
+                    className={this.props.form.getFieldValue("environment") === "" || this.props.form.getFieldValue("environment") === undefined ? "select-env-err select-env" : "select-env"}
                     onChange={this.handleChange}
                   >
                     <option value="">Select Environment</option>
@@ -212,7 +208,7 @@ const AddEnvironmentConfiguration = Form.create()(
               ) : (
                 ""
               )}
-              {this.props.record["type"] !== "rabbitmq" ? (
+              {this.props.record["type"] !== "rabbitmq" && this.props.record["type"] !== "kafka" ? (
                 <Col xs={12} className="input-forms">
                   <Form.Item label="Database">
                     {getFieldDecorator("Database", {
@@ -364,7 +360,7 @@ const AddEnvironmentConfiguration = Form.create()(
           );
         } else {
           return (
-            <div onClick={(e) => this.testSourceConnection(e, "update")} className="positive-button">
+            <div onClick={(e) => this.handleSave(e)} className="positive-button">
               <i className="fa fa-check" />
               Save
             </div>

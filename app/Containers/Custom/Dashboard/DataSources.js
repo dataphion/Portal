@@ -49,17 +49,21 @@ export default class DataSources extends React.Component {
         { label: "Postgres", value: "postgres" },
         {
           label: "Cassandra",
-          value: "cassandra"
-        }
-      ]
+          value: "cassandra",
+        },
+        {
+          label: "Kafka",
+          value: "kafka",
+        },
+      ],
     };
   }
 
-  onExpandedRowsChange = rows => {
+  onExpandedRowsChange = (rows) => {
     let current_row = rows.reverse();
 
     this.setState({
-      expandedRowKeys: [current_row[0]]
+      expandedRowKeys: [current_row[0]],
     });
   };
 
@@ -76,7 +80,7 @@ export default class DataSources extends React.Component {
 
   getEnvironments = () => {
     let _this = this;
-    axios.get(constants.environments).then(environment => {
+    axios.get(constants.environments).then((environment) => {
       let list = [];
       if (environment["status"] === 200) {
         for (let env of environment["data"]) {
@@ -95,27 +99,27 @@ export default class DataSources extends React.Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
+        Accept: "application/json",
       },
       body: JSON.stringify({
-        query: `{dbregistrations(where:{database_type:"${this.state.SelectedDatabaseBtn}"}){id,source_name,ip,port,username,database,queue_name,}}`
-      })
+        query: `{dbregistrations(where:{database_type:"${this.state.SelectedDatabaseBtn}"}){id,source_name,ip,port,username,database,queue_name,}}`,
+      }),
     })
-      .then(response => response.json())
-      .then(response => {
+      .then((response) => response.json())
+      .then((response) => {
         this.setState({
           loader: false,
-          sourcesData: response.data.dbregistrations
+          sourcesData: response.data.dbregistrations,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         Alert.error("Something went wrong");
       });
   };
 
   getSourceRegistrationsDetails = () => {
     this.setState({ loader: true });
-    axios.get(`${constants.application}/${window.location.pathname.split("/")[2]}`).then(response => {
+    axios.get(`${constants.application}/${window.location.pathname.split("/")[2]}`).then((response) => {
       let results = [];
       // debugger
       for (let i in response.data.sourceregistrations) {
@@ -125,7 +129,7 @@ export default class DataSources extends React.Component {
             id: response.data.sourceregistrations[i]["id"],
             source_name: response.data.sourceregistrations[i]["name"],
             type: response.data.sourceregistrations[i]["type"],
-            description: response.data.sourceregistrations[i]["description"]
+            description: response.data.sourceregistrations[i]["description"],
           });
       }
 
@@ -133,26 +137,26 @@ export default class DataSources extends React.Component {
     });
   };
 
-  sourceEdit = id => {
+  sourceEdit = (id) => {
     fetch(constants.graphql, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
+        Accept: "application/json",
       },
       body: JSON.stringify({
-        query: `{dbregistrations(where:{id:"${id}"}){id,source_name,ip,port,username,password,database,queue_name,database_type}}`
-      })
+        query: `{dbregistrations(where:{id:"${id}"}){id,source_name,ip,port,username,password,database,queue_name,database_type}}`,
+      }),
     })
-      .then(response => response.json())
-      .then(response => {
+      .then((response) => response.json())
+      .then((response) => {
         this.setState({
           UpdateRequestData: response.data.dbregistrations[0],
           DatabaseType: response.data.dbregistrations[0].database_type,
-          ModalOpen: true
+          ModalOpen: true,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         Alert.error("Something went wrong");
       });
   };
@@ -166,7 +170,7 @@ export default class DataSources extends React.Component {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json"
+          Accept: "application/json",
         },
         body: JSON.stringify({
           query: `query{
@@ -175,11 +179,11 @@ export default class DataSources extends React.Component {
                   id
                 }
               }
-            }`
-        })
+            }`,
+        }),
       })
-        .then(response => response.json())
-        .then(response => {
+        .then((response) => response.json())
+        .then((response) => {
           for (let db of response.data.sourceregistration.dbregistrations) {
             //  delete all DBs inside this source
             axios.delete(`${constants.dbregistrations}/${db["id"]}`);
@@ -187,7 +191,7 @@ export default class DataSources extends React.Component {
           //  delete source
           axios.delete(`${constants.sourceregistration}/${this.state.deletion_id}`);
           let _this = this;
-          setTimeout(function() {
+          setTimeout(function () {
             _this.getSourceRegistrationsDetails();
             _this.setState({ deleteConfirmation: false, loader: false });
             Alert.success("Successfully deleted!");
@@ -200,7 +204,7 @@ export default class DataSources extends React.Component {
 
       // update rows after deletion
       // settimeout used to fetch updated data from DB, as it takes some time to update database
-      setTimeout(function() {
+      setTimeout(function () {
         _this.renderSubTable(_this.state.record_expanded_src["expanded"], _this.state.record_expanded_src["record"]);
         _this.setState({ loader: false });
         Alert.success("Successfully deleted!");
@@ -210,10 +214,10 @@ export default class DataSources extends React.Component {
     }
   };
 
-  SelectedDatabaseBtn = e => {
+  SelectedDatabaseBtn = (e) => {
     console.log(e.target.value);
 
-    this.setState({ SelectedDatabaseBtn: e.target.value }, function() {
+    this.setState({ SelectedDatabaseBtn: e.target.value }, function () {
       // this.getSourceRegistrations();
       this.getSourceRegistrationsDetails();
     });
@@ -223,7 +227,7 @@ export default class DataSources extends React.Component {
     // store expanded row
     let record_expanded_row = {
       expanded: expanded,
-      record: record
+      record: record,
     };
 
     sessionStorage.setItem("source_type", record["type"]);
@@ -237,7 +241,7 @@ export default class DataSources extends React.Component {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json"
+          Accept: "application/json",
         },
         body: JSON.stringify({
           query: `query{
@@ -261,11 +265,11 @@ export default class DataSources extends React.Component {
                   }
                 }
               }
-            }`
-        })
+            }`,
+        }),
       })
-        .then(response => response.json())
-        .then(response => {
+        .then((response) => response.json())
+        .then((response) => {
           for (let reg of response["data"]["sourceregistration"]["dbregistrations"]) {
             let envi = "";
             for (let env of this.state.Environments_list) {
@@ -278,7 +282,7 @@ export default class DataSources extends React.Component {
                   database: reg["database"],
                   Queuename: reg["queue_name"],
                   environment: envi,
-                  id: reg["id"]
+                  id: reg["id"],
                 });
               }
             }
@@ -413,7 +417,7 @@ export default class DataSources extends React.Component {
                   _this.props.parentData.history.push({
                     pathname: `data-sources/query/${id}`,
                     parentData: _this.props,
-                    source_type: _this.state.database_type
+                    source_type: _this.state.database_type,
                   });
                 }}
               >
@@ -425,7 +429,7 @@ export default class DataSources extends React.Component {
                 className="table-action-btn"
                 onClick={() => {
                   let id = node["parent"]["parent"]["parent"]["children"][4]["children"][0]["data"] || node["parent"]["parent"]["parent"]["children"][5]["children"][0]["data"];
-                  axios.get(`${constants.dbregistrations}/${id}`).then(response => {
+                  axios.get(`${constants.dbregistrations}/${id}`).then((response) => {
                     let data = response["data"];
 
                     let editConfigurationData = {
@@ -436,20 +440,20 @@ export default class DataSources extends React.Component {
                       username: data["username"],
                       database: data["database"],
                       sourceregistration: data["sourceregistration"]["id"],
-                      update_id: id
+                      update_id: id,
                     };
                     let record = {
                       description: data["sourceregistration"]["description"],
                       id: data["sourceregistration"]["id"],
 
                       source_name: data["sourceregistration"]["name"],
-                      type: data["sourceregistration"]["type"]
+                      type: data["sourceregistration"]["type"],
                     };
                     _this.setState({
                       ConfigModalOpen: true,
                       // db_modification_id: id
                       editConfigurationData: editConfigurationData,
-                      opened_record: record
+                      opened_record: record,
                     });
                   });
                 }}
@@ -504,7 +508,7 @@ export default class DataSources extends React.Component {
           // this.setState({expandedRowKeys: []})
           expended_rows = [];
           return a.source_name.length - b.source_name.length;
-        }
+        },
       },
       {
         sorter: true,
@@ -514,7 +518,7 @@ export default class DataSources extends React.Component {
         sorter: (a, b) => {
           expended_rows = [];
           return a.type.length - b.type.length;
-        }
+        },
       },
       {
         sorter: true,
@@ -524,7 +528,7 @@ export default class DataSources extends React.Component {
         sorter: (a, b) => {
           expended_rows = [];
           a.description.length - b.description.length;
-        }
+        },
       },
       {
         title: "Action",
@@ -536,11 +540,11 @@ export default class DataSources extends React.Component {
               <Whisper placement="top" trigger="hover" speaker={<Tooltip>Configuration</Tooltip>}>
                 <div
                   className="table-action-btn"
-                  onClick={e => {
+                  onClick={(e) => {
                     this.setState({
                       editConfigurationData: {},
                       ConfigModalOpen: true,
-                      opened_record: record
+                      opened_record: record,
                     });
                   }}
                 >
@@ -550,7 +554,7 @@ export default class DataSources extends React.Component {
               <Whisper placement="top" trigger="hover" speaker={<Tooltip>Delete</Tooltip>}>
                 <div
                   className="table-action-btn"
-                  onClick={e => {
+                  onClick={(e) => {
                     this.deletePopUp(record["id"], "delete-source");
                   }}
                 >
@@ -559,8 +563,8 @@ export default class DataSources extends React.Component {
               </Whisper>
             </div>
           );
-        }
-      }
+        },
+      },
     ];
 
     return (
@@ -579,7 +583,7 @@ export default class DataSources extends React.Component {
                   this.setState({
                     ModalOpen: true,
                     UpdateRequestData: {},
-                    DatabaseType: this.state.SelectedDatabaseBtn
+                    DatabaseType: this.state.SelectedDatabaseBtn,
                   })
                 }
                 className="positive-button"
@@ -597,7 +601,7 @@ export default class DataSources extends React.Component {
                   <div className="label-required-box filter-source-container">
                     <label className="data-source-label filter-source-label">Filter Data Sources</label>
                   </div>
-                  <select autoFocus className="source-database-filter" value={this.state.SelectedDatabaseBtn} onChange={e => this.SelectedDatabaseBtn(e)}>
+                  <select autoFocus className="source-database-filter" value={this.state.SelectedDatabaseBtn} onChange={(e) => this.SelectedDatabaseBtn(e)}>
                     <option disabled value="selected_data_source" selected>
                       Filter
                     </option>
@@ -664,7 +668,7 @@ export default class DataSources extends React.Component {
                   <div className="testcase-filter-panel-search-btn">
                     <i className="fa fa-search" />
                   </div>
-                  <input autoFocus type="text" placeholder="Search testcases here" name="search" value={this.state.searchText} onChange={e => this.setState({ searchText: e.target.value })} />
+                  <input autoFocus type="text" placeholder="Search testcases here" name="search" value={this.state.searchText} onChange={(e) => this.setState({ searchText: e.target.value })} />
                 </div>
               </div>
               <div className="testcases-table">
@@ -672,7 +676,7 @@ export default class DataSources extends React.Component {
                   dataSource={this.state.table_sourcesData}
                   columns={columns}
                   // rowKey="id"
-                  expandedRowRender={record => (
+                  expandedRowRender={(record) => (
                     <div
                       className="content"
                       // dangerouslySetInnerHTML={{ __html: this.state.html }}
@@ -692,7 +696,7 @@ export default class DataSources extends React.Component {
           updateData={this.getSourceRegistrationsDetails}
           ModalOpen={this.state.ModalOpen}
           DatabaseType={this.state.DatabaseType}
-          SelectDatabase={e => {
+          SelectDatabase={(e) => {
             console.log("database type ---->", e.target.value);
 
             this.setState({ DatabaseType: e.target.value });
@@ -711,7 +715,7 @@ export default class DataSources extends React.Component {
             let _this = this;
             if (this.state.record_expanded_src.hasOwnProperty("expanded")) {
               this.setState({ loader: true });
-              setTimeout(function() {
+              setTimeout(function () {
                 // re-render subtable
                 _this.renderSubTable(_this.state.record_expanded_src["expanded"], _this.state.record_expanded_src["record"]);
                 _this.setState({ loader: false });
