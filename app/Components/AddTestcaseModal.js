@@ -101,10 +101,7 @@ const AddTestcaseModal = Form.create()(
                   description: form.getFieldValue("testcaseDescription"),
                   app_id: window.location.pathname.split("/")[2],
                   feature_id: this.state.addNewFeature ? featureReq.data.id : form.getFieldValue("feature"),
-                  url:
-                    form.getFieldValue("url").split("http://")[1] || form.getFieldValue("url").split("https://")[1]
-                      ? form.getFieldValue("url")
-                      : `http://${form.getFieldValue("url")}`,
+                  url: form.getFieldValue("url").split("http://")[1] || form.getFieldValue("url").split("https://")[1] ? form.getFieldValue("url") : `http://${form.getFieldValue("url")}`,
                 };
                 this.triggerExtension(message);
                 this.onHide();
@@ -117,9 +114,9 @@ const AddTestcaseModal = Form.create()(
                     id: window.location.pathname.split("/")[2],
                   },
                   feature: {
-                    // id: this.state.addNewFeature ? featureReq.data.id : this.props.features.find(o => o.id === form.getFieldValue("feature")).id
+                    id: this.state.addNewFeature ? featureReq.data.id : this.props.features.find((o) => o.id === form.getFieldValue("feature")).id,
 
-                    id: this.state.addNewFeature ? featureReq.data.id : this.props.features.find((o) => o.name === form.getFieldValue("feature")).id,
+                    // id: this.state.addNewFeature ? featureReq.data.id : this.props.features.find((o) => o.name === form.getFieldValue("feature")).id,
                   },
                 };
                 await axios.post(constants.testcases, testcaseData);
@@ -198,10 +195,7 @@ const AddTestcaseModal = Form.create()(
           </Modal.Header>
           <Modal.Body>
             <div className="sr-form-button-container-row" style={{ justifyContent: "center" }}>
-              <div
-                onClick={() => this.props.modalTestcaseSelected("ui")}
-                className={"sr-form-button-container " + (this.props.modalTestcaseType === "ui" ? "sr-form-button-bg" : "")}
-              >
+              <div onClick={() => this.props.modalTestcaseSelected("ui")} className={"sr-form-button-container " + (this.props.modalTestcaseType === "ui" ? "sr-form-button-bg" : "")}>
                 <div
                   className="fa fa-desktop"
                   style={{
@@ -210,18 +204,9 @@ const AddTestcaseModal = Form.create()(
                     color: this.props.modalTestcaseType === "ui" ? "#fff" : "",
                   }}
                 />
-                <div
-                  className={
-                    "sr-form-button-title " + (this.props.modalTestcaseType === "ui" ? "sr-form-button-title-white" : "sr-form-button-title-black")
-                  }
-                >
-                  UI
-                </div>
+                <div className={"sr-form-button-title " + (this.props.modalTestcaseType === "ui" ? "sr-form-button-title-white" : "sr-form-button-title-black")}>UI</div>
               </div>
-              <div
-                onClick={() => this.props.modalTestcaseSelected("api")}
-                className={"sr-form-button-container " + (this.props.modalTestcaseType === "api" ? "sr-form-button-bg" : "")}
-              >
+              <div onClick={() => this.props.modalTestcaseSelected("api")} className={"sr-form-button-container " + (this.props.modalTestcaseType === "api" ? "sr-form-button-bg" : "")}>
                 <div
                   className="fa fa-rocket"
                   style={{
@@ -230,18 +215,9 @@ const AddTestcaseModal = Form.create()(
                     color: this.props.modalTestcaseType === "api" ? "#fff" : "",
                   }}
                 />
-                <div
-                  className={
-                    "sr-form-button-title " + (this.props.modalTestcaseType === "api" ? "sr-form-button-title-white" : "sr-form-button-title-black")
-                  }
-                >
-                  API
-                </div>
+                <div className={"sr-form-button-title " + (this.props.modalTestcaseType === "api" ? "sr-form-button-title-white" : "sr-form-button-title-black")}>API</div>
               </div>
-              <div
-                onClick={() => this.props.modalTestcaseSelected("mobile")}
-                className={"sr-form-button-container " + (this.props.modalTestcaseType === "mobile" ? "sr-form-button-bg" : "")}
-              >
+              <div onClick={() => this.props.modalTestcaseSelected("mobile")} className={"sr-form-button-container " + (this.props.modalTestcaseType === "mobile" ? "sr-form-button-bg" : "")}>
                 <div
                   className="fa fa-mobile"
                   style={{
@@ -250,14 +226,7 @@ const AddTestcaseModal = Form.create()(
                     color: this.props.modalTestcaseType === "mobile" ? "#fff" : "",
                   }}
                 />
-                <div
-                  className={
-                    "sr-form-button-title " +
-                    (this.props.modalTestcaseType === "mobile" ? "sr-form-button-title-white" : "sr-form-button-title-black")
-                  }
-                >
-                  Mobile
-                </div>
+                <div className={"sr-form-button-title " + (this.props.modalTestcaseType === "mobile" ? "sr-form-button-title-white" : "sr-form-button-title-black")}>Mobile</div>
               </div>
             </div>
             <Form layout="vertical">

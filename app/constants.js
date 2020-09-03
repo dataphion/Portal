@@ -46,6 +46,7 @@ const constants = {
   flows: host + "api/flows",
   graphql: host + "api/graphql",
   dbregistrationsCheck: host + "api/dbregistrations/check",
+  kafkaoffset: host + "api/dbregistrations/check",
   executequery: host + "api/dbregistrations/execute",
   sourceregistration: host + "api/sourceregistrations",
   application: host + "api/applications",

@@ -17,6 +17,7 @@ import socketIOClient from "socket.io-client";
 import { Form, Input } from "antd";
 import { Icon } from "rsuite";
 import Graph from "react-graph-vis";
+// var kafka = require("kafka-node");
 import {
   mxGraph,
   mxGraphHandler,
@@ -40,6 +41,7 @@ import {
   mxCodec,
   mxCellHighlight,
 } from "mxgraph-js";
+import { reject } from "lodash";
 const undoManager = new mxUndoManager();
 var ALLOW_EDGE = true;
 
@@ -781,11 +783,27 @@ const TestcaseApi = Form.create()(
       }
     };
 
-    handleConfirm = (fields) => {
-      // console.log(fields.Host_url);
+    getKafkaOffset = async (details) => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          let get_source_details = await axios.get(`${constants.dbregistrations}/${details.KafkaSourceId}`);
+          let body = { kafkaTopic: details.KafkaTopicName, ip: get_source_details.data.ip, port: get_source_details.data.port, username: "", password: "", database_type: "kafkaOoffsetcheck" };
+          let get_offset = await axios.post(`${constants.kafkaoffset}`, body);
+          resolve(get_offset.data.offset_value);
+        } catch (error) {
+          console.log(error);
+          reject(error);
+        }
+      });
+    };
+
+    handleConfirm = async (fields) => {
+      // console.log(fields.KafkaType);
+      // console.log(fields.KafkaSourceId);
 
       const { graph } = this.state;
       const cell = graph.getSelectionCell();
+
       this.applyHandler(graph, cell, "Title", fields.Title);
       this.applyHandler(graph, cell, "Description", fields.Description);
       if (cell.getAttribute("Type") === "api") {
@@ -818,6 +836,15 @@ const TestcaseApi = Form.create()(
           this.applyHandler(graph, cell, "VariableAdd", JSON.stringify(fields.VariableAdd));
         }
       } else if (cell.getAttribute("Type") === "source") {
+        // let latestOffset = 0;
+        // if (fields.KafkaType === "sub") {
+        //   //   // GET CURRENT OFFSET FOR KAFKA TOPIC
+        //   let get_offset = await this.getKafkaOffset(fields.KafkaSourceId);
+        //   console.log("get_source_details ----", get_offset);
+        //   latestOffset = get_offset;
+        // }
+        // console.log("Consumer current offset: " + latestOffset);
+        // this.applyHandler(graph, cell, "offsetValue", latestOffset);
         this.applyHandler(graph, cell, "AceEditorValue", JSON.stringify(fields.AceEditorValue));
         this.applyHandler(graph, cell, "DatabaseType", fields.DatabaseType);
         this.applyHandler(graph, cell, "OracleSourceId", fields.OracleSourceId);
@@ -831,6 +858,7 @@ const TestcaseApi = Form.create()(
         this.applyHandler(graph, cell, "kafkaValidation", fields.kafkaValidation);
         this.applyHandler(graph, cell, "KafkaWaitingTime", fields.KafkaWaitingTime);
         this.applyHandler(graph, cell, "PollingInterval", fields.PollingInterval);
+        this.applyHandler(graph, cell, "ExpectedIncrement", fields.ExpectedIncrement);
         this.applyHandler(graph, cell, "rmqData", fields.AceEditorValue);
         this.applyHandler(graph, cell, "ExpectedKafkaReponse", fields.ExpectedKafkaReponse);
         this.applyHandler(graph, cell, "publishDataSelected", fields.publishDataSelected);
@@ -865,6 +893,7 @@ const TestcaseApi = Form.create()(
     };
 
     applyHandler = (graph, cell, name, newValue) => {
+      // console.log("apply handler ----->", cell, name, newValue);
       graph.getModel().beginUpdate();
       try {
         const edit = new mxCellAttributeChange(cell, name, newValue);
@@ -1238,6 +1267,34 @@ const TestcaseApi = Form.create()(
       let getXML = encoder.encode(graph.getModel());
       //Get all graph XML
       let graphXML = mxUtils.getXml(getXML);
+
+      console.log("allcells --->", allCells);
+      for (const prop in allCells) {
+        if (allCells[prop].hasOwnProperty("properties")) {
+          if (allCells[prop]["properties"]["KafkaType"]) {
+            let current_offset = 0;
+            if (allCells[prop]["properties"]["KafkaType"] === "sub") {
+              //   // GET CURRENT OFFSET FOR KAFKA TOPIC
+              let get_source_details = {
+                KafkaTopicName: allCells[prop]["properties"]["KafkaTopicName"],
+                KafkaSourceId: allCells[prop]["properties"]["KafkaSourceId"],
+              };
+              current_offset = await this.getKafkaOffset(get_source_details);
+              console.log("get_source_details ----", current_offset);
+              // latestOffset = get_offset;
+              allCells[prop]["properties"]["offsetValue"] = current_offset;
+            }
+          }
+        }
+      }
+
+      // let latestOffset = 0;
+      // if (fields.KafkaType === "sub") {
+      //   //   // GET CURRENT OFFSET FOR KAFKA TOPIC
+      //   let get_offset = await this.getKafkaOffset(fields.KafkaSourceId);
+      //   console.log("get_source_details ----", get_offset);
+      //   latestOffset = get_offset;
+      // }
 
       if (this.state.graphId === "") {
         const that = this;

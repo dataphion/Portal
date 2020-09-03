@@ -530,7 +530,9 @@ const ApiSidebar = Form.create()(
     render() {
       let host_url = "";
       if (this.props.selectedCellData.custom_api && this.props.selectedCellData.custom_api.value === "true") {
-        host_url = this.props.selectedCellData.Host_url.value + this.props.selectedCellData.Uri.value;
+        if (this.props.selectedCellData.Host_url && this.props.selectedCellData.Uri) {
+          host_url = this.props.selectedCellData.Host_url.value + this.props.selectedCellData.Uri.value;
+        }
       }
       const { getFieldDecorator } = this.props.form;
       return (

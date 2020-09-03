@@ -26,7 +26,7 @@ export default class SourceCell {
       SourceCell.setAttribute("class", "source-cell mssql-source-cell");
       SourceCellTitle.innerHTML = cell.getAttribute("MssqlDatabase", "");
     } else if (cell.getAttribute("Method").toLowerCase() === "postgres") {
-      SourceCell.setAttribute("class", "source-cell mssql-source-cell");
+      SourceCell.setAttribute("class", "source-cell postgres-source-cell");
       SourceCellTitle.innerHTML = cell.getAttribute("PostgresDatabase", "");
     } else if (cell.getAttribute("Method").toLowerCase() === "cassandra") {
       SourceCell.setAttribute("class", "source-cell cassandra-source-cell");

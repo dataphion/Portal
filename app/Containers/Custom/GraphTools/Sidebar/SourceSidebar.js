@@ -167,6 +167,7 @@ const SourceSidebar = Form.create()(
         kafkaValidation: form.getFieldValue("kafkaValidation"),
         KafkaWaitingTime: form.getFieldValue("KafkaWaitingTime"),
         PollingInterval: form.getFieldValue("PollingInterval"),
+        ExpectedIncrement: form.getFieldValue("ExpectedIncrement"),
         // ExpectedKafkaReponse: this.state.ExpectedKafkaReponse,
       };
 
@@ -488,7 +489,7 @@ const SourceSidebar = Form.create()(
               {form.getFieldValue("KafkaType") === "sub" ? (
                 <div>
                   <Row className="col-margin">
-                    <Col xs={12}>
+                    <Col xs={8}>
                       <div className="sidebar-body-regular-row">
                         <Form.Item label="Maximum Timeout(min)">
                           {getFieldDecorator("KafkaWaitingTime", {
@@ -502,7 +503,7 @@ const SourceSidebar = Form.create()(
                         </Form.Item>
                       </div>
                     </Col>
-                    <Col xs={12}>
+                    <Col xs={8}>
                       <div className="sidebar-body-regular-row">
                         <Form.Item label="Polling Interval(s)">
                           {getFieldDecorator("PollingInterval", {
@@ -512,6 +513,20 @@ const SourceSidebar = Form.create()(
                               },
                             ],
                             initialValue: this.props.selectedCellData.PollingInterval ? this.props.selectedCellData.PollingInterval.value : "",
+                          })(<Input type="number" />)}
+                        </Form.Item>
+                      </div>
+                    </Col>
+                    <Col xs={8}>
+                      <div className="sidebar-body-regular-row">
+                        <Form.Item label="Expected message Increment">
+                          {getFieldDecorator("ExpectedIncrement", {
+                            rules: [
+                              {
+                                required: true,
+                              },
+                            ],
+                            initialValue: this.props.selectedCellData.ExpectedIncrement ? this.props.selectedCellData.ExpectedIncrement.value : "",
                           })(<Input type="number" />)}
                         </Form.Item>
                       </div>

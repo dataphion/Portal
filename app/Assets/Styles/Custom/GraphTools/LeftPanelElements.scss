@@ -50,10 +50,10 @@
 }
 
 .graph-left-panel-selection-item-active {
-  background: #ff9879 !important;
+  background: linear-gradient(90deg, rgb(115, 70, 235), rgb(42, 74, 101)) !important;
   color: #ffffff !important;
   &:hover {
-    background: #ff9879 !important;
+    background: linear-gradient(90deg, rgb(115, 70, 235), rgb(42, 74, 101)) !important;
   }
 }
 

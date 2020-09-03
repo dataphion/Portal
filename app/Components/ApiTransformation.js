@@ -12,7 +12,7 @@ const ApiTransformation = Form.create()(
       this.state = {
         uploadedFileName: "",
         jsonFile: {},
-        SwaggerInputData: null
+        SwaggerInputData: null,
       };
       this.fileReader = new FileReader();
     }
@@ -42,16 +42,16 @@ const ApiTransformation = Form.create()(
           contact: {
             name: "TEAM",
             email: "contact-email@something.io",
-            url: "mywebsite.io"
+            url: "mywebsite.io",
           },
           termsOfService: "YOUR_TERMS_OF_SERVICE_URL",
           license: {
             name: "Apache 2.0",
-            url: "https://www.apache.org/licenses/LICENSE-2.0.html"
-          }
+            url: "https://www.apache.org/licenses/LICENSE-2.0.html",
+          },
         },
         servers: [],
-        paths: {}
+        paths: {},
       };
       //   ----Download Swagger File---
 
@@ -75,7 +75,7 @@ const ApiTransformation = Form.create()(
               let response_body = {};
               for (const body in api.response) {
                 response_body[body] = {
-                  type: typeof api.response[body]
+                  type: typeof api.response[body],
                 };
               }
 
@@ -84,7 +84,7 @@ const ApiTransformation = Form.create()(
               let request_body = {};
               for (const body in api.requestBody) {
                 request_body[body] = {
-                  type: typeof api.requestBody[body]
+                  type: typeof api.requestBody[body],
                 };
               }
 
@@ -100,25 +100,25 @@ const ApiTransformation = Form.create()(
                     deprecated: false,
                     required: true,
                     schema: {
-                      type: "string"
-                    }
+                      type: "string",
+                    },
                   });
                 }
               }
 
               // response ----
               let response = {
-                "200": {
+                200: {
                   description: "response",
                   content: {
                     "application/json": {
                       schema: {
                         type: object,
-                        properties: response_body
-                      }
-                    }
-                  }
-                }
+                        properties: response_body,
+                      },
+                    },
+                  },
+                },
               };
 
               // requestBody----
@@ -128,10 +128,10 @@ const ApiTransformation = Form.create()(
                 content: {
                   "application/json": {
                     schema: {
-                      properties: request_body
-                    }
-                  }
-                }
+                      properties: request_body,
+                    },
+                  },
+                },
               };
 
               // set response/request body
@@ -140,7 +140,7 @@ const ApiTransformation = Form.create()(
                   deprecated: false,
                   description: api["description"],
                   responses: response,
-                  parameteres: parameteres
+                  parameteres: parameteres,
                 };
               } else {
                 swaggerFile["paths"][url][method] = {
@@ -148,7 +148,7 @@ const ApiTransformation = Form.create()(
                   description: api["description"],
                   responses: response,
                   requestBody: requestBody,
-                  parameteres: parameteres
+                  parameteres: parameteres,
                 };
               }
             }
@@ -168,12 +168,12 @@ const ApiTransformation = Form.create()(
           servers: [
             {
               url: "http://localhost:5000",
-              description: "Development server"
+              description: "Development server",
             },
             {
               url: "http://localhost:5000",
-              description: "Production server"
-            }
+              description: "Production server",
+            },
           ],
           apis: [
             {
@@ -181,7 +181,7 @@ const ApiTransformation = Form.create()(
               method: "get",
               description: "",
               headers: {},
-              response: {}
+              response: {},
             },
             {
               url: "/api/url_2",
@@ -189,7 +189,7 @@ const ApiTransformation = Form.create()(
               headers: {},
               description: "",
               requestBody: {},
-              response: {}
+              response: {},
             },
             {
               // for parameterize path
@@ -197,10 +197,10 @@ const ApiTransformation = Form.create()(
               method: "get",
               description: "",
               headers: {},
-              response: {}
-            }
-          ]
-        }
+              response: {},
+            },
+          ],
+        },
       };
 
       var blob = new Blob([JSON.stringify(sample)], { type: "text/plain;charset=utf-8" });
@@ -234,24 +234,24 @@ const ApiTransformation = Form.create()(
                   {getFieldDecorator("swaggerInputFile", {
                     rules: [
                       {
-                        required: true
-                      }
+                        required: true,
+                      },
                     ],
-                    initialValue: ""
+                    initialValue: "",
                   })(
                     <Upload.Dragger
                       multiple={false}
                       showUploadList={false}
-                      onChange={e => {
+                      onChange={(e) => {
                         let _this = this;
                         const reader = new FileReader();
-                        reader.onload = function() {
+                        reader.onload = function () {
                           _this.setState({ SwaggerInputData: JSON.parse(reader.result) });
                         };
                         reader.readAsText(e.fileList[0].originFileObj);
 
                         this.setState({
-                          uploadedFileName: e.file.name
+                          uploadedFileName: e.file.name,
                         });
                       }}
                     >
