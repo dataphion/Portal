@@ -2,8 +2,13 @@ import React from "react";
 import "../../../Assets/Styles/Custom/GraphTools/LeftPanelElements.scss";
 import constants from "../../../constants";
 import _ from "lodash";
-import { Whisper, Tooltip, Alert } from "rsuite";
+import { Whisper, Tooltip, Alert, Panel, PanelGroup } from "rsuite";
 import Loader from "react-loader";
+
+// import { Collapse } from "antd";
+
+// const { Panel } = Collapse;
+
 let spinnerOptions = {
   lines: 13,
   length: 10,
@@ -278,10 +283,314 @@ export default class LeftPanelElements extends React.Component {
     }
   };
 
+  callback = (key) => {
+    console.log(key);
+  };
+
+  showControls = () => {
+    return (
+      <div className="graph-left-panel-drag-container animated zoomIn faster">
+        <div className="graph-left-panel-drag-header">
+          <div className="graph-left-panel-drag-header-title">Conditions</div>
+          <div className="graph-left-panel-drag-header-border" />
+          <div className="graph-left-panel-drag-header-data-count">1</div>
+        </div>
+        <div className="graph-left-panel-drag-row">
+          <div className="graph-left-panel-drag-data-container">
+            <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Condition")}>
+              <div
+                value={JSON.stringify({
+                  Method: "conditions",
+                  Type: "controls",
+                })}
+                className="graph-left-panel-draggable-element graph-left-panel-draggable-element-conditions"
+              >
+                <div className="graph-left-panel-draggable-element-conditions-text">If</div>
+              </div>
+            </Whisper>
+            {/* <div className="graph-left-panel-drag-data-desc larg-desc" style={{ marginTop: "10px" }}>
+                      Condition
+                    </div> */}
+          </div>
+          <div className="graph-left-panel-drag-data-container">
+            <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Iterator")}>
+              <div
+                value={JSON.stringify({
+                  Method: "iterator",
+                  Type: "controls",
+                })}
+                className="graph-left-panel-draggable-element graph-left-panel-draggable-element-conditions"
+              >
+                <div className="graph-left-panel-draggable-element-conditions-text">
+                  <i className="fa fa-sync-alt" />
+                </div>
+              </div>
+            </Whisper>
+            {/* <div className="graph-left-panel-drag-data-desc larg-desc" style={{ marginTop: "10px" }}>
+                      Iterator
+                    </div> */}
+          </div>
+          <div className="graph-left-panel-drag-data-container">
+            <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Assertion")}>
+              <div
+                value={JSON.stringify({
+                  Method: "assertion",
+                  Type: "controls",
+                })}
+                className="graph-left-panel-draggable-element graph-left-panel-draggable-element-conditions"
+              >
+                <div className="graph-left-panel-draggable-element-conditions-text">
+                  <i className="fa fa-shield" />
+                </div>
+              </div>
+            </Whisper>
+            {/* <div className="graph-left-panel-drag-data-desc larg-desc" style={{ marginTop: "10px" }}>
+                      Assertion
+                    </div> */}
+          </div>
+          <div className="graph-left-panel-drag-data-container">
+            <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Variable")}>
+              <div
+                value={JSON.stringify({
+                  Method: "variable",
+                  Type: "controls",
+                })}
+                className="graph-left-panel-draggable-element graph-left-panel-draggable-element-conditions"
+              >
+                <div className="graph-left-panel-draggable-element-conditions-text">
+                  <i className="fa fa-info" />
+                </div>
+              </div>
+            </Whisper>
+            {/* <div className="graph-left-panel-drag-data-desc larg-desc" style={{ marginTop: "10px" }}>
+                      Variable
+                    </div> */}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   render() {
     return (
       <React.Fragment>
-        <div className="graph-left-panel-selection-container">
+        <div className="collapse-outer-container" id="collapse-outer-container">
+          <PanelGroup accordion defaultActiveKey={1} bordered>
+            <Panel header="Testcase" eventKey={1}>
+              <div className="nested-collapse-container">
+                <PanelGroup accordion defaultActiveKey={4} bordered>
+                  <Panel header="API" eventKey={4}>
+                    <React.Fragment>
+                      {this.state.endpointPacks.map((data, index) => {
+                        const EndpointPackId = data.id;
+                        if (data.name && data.name !== "custom_api") {
+                          return (
+                            <div className="endpoint-pack-accordion-dropdown animated zoomIn faster" key={index}>
+                              <div onClick={() => this.expandRow(index)} className="endpoint-pack-accordion">
+                                <div className="endpoint-pack-name">{data.name}</div>
+                                <i style={{ transition: "all 0.3s" }} className={"fa fa-angle-down " + (data.expanded ? "expandBtn" : "")} />
+                              </div>
+                              <div className="endpoint-pack-accordion-bottom" style={data.expanded ? { height: "100%" } : {}}>
+                                {data.endpoints.map((endpoint, index) => {
+                                  return this.renderEndpoints(endpoint, index, EndpointPackId);
+                                })}
+                              </div>
+                            </div>
+                          );
+                        }
+                      })}
+                      <Loader loaded={this.state.loaded} options={spinnerOptions} />
+                    </React.Fragment>
+                  </Panel>
+                  <Panel header="Custom API" eventKey={5}>
+                    <div className="custom-api-drag">
+                      <div className="graph-left-panel-drag-data-container">
+                        <Whisper placement="top" trigger="hover" speaker={this.Tooltip("Drag & Drop")}>
+                          <div
+                            value={JSON.stringify({
+                              EndpointPackId: "",
+                              EndpointId: "",
+                              Uri: "",
+                              Method: "",
+                              Type: "api",
+                              id: "",
+                              custom_api: true,
+                            })}
+                            id="rest-api-drag-cls"
+                            className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api get-method-btn rest-api-drag-cls"
+                          >
+                            Rest API
+                          </div>
+                        </Whisper>
+                      </div>
+                    </div>
+                  </Panel>
+                  <Panel header="UI" eventKey={6}>
+                    <div className="graph-left-panel-drag-container animated zoomIn faster">
+                      <div className="graph-left-panel-drag-row">
+                        <div className="graph-left-panel-drag-data-container">
+                          <Whisper placement="bottom" trigger="click" speaker={this.Tooltip("Drag & Drop")}>
+                            <div
+                              value={JSON.stringify({
+                                Method: "uitestcase",
+                                Type: "api",
+                              })}
+                              className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source uitestcase-bg"
+                            >
+                              UI Testcases
+                            </div>
+                          </Whisper>
+                          <div className="graph-left-panel-drag-data-desc larg-desc">UI Testcases</div>
+                        </div>
+                      </div>
+                    </div>
+                  </Panel>
+                </PanelGroup>
+              </div>
+            </Panel>
+            <Panel header="Controls" eventKey={2}>
+              {this.showControls()}
+            </Panel>
+            <Panel header="Source" eventKey={3}>
+              <div className="graph-left-panel-drag-container animated zoomIn faster">
+                <div className="graph-left-panel-drag-header">
+                  <div className="graph-left-panel-drag-header-title">Sources</div>
+                  <div className="graph-left-panel-drag-header-border" />
+                  <div className="graph-left-panel-drag-header-data-count">9</div>
+                </div>
+                <div className="graph-left-panel-drag-row">
+                  <div className="graph-left-panel-drag-data-container">
+                    <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("MSSQL")}>
+                      <div
+                        value={JSON.stringify({
+                          Method: "mssql",
+                          Type: "source",
+                        })}
+                        className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source mssql-bg"
+                      >
+                        MSSQL
+                      </div>
+                    </Whisper>
+                    {/* <div className="graph-left-panel-drag-data-desc larg-desc">MSSQL</div> */}
+                  </div>
+                  <div className="graph-left-panel-drag-data-container">
+                    <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("MongoDB")}>
+                      <div
+                        value={JSON.stringify({
+                          Method: "mongodb",
+                          Type: "source",
+                        })}
+                        className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source mongodb-bg"
+                      >
+                        MongoDB
+                      </div>
+                    </Whisper>
+                    {/* <div className="graph-left-panel-drag-data-desc larg-desc">MongoDB</div> */}
+                  </div>
+                  <div className="graph-left-panel-drag-data-container">
+                    <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("MySQL")}>
+                      <div
+                        value={JSON.stringify({
+                          Method: "mysql",
+                          Type: "source",
+                        })}
+                        className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source mysql-bg"
+                      >
+                        MySQL
+                      </div>
+                    </Whisper>
+                    {/* <div className="graph-left-panel-drag-data-desc larg-desc">MySQL</div> */}
+                  </div>
+                  <div className="graph-left-panel-drag-data-container">
+                    <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Oracle")}>
+                      <div
+                        value={JSON.stringify({
+                          Method: "oracle",
+                          Type: "source",
+                        })}
+                        className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source oracle-bg"
+                      >
+                        Oracle
+                      </div>
+                    </Whisper>
+                    {/* <div className="graph-left-panel-drag-data-desc larg-desc">Oracle</div> */}
+                  </div>
+                  <div className="graph-left-panel-drag-data-container">
+                    <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("RabbitMQ")}>
+                      <div
+                        value={JSON.stringify({
+                          Method: "rabbitmq",
+                          Type: "source",
+                        })}
+                        className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source rabbitmq-bg"
+                      >
+                        RabbitMQ
+                      </div>
+                    </Whisper>
+                    {/* <div className="graph-left-panel-drag-data-desc larg-desc">RabbitMQ</div> */}
+                  </div>
+                  <div className="graph-left-panel-drag-data-container">
+                    <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Redis")}>
+                      <div
+                        value={JSON.stringify({
+                          Method: "redis",
+                          Type: "source",
+                        })}
+                        className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source redis-bg"
+                      >
+                        Redis
+                      </div>
+                    </Whisper>
+                    {/* <div className="graph-left-panel-drag-data-desc larg-desc">Redis</div> */}
+                  </div>
+                  <div className="graph-left-panel-drag-data-container">
+                    <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Postgres")}>
+                      <div
+                        value={JSON.stringify({
+                          Method: "postgres",
+                          Type: "source",
+                        })}
+                        className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source postgres-bg"
+                      >
+                        postgres
+                      </div>
+                    </Whisper>
+                    {/* <div className="graph-left-panel-drag-data-desc larg-desc">Postgres</div> */}
+                  </div>
+                  <div className="graph-left-panel-drag-data-container">
+                    <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Cassandra")}>
+                      <div
+                        value={JSON.stringify({
+                          Method: "cassandra",
+                          Type: "source",
+                        })}
+                        className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source cassandra-bg"
+                      >
+                        Cassandra
+                      </div>
+                    </Whisper>
+                    {/* <div className="graph-left-panel-drag-data-desc larg-desc">Cassandra</div> */}
+                  </div>
+                  <div className="graph-left-panel-drag-data-container">
+                    <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Kafka")}>
+                      <div
+                        value={JSON.stringify({
+                          Method: "kafka",
+                          Type: "source",
+                        })}
+                        className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source kafka-bg"
+                      >
+                        Kafka
+                      </div>
+                    </Whisper>
+                    {/* <div className="graph-left-panel-drag-data-desc larg-desc">Kafka</div> */}
+                  </div>
+                </div>
+              </div>
+            </Panel>
+          </PanelGroup>
+        </div>
+        {/* <div className="graph-left-panel-selection-container">
           <div
             onClick={() =>
               this.setState({ activePanel: "api" }, () => {
@@ -315,9 +624,9 @@ export default class LeftPanelElements extends React.Component {
           >
             Sources
           </div>
-        </div>
+        </div> */}
 
-        {this.state.activePanel === "api" ? (
+        {/* {this.state.activePanel === "api" ? (
           <div className="api-testcase-uitestcase-btn">
             <div
               className="button-container"
@@ -356,30 +665,12 @@ export default class LeftPanelElements extends React.Component {
               UI
             </div>
           </div>
-        ) : null}
+        ) : null} */}
 
         {/* Render Api Panel */}
-        {this.state.activePanel === "api" && this.state.activeTastcase === "api" ? (
+        {/* {this.state.activePanel === "api" && this.state.activeTastcase === "api" ? (
           <React.Fragment>
-            {/* <div className="graph-left-panel-search">
-              <div className="graph-left-panel-search-btn">
-                <i className="fa fa-search" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search here"
-                name="search"
-                value={this.state.searchValue}
-                onChange={e =>
-                  this.setState({ searchValue: e.target.value }, () => {
-                    this.props.createDragElement();
-                  })
-                }
-              />
-            </div> */}
             {this.state.endpointPacks.map((data, index) => {
-              // console.log(data);
-
               const EndpointPackId = data.id;
               if (data.name && data.name !== "custom_api") {
                 return (
@@ -420,9 +711,9 @@ export default class LeftPanelElements extends React.Component {
               </div>
             </div>
           </div>
-        ) : null}
+        ) : null} */}
 
-        {this.state.activePanel === "api" && this.state.activeTastcase === "custom-api" ? (
+        {/* {this.state.activePanel === "api" && this.state.activeTastcase === "custom-api" ? (
           <div className="custom-api-drag">
             <div className="graph-left-panel-drag-data-container">
               <Whisper placement="top" trigger="click" speaker={this.Tooltip("Drag & Drop")}>
@@ -442,15 +733,12 @@ export default class LeftPanelElements extends React.Component {
                   Rest API
                 </div>
               </Whisper>
-              {/* <div className="graph-left-panel-drag-data-desc" title="description">
-              description
-            </div> */}
             </div>
           </div>
-        ) : null}
+        ) : null} */}
 
         {/* Render Conditions Panel */}
-        {this.state.activePanel === "controls" ? (
+        {/* {this.state.activePanel === "controls" ? (
           <div className="graph-left-panel-drag-container animated zoomIn faster">
             <div className="graph-left-panel-drag-header">
               <div className="graph-left-panel-drag-header-title">Conditions</div>
@@ -532,10 +820,10 @@ export default class LeftPanelElements extends React.Component {
           </div>
         ) : (
           ""
-        )}
+        )} */}
 
         {/* Render Sources Panel */}
-        {this.state.activePanel === "source" ? (
+        {/* {this.state.activePanel === "source" ? (
           <div className="graph-left-panel-drag-container animated zoomIn faster">
             <div className="graph-left-panel-drag-header">
               <div className="graph-left-panel-drag-header-title">Databases</div>
@@ -673,7 +961,7 @@ export default class LeftPanelElements extends React.Component {
           </div>
         ) : (
           ""
-        )}
+        )} */}
       </React.Fragment>
     );
   }

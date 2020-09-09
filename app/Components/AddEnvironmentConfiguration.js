@@ -112,6 +112,7 @@ const AddEnvironmentConfiguration = Form.create()(
     };
 
     showConfiguration = () => {
+      console.log("configuration", this.props.editConfigurationData);
       const { getFieldDecorator } = this.props.form;
       return (
         <Form layout="vertical">
@@ -210,7 +211,7 @@ const AddEnvironmentConfiguration = Form.create()(
               )}
               {this.props.record["type"] !== "rabbitmq" && this.props.record["type"] !== "kafka" ? (
                 <Col xs={12} className="input-forms">
-                  <Form.Item label="Database">
+                  <Form.Item label={this.props.record["type"] === "cassandra" ? "Keyspace" : "Database"}>
                     {getFieldDecorator("Database", {
                       rules: [
                         {
@@ -224,7 +225,7 @@ const AddEnvironmentConfiguration = Form.create()(
               ) : (
                 ""
               )}
-              {this.props.record["type"] === "cassandra" ? (
+              {/* {this.props.record["type"] === "cassandra" ? (
                 <Col xs={12} className="input-forms">
                   <Form.Item label="Keyspace">
                     {getFieldDecorator("Keyspace", {
@@ -239,7 +240,7 @@ const AddEnvironmentConfiguration = Form.create()(
                 </Col>
               ) : (
                 ""
-              )}
+              )} */}
               {/* {this.props.record["type"] === "rabbitmq" ? (
                 <Col xs={12} className="input-forms">
                   <Form.Item label="Queue Name">
@@ -319,7 +320,7 @@ const AddEnvironmentConfiguration = Form.create()(
               source_name: this.props.record["source_name"],
               keyspace: keyspace,
             };
-
+            console.log("save_data -->", data);
             let url = constants.dbregistrations;
             let method = axios.post;
             if (this.props.editConfigurationData && Object.keys(this.props.editConfigurationData).length > 0) {

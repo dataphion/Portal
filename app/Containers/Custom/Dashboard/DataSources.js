@@ -431,7 +431,7 @@ export default class DataSources extends React.Component {
                   let id = node["parent"]["parent"]["parent"]["children"][4]["children"][0]["data"] || node["parent"]["parent"]["parent"]["children"][5]["children"][0]["data"];
                   axios.get(`${constants.dbregistrations}/${id}`).then((response) => {
                     let data = response["data"];
-
+                    console.log("data", data);
                     let editConfigurationData = {
                       env: data["environments"][0]["id"],
                       ip: data["ip"],

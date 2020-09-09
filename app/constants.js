@@ -13,8 +13,8 @@ if (port) {
 // const host = "http://localhost:4200/";
 // const apiExecuteHost = "http://localhost:9501/api/Runtest";
 // const sockio_host = "http://localhost:4200";
-// const image_host = "http://localhost:1337";
-// const error_image_host = "http://localhost:1337";
+// const image_host = "http://localhost:4200";
+// const error_image_host = "http://localhost:4200";
 
 const constants = {
   error_image_host: error_image_host,

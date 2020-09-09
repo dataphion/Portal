@@ -93,7 +93,7 @@
 }
 
 #rest-api-drag-cls {
-  border: 1px solid white !important;
+  border: 1px dashed white !important;
   width: 200px !important;
   height: 38px !important;
   border-radius: 3px !important;
@@ -140,6 +140,8 @@
     }
   }
   .graph-left-panel-drag-row {
+    display: flex;
+    flex-wrap: wrap;
     margin-top: 10px;
     .graph-left-panel-drag-data-container {
       display: flex;
@@ -158,7 +160,7 @@
       .graph-left-panel-draggable-element-conditions {
         width: 50px;
         height: 50px;
-        border: 1px solid #ffffff;
+        border: 1px dashed #ffffff;
         background: none;
         transform: rotate(45deg);
         margin-top: 10px;
@@ -179,7 +181,7 @@
         height: 40px;
         margin-right: 10px;
         background: none;
-        border: 1px solid #ffffff;
+        border: 1px dashed #ffffff;
         font-size: 12px;
         margin-top: 0;
         text-indent: -9999px;
@@ -341,4 +343,37 @@
 .endpoint-pack-accordion-bottom::-webkit-scrollbar {
   width: 0;
   display: none;
+}
+
+#collapse-outer-container {
+  .rs-panel-body {
+    background: #293a65 !important;
+    padding: 10px !important;
+  }
+  .rs-panel-heading {
+    padding: 12px !important;
+    background: linear-gradient(90deg, rgb(115, 70, 235), rgb(42, 74, 101));
+  }
+  .rs-panel-collapsible {
+    border-radius: 0px !important;
+    border-bottom: 1px solid #293a65;
+  }
+  .nested-collapse-container {
+    .rs-panel-body {
+      background: #293a65 !important;
+      padding: 0px !important;
+    }
+    .rs-panel-heading {
+      padding: 12px !important;
+      display: flex;
+      align-content: center;
+      background: linear-gradient(90deg, rgb(115, 70, 235), rgb(42, 74, 101));
+      // height: 40px;
+    }
+    .rs-panel-collapsible {
+      // height: 35px !important;
+      border-radius: 0px !important;
+      border-bottom: 1px solid #293a65 !important;
+    }
+  }
 }
