@@ -43,3 +43,29 @@
     }
   }
 }
+
+.import-dropdown {
+  min-width: 166px !important;
+  display: flex;
+  justify-content: center;
+  cursor: pointer !important;
+  display: flex;
+  align-items: center;
+  padding: 8px 20px !important;
+  border-radius: 3px !important;
+  color: #ffffff !important;
+  background-image: linear-gradient(275deg, #1039a6, #6d15b9) !important;
+  font-size: 15px !important;
+  transition: all 0.3s !important;
+  font-weight: 600 !important;
+  margin-left: 10px !important;
+  height: 40px !important;
+}
+
+.transformation-btn {
+  border-radius: 3px !important;
+}
+
+.transformation-btn:hover {
+  transform: none !important;
+}

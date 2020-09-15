@@ -41,6 +41,7 @@ const constants = {
   swaggerFile: host + "api/applications/swagger",
   swaggerUpadte: host + "api/applications/swaggerupdate",
   swaggerconfirm: host + "api/applications/swaggerconfirm",
+  createCollection: host + "applications/createcollection",
   endpointpacks: host + "api/endpointpacks",
   endpoints: host + "api/endpoints",
   flows: host + "api/flows",

@@ -47,6 +47,7 @@ var ALLOW_EDGE = true;
 
 class mxCellAttributeChange extends React.Component {
   constructor(cell, attribute, value) {
+    console.log(value);
     super();
     this.cell = cell;
     this.attribute = attribute;
@@ -213,7 +214,7 @@ const TestcaseApi = Form.create()(
       })
         .then((response) => response.json())
         .then((response) => {
-          // console.log("response --->", response);
+          console.log("response --->", response.data.applications[0].testcases[0].flow);
           if (response.data.applications[0].testcases[0].flow) {
             this.setState({
               graphId: response.data.applications[0].testcases[0].flow.id,
@@ -229,11 +230,11 @@ const TestcaseApi = Form.create()(
             loader: false,
             createdGraphData: response.data.applications[0],
           });
-        })
-        .catch((error) => {
-          Alert.error("Something went wrong");
-          console.log(error);
         });
+      // .catch((error) => {
+      //   Alert.error("Something went wrong");
+      //   console.log(error);
+      // });
 
       // Socket for real time
       const socket = socketIOClient(constants.socket_url);
@@ -786,7 +787,12 @@ const TestcaseApi = Form.create()(
     getKafkaOffset = async (details) => {
       return new Promise(async (resolve, reject) => {
         try {
-          let get_source_details = await axios.get(`${constants.dbregistrations}/${details.KafkaSourceId}`);
+          // get resgistered kafka config
+          let get_kafkadb_id = await axios.get(`${constants.sourceregistration}/${details.KafkaSourceId}`);
+          console.log(get_kafkadb_id);
+          console.log(get_kafkadb_id.data.dbregistrations[0].id);
+          console.log("url -->", `${constants.dbregistrations}/${get_kafkadb_id.data.dbregistrations[0].id}`);
+          let get_source_details = await axios.get(`${constants.dbregistrations}/${get_kafkadb_id.data.dbregistrations[0].id}`);
           let body = { kafkaTopic: details.KafkaTopicName, ip: get_source_details.data.ip, port: get_source_details.data.port, username: "", password: "", database_type: "kafkaOoffsetcheck" };
           let get_offset = await axios.post(`${constants.kafkaoffset}`, body);
           resolve(get_offset.data.offset_value);
@@ -798,8 +804,8 @@ const TestcaseApi = Form.create()(
     };
 
     handleConfirm = async (fields) => {
-      // console.log(fields.KafkaType);
-      // console.log(fields.KafkaSourceId);
+      console.log(fields.AceEditorValue);
+      console.log(JSON.stringify(fields.AceEditorValue));
 
       const { graph } = this.state;
       const cell = graph.getSelectionCell();
@@ -893,7 +899,7 @@ const TestcaseApi = Form.create()(
     };
 
     applyHandler = (graph, cell, name, newValue) => {
-      // console.log("apply handler ----->", cell, name, newValue);
+      console.log("apply handler ----->", newValue);
       graph.getModel().beginUpdate();
       try {
         const edit = new mxCellAttributeChange(cell, name, newValue);

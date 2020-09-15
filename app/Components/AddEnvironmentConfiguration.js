@@ -3,6 +3,7 @@ import { Form, Input } from "antd";
 import { Alert, Modal, Row, Col } from "rsuite";
 import constants from "../constants";
 import axios from "axios";
+import Loader from "../Components/Loader";
 
 const AddEnvironmentConfiguration = Form.create()(
   class extends React.Component {
@@ -12,6 +13,7 @@ const AddEnvironmentConfiguration = Form.create()(
         Environments_list: [],
         selected_env: "",
         select_env_err: false,
+        loader: false,
       };
     }
     getCurrentData = () => {
@@ -50,37 +52,52 @@ const AddEnvironmentConfiguration = Form.create()(
       }
 
       const formData = this.getCurrentData();
-
+      this.setState({ loader: true });
       axios
         .post(constants.dbregistrationsCheck, formData)
         .then((response) => {
+          console.log(response);
           if (response.data.status === "success") {
             if (type === "test") {
               Alert.success("Connection has been established successfully.");
             } else {
               this.handleSave(e);
             }
+            this.setState({ loader: false });
           } else {
+            console.log(formData.database_type);
+
             if (formData.database_type === "redis") {
               Alert.error("Unable to connect to the database, Please verify again.");
             } else if (formData.database_type === "mysql") {
-              Alert.error(response.data.error.message, 10000);
+              // Alert.error(response.data.error.message, 2000);
+              Alert.error("error in mysql connection!", 2000);
             } else if (formData.database_type === "rabbitmq") {
-              Alert.error(response.data.error, 10000);
+              Alert.error("error in rabbitmq connection!", 2000);
             } else if (formData.database_type === "oracle") {
-              Alert.error(`Unable to connect to the database, Error code ${response.data.error.errorNum}`, 10000);
+              // Alert.error(`Unable to connect to the database, Error code ${response.data.error.errorNum}`, 10000);
+              Alert.error(`Unable to connect to the Oracle database`, 2000);
             } else if (formData.database_type === "mongodb") {
-              Alert.error(response.data.error, 10000);
+              // Alert.error(response.data.error, 2000);
+              Alert.error("error in mongodb connection!", 2000);
             } else if (formData.database_type === "mssql") {
-              Alert.error(response.data.error, 10000);
+              // Alert.error(response.data.error, 2000);
+              Alert.error("error in mssql connection!", 2000);
             } else if (formData.database_type === "postgres") {
-              Alert.error(response.data.error, 10000);
+              // Alert.error(response.data.error, 2000);
+              Alert.error("error in postgres connection!", 2000);
             } else if (formData.database_type === "cassandra") {
-              Alert.error(response.data.error, 10000);
+              // Alert.error(response.data.error, 2000);
+              Alert.error("error in cassandra connection!", 2000);
+            } else if (formData.database_type === "kafka") {
+              Alert.error("error in kafka connection!", 2000);
             }
+            this.setState({ loader: false });
           }
         })
         .catch((error) => {
+          this.setState({ loader: false });
+
           Alert.error("Something went wrong");
         });
     };
@@ -361,7 +378,7 @@ const AddEnvironmentConfiguration = Form.create()(
           );
         } else {
           return (
-            <div onClick={(e) => this.handleSave(e)} className="positive-button">
+            <div onClick={(e) => this.testSourceConnection(e, "save")} className="positive-button">
               <i className="fa fa-check" />
               Save
             </div>
@@ -396,6 +413,7 @@ const AddEnvironmentConfiguration = Form.create()(
               {this.renderBtn()}
             </div>
           </Modal.Footer>
+          <Loader status={this.state.loader} />
         </Modal>
       );
     }

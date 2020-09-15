@@ -31,6 +31,8 @@ export default class Testcases extends React.Component {
       modalTestcaseType: "ui",
       caseId: "", // for delete
       deleteConfirmation: false, // for delete
+      collection_data: [{ value: "none", label: "None" }],
+      endpointpacks_data: [],
     };
   }
   componentDidMount() {
@@ -38,10 +40,57 @@ export default class Testcases extends React.Component {
       window.scrollTo(0, 0);
       this.loadTestcasesData();
       this.loadEndpointpacks();
+      this.loadCollections();
     } else {
       this.props.history.push("/login");
     }
   }
+
+  loadCollections = () => {
+    let collection_data = this.state.collection_data;
+    let endpointpacks = [];
+    fetch(constants.graphql, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        query: `{applications(where:
+          {user:{id:"${sessionStorage.getItem("id")}"},
+          id:"${window.location.pathname.split("/")[2]}"}){
+            endpointpacks{
+              id,
+              name,
+              upload_type,
+              host_url,
+              swagger_url,
+              endpoints{
+                id,
+                endpoint,
+                method,
+                headers,
+                requestbody
+              }
+            }
+          }
+        }`,
+      }),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log("collection data", response.data.applications[0].endpointpacks);
+        if (response.data.applications[0].endpointpacks.length > 0) {
+          for (const endpointpack of response.data.applications[0].endpointpacks) {
+            if (endpointpack.upload_type === "postman-collection") {
+              collection_data.push({ value: endpointpack.id, label: endpointpack.name });
+              endpointpacks.push(endpointpack);
+            }
+          }
+        }
+        this.setState({ collection_data: collection_data, endpointpacks_data: endpointpacks });
+      });
+  };
 
   loadTestcasesData = () => {
     this.setState({ loader: true });
@@ -116,9 +165,7 @@ export default class Testcases extends React.Component {
             // get open_url
             let sorted_testcasecomponents = [];
             if (data.testcasecomponents.length !== 0) {
-              sorted_testcasecomponents = data.testcasecomponents.sort((a, b) =>
-                Number(a.id) > Number(b.id) ? 1 : Number(b.id) > Number(a.id) ? -1 : 0
-              );
+              sorted_testcasecomponents = data.testcasecomponents.sort((a, b) => (Number(a.id) > Number(b.id) ? 1 : Number(b.id) > Number(a.id) ? -1 : 0));
             }
 
             if (data.feature) {
@@ -156,12 +203,7 @@ export default class Testcases extends React.Component {
                 id: data.id,
                 name: data.name,
                 description: data.description,
-                url:
-                  data.testcasecomponents.length !== 0
-                    ? data.testcasecomponents[0].objectrepository
-                      ? data.testcasecomponents[0].objectrepository.url
-                      : "----------"
-                    : "----------",
+                url: data.testcasecomponents.length !== 0 ? (data.testcasecomponents[0].objectrepository ? data.testcasecomponents[0].objectrepository.url : "----------") : "----------",
                 // url: sorted_testcasecomponents.length !== 0 ? sorted_testcasecomponents[0].objectrepository.url : "----------",
                 type: data.type,
                 conflict: data.conflict,
@@ -313,15 +355,9 @@ export default class Testcases extends React.Component {
           <Whisper
             placement="top"
             trigger="hover"
-            speaker={
-              <Tooltip>
-                {type === "ui" ? "UI" : type === "api" ? (data.conflict ? "Conflicted API" : "API") : type === "mobile" ? "MOBILE" : "Unknown"}
-              </Tooltip>
-            }
+            speaker={<Tooltip>{type === "ui" ? "UI" : type === "api" ? (data.conflict ? "Conflicted API" : "API") : type === "mobile" ? "MOBILE" : "Unknown"}</Tooltip>}
           >
-            <i
-              className={"fa " + (type === "ui" ? "fa-desktop" : type === "api" ? (data.conflict ? "fa-rocket conflict" : "fa-rocket") : "fa-mobile")}
-            />
+            <i className={"fa " + (type === "ui" ? "fa-desktop" : type === "api" ? (data.conflict ? "fa-rocket conflict" : "fa-rocket") : "fa-mobile")} />
           </Whisper>
         ),
       },
@@ -426,9 +462,7 @@ export default class Testcases extends React.Component {
                   </div>
                   <div
                     onClick={() => this.selectedTestcasesAction("mobile")}
-                    className={
-                      "testcase-buttons-menu-items " + (this.state.selectedTestcases === "mobile" ? "testcase-buttons-menu-items-active" : "")
-                    }
+                    className={"testcase-buttons-menu-items " + (this.state.selectedTestcases === "mobile" ? "testcase-buttons-menu-items-active" : "")}
                   >
                     Mobile
                   </div>
@@ -437,14 +471,7 @@ export default class Testcases extends React.Component {
                   <div className="testcase-filter-panel-search-btn">
                     <i className="fa fa-search" />
                   </div>
-                  <input
-                    autoFocus
-                    type="text"
-                    placeholder="Search testcases here"
-                    name="search"
-                    value={this.state.searchText}
-                    onChange={(e) => this.setState({ searchText: e.target.value })}
-                  />
+                  <input autoFocus type="text" placeholder="Search testcases here" name="search" value={this.state.searchText} onChange={(e) => this.setState({ searchText: e.target.value })} />
                 </div>
               </div>
               <div className="testcases-table">
@@ -453,9 +480,7 @@ export default class Testcases extends React.Component {
                   dataSource={filteredData}
                   columns={columns}
                   pagination={{
-                    pageSize: document.getElementsByClassName("ant-table-wrapper")[0]
-                      ? Math.ceil(document.getElementsByClassName("ant-table-wrapper")[0].offsetHeight / 40 - 4)
-                      : 10,
+                    pageSize: document.getElementsByClassName("ant-table-wrapper")[0] ? Math.ceil(document.getElementsByClassName("ant-table-wrapper")[0].offsetHeight / 40 - 4) : 10,
                   }}
                   rowKey="id"
                 />
@@ -469,6 +494,8 @@ export default class Testcases extends React.Component {
           modalTestcaseSelected={(e) => this.setState({ modalTestcaseType: e })}
           addTestcaseModal={this.state.addTestcaseModal}
           features={this.state.features}
+          collection_data={this.state.collection_data}
+          endpointpacks_data={this.state.endpointpacks_data}
           featureId={this.state.features.find((o) => o.id === this.state.featureId)}
           parentData={this.props.parentData}
           onHide={() => this.setState({ addTestcaseModal: false, modalTestcaseType: "ui" })}
@@ -480,11 +507,7 @@ export default class Testcases extends React.Component {
           raw_data={this.state.raw_response}
           onHide={() => this.setState({ manageFeaturesModal: false })}
         />
-        <DeletePopupModal
-          deleteConfirmation={this.state.deleteConfirmation}
-          onHide={() => this.setState({ deleteConfirmation: false, caseId: "" })}
-          delete={this.delete}
-        />
+        <DeletePopupModal deleteConfirmation={this.state.deleteConfirmation} onHide={() => this.setState({ deleteConfirmation: false, caseId: "" })} delete={this.delete} />
         <Loader status={this.state.loader} />
       </React.Fragment>
     );

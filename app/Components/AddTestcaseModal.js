@@ -18,9 +18,12 @@ const AddTestcaseModal = Form.create()(
       features: [],
       AceEditorValue: [],
       AceEditorValidation: [],
+      collection_upload: false,
+      selected_collection: "none",
     };
 
     componentDidMount() {
+      console.log("call apis");
       this.saveRecord = this.saveRecord.bind(this);
     }
 
@@ -114,12 +117,231 @@ const AddTestcaseModal = Form.create()(
                     id: window.location.pathname.split("/")[2],
                   },
                   feature: {
-                    id: this.state.addNewFeature ? featureReq.data.id : this.props.features.find((o) => o.id === form.getFieldValue("feature")).id,
+                    // id: this.state.addNewFeature ? featureReq.data.id : this.props.features.find((o) => o.id === form.getFieldValue("feature")).id,
 
-                    // id: this.state.addNewFeature ? featureReq.data.id : this.props.features.find((o) => o.name === form.getFieldValue("feature")).id,
+                    id: this.state.addNewFeature ? featureReq.data.id : this.props.features.find((o) => o.name === form.getFieldValue("feature")).id,
                   },
                 };
-                await axios.post(constants.testcases, testcaseData);
+                let createTestcase = await axios.post(constants.testcases, testcaseData);
+                console.log(createTestcase);
+                // let testcaseId = await createTestcase.json();
+                if (this.state.selected_collection !== "none") {
+                  console.log(createTestcase.data.id);
+
+                  //create flow
+                  let endpoints = [];
+                  let graph_json = {};
+                  let graph_xml = "";
+
+                  let store_xml_data = [
+                    `<mxGraphModel>
+                  <root><mxCell id="0" />
+                  <mxCell id="1" parent="0" />`,
+                  ];
+
+                  console.log(this.props.endpointpacks_data);
+                  let selected_endpointpacks = null;
+                  for (const endpoints of this.props.endpointpacks_data) {
+                    if (endpoints.id === this.state.selected_collection) {
+                      console.log("id found");
+                      selected_endpointpacks = endpoints;
+                      break;
+                    }
+                  }
+                  console.log("selected ebdpoints", selected_endpointpacks);
+                  let tag_ids = 2;
+                  let current_source = 2;
+                  let current_target = 3;
+                  let graph_json_captutre = 2;
+                  let mx_graph_vertical = 40;
+                  let BodySelectedMenu = "None";
+                  for (let i = 0; i < selected_endpointpacks.endpoints.length; i++) {
+                    const ep = selected_endpointpacks.endpoints[i];
+                    let graph_h = "";
+                    let headers_count = 1;
+                    let headers_length = Object.keys(ep.headers).length;
+                    for (const h in ep.headers) {
+                      // console.log(text[h]);
+                      graph_h = graph_h + `{&quot;HeadersKey&quot;:&quot;${h}&quot;,&quot;HeadersValue&quot;:&quot;${ep.headers[h]}&quot;}`;
+
+                      if (headers_count !== headers_length) {
+                        graph_h = graph_h + ",";
+                      }
+                      headers_count++;
+                    }
+                    let graph_raw_data = "";
+                    if (ep.requestbody) {
+                      BodySelectedMenu = "JSON";
+                      let raw_data = JSON.stringify(ep.requestbody);
+                      raw_data = raw_data.replace(/\"/g, "\\&quot;");
+                      raw_data = `&quot;${raw_data}&quot;`;
+                      console.log("raw_data", raw_data);
+                      graph_raw_data = raw_data;
+                      // formatting body data for mx-graph
+                      // let raw_data = "&quot{"
+                      // for (const raw in ep.requestbody) {
+                      //   raw_data = raw_data + `\&quot;${raw}\&quot;:`
+                      //   let NestedObj = true
+                      //   // while( NestedObj){
+                      //   findNestedData=(values)=>{
+                      //     if(typeof values === Object){
+                      //       raw_data = raw_data+`{\&quot;${key}\&quot;:`
+                      //       for (const key in values) {
+                      //       if(typeof key === Object){
+                      //         this.findNestedData(key)
+                      //       }else{
+                      //       raw_data = raw_data+`\&quot;${key}\&quot;`
+                      //       }
+                      //       }
+                      //     }
+
+                      //   }
+                      //   this.findNestedData(ep.requestbody[raw])
+
+                      //   // }
+
+                      // }
+                    }
+                    console.log("modified data --->", graph_raw_data);
+                    endpoints.push(ep.id);
+                    if (i < 2) {
+                      store_xml_data.push(
+                        `<TaskObject EndpointPackId="${selected_endpointpacks.id}" EndpointId="${ep.id}" Uri="${ep.endpoint}" custom_api="false" Method="${ep.method}" Title="req ${i}" Type="api" Description="desc" PathParametersAdd="[]" QueryParametersAdd="[]" AuthorizationUsername="" AuthorizationPassword="" HeadersAdd="[${graph_h}]" BodySelectedMenu="${BodySelectedMenu}" BodyFormDataAdd="[]" AceEditorValue="${graph_raw_data}" id="${tag_ids}">
+                  <mxCell style="rounded=1;fillColor=#cccccc;strokeColor=none;" parent="1" vertex="1">
+                     <mxGeometry x="450" y="${mx_graph_vertical}" width="229" height="67" as="geometry" />
+                  </mxCell>
+               </TaskObject>`
+                      );
+                      mx_graph_vertical = mx_graph_vertical + 100;
+                      tag_ids = tag_ids + 1;
+                      if (i == 1) {
+                        store_xml_data.push(
+                          `<mxCell id="${tag_ids}" value="Edge" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#cccccc;strokeWidth=3;rounded=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="${current_source}" target="${current_target}" edge="1">
+                          <mxGeometry relative="1" as="geometry" />
+                       </mxCell>`
+                        );
+                        tag_ids = tag_ids + 1;
+                      }
+                    } else {
+                      store_xml_data.push(
+                        `<TaskObject EndpointPackId="${selected_endpointpacks.id}" EndpointId="${ep.id}" Uri="${ep.endpoint}" custom_api="false" Method="${ep.method}" Title="req ${i}" Type="api" Description="desc" PathParametersAdd="[]" QueryParametersAdd="[]" AuthorizationUsername="" AuthorizationPassword="" HeadersAdd="[${graph_h}]" BodySelectedMenu="${BodySelectedMenu}" BodyFormDataAdd="[]" AceEditorValue="${graph_raw_data}" id="${tag_ids}">
+                  <mxCell style="rounded=1;fillColor=#cccccc;strokeColor=none;" parent="1" vertex="1">
+                     <mxGeometry x="450" y="${mx_graph_vertical}" width="229" height="67" as="geometry" />
+                  </mxCell>
+               </TaskObject>`
+                      );
+                      tag_ids = tag_ids + 1;
+                      mx_graph_vertical = mx_graph_vertical + 100;
+
+                      store_xml_data.push(
+                        `<mxCell id="${tag_ids}" value="Edge" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#cccccc;strokeWidth=3;rounded=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="${current_target}" target="${
+                          current_target + 2
+                        }" edge="1">
+                        <mxGeometry relative="1" as="geometry" />
+                     </mxCell>`
+                      );
+                      current_target = current_target + 2;
+                      tag_ids = tag_ids + 1;
+                    }
+                    if (selected_endpointpacks.endpoints.length - 1 === i) {
+                      store_xml_data.push(`   </root>
+                      </mxGraphModel>`);
+                    }
+
+                    console.log(tag_ids);
+                  }
+
+                  // create graph_json_data
+                  let inc_val = 2;
+                  for (let i = 0; i < selected_endpointpacks.endpoints.length; i++) {
+                    let ele = selected_endpointpacks.endpoints[i];
+                    console.log("elements", ele);
+                    if (inc_val < 4) {
+                      // children
+
+                      let child = [];
+                      if (selected_endpointpacks.endpoints.length - 1 !== i) {
+                        let c = inc_val === 2 ? inc_val + 1 : inc_val + 2;
+                        child.push(c.toString());
+                      }
+                      // parent
+                      let parent = [];
+                      if (i !== 0) {
+                        let p = inc_val - 1;
+                        parent.push(p.toString());
+                      }
+                      graph_json[inc_val] = {
+                        children: child,
+                        parent: parent,
+                        id: inc_val.toString(),
+                        properties: {
+                          AceEditorValue: ele.requestbody,
+                          AuthorizationPassword: "",
+                          AuthorizationUsername: "",
+                          BodyFormDataAdd: {},
+                          BodySelectedMenu: BodySelectedMenu,
+                          Description: "desc",
+                          EndpointId: ele.id,
+                          EndpointPackId: selected_endpointpacks.id,
+                          HeadersAdd: ele.headers,
+                          Method: ele.method,
+                          PathParametersAdd: {},
+                          QueryParametersAdd: {},
+                          Title: `req ${i}`,
+                          Type: "api",
+                          Uri: ele.endpoint,
+                          custom_api: false,
+                        },
+                      };
+
+                      inc_val = inc_val === 2 ? inc_val + 1 : inc_val + 2;
+                    } else {
+                      let child = [];
+                      if (selected_endpointpacks.endpoints.length - 1 !== i) {
+                        let c = inc_val + 2;
+                        child.push(c.toString());
+                      }
+                      // parent
+                      let parent = [];
+                      let p = inc_val - 2;
+                      parent.push(p.toString());
+                      graph_json[inc_val] = {
+                        children: child,
+                        parent: parent,
+                        id: inc_val.toString(),
+                        AceEditorValue: ele.requestbody,
+                        AuthorizationPassword: "",
+                        AuthorizationUsername: "",
+                        BodyFormDataAdd: {},
+                        BodySelectedMenu: BodySelectedMenu,
+                        Description: "desc",
+                        EndpointId: ele.id,
+                        EndpointPackId: selected_endpointpacks.id,
+                        HeadersAdd: ele.parameters,
+                        Method: ele.method,
+                        PathParametersAdd: {},
+                        QueryParametersAdd: {},
+                        Title: `req ${i}`,
+                        Type: "api",
+                        Uri: ele.endpoint,
+                        custom_api: false,
+                      };
+                      inc_val = inc_val + 2;
+                    }
+                  }
+                  graph_xml = store_xml_data.join("");
+                  let request_body = {
+                    endpoints: endpoints,
+                    graph_json: graph_json,
+                    graph_xml: graph_xml,
+                    testcase: createTestcase.data.id,
+                  };
+                  console.log("request_body --- >", request_body);
+
+                  let create_flow = await axios.post(constants.flows, request_body);
+                  // console.log(create_flow);
+                }
+
                 this.props.loadTestcasesData();
                 this.onHide();
               } else {
@@ -180,12 +402,18 @@ const AddTestcaseModal = Form.create()(
       }
     };
 
+    UploadCollection = (e) => {
+      console.log(e);
+      this.setState({ selected_collection: e });
+    };
+
     onHide = () => {
       this.props.onHide();
       this.setState({ addNewFeature: false });
     };
 
     render() {
+      console.log(this.props);
       const { getFieldDecorator } = this.props.form;
       const { setMobilePlatform, setCapabilities, state } = this.context;
       return (
@@ -273,6 +501,33 @@ const AddTestcaseModal = Form.create()(
                     )}
                   </Form.Item>
                 </Col>
+                {this.props.modalTestcaseType === "api" ? (
+                  <Col xs={12} className="input-forms">
+                    <Form.Item label="Collections">
+                      {getFieldDecorator("collections", {
+                        rules: [
+                          {
+                            required: true,
+                          },
+                        ],
+                        initialValue: this.state.selected_collection,
+                      })(
+                        <Select onChange={(e) => this.UploadCollection(e)}>
+                          {this.props.collection_data.map((data, index) => {
+                            return (
+                              <Select.Option value={data.value} key={index}>
+                                {data.label}
+                              </Select.Option>
+                            );
+                          })}
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </Col>
+                ) : (
+                  ""
+                )}
+
                 {this.state.addNewFeature ? (
                   <Col xs={12} className="input-forms">
                     <Form.Item label="New Feature">

@@ -70,12 +70,13 @@ export default class LeftPanelElements extends React.Component {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        query: `{endpointpacks(where:{application:{id:"${this.props.parentProps.split("/")[2]}"}}){id,name,endpoints{id,endpoint,method,description,summary}}}`,
+        query: `{endpointpacks(where:{application:{id:"${this.props.parentProps.split("/")[2]}"}}){id,name,upload_type,endpoints{id,endpoint,method,description,summary}}}`,
       }),
     })
       .then((response) => response.json())
       .then((response) => {
         const formatedPacks = [];
+        console.log(response.data.endpointpacks);
         for (const data of response.data.endpointpacks) {
           let endpoints = []; //for store formated JSON object Array
           for (const api of data.endpoints) {
@@ -124,6 +125,7 @@ export default class LeftPanelElements extends React.Component {
             name: data.name,
             expanded: false,
             endpoints: endpoints,
+            upload_type: data.upload_type,
           });
         }
         this.setState({ endpointPacks: formatedPacks, loaded: true });
@@ -141,8 +143,8 @@ export default class LeftPanelElements extends React.Component {
     this.setState({ endpointPacks: endpointPacks });
   };
 
-  renderEndpoints = (endpoint, index, EndpointPackId) => {
-    // console.log(endpoint);
+  renderEndpoints = (endpoint, index, EndpointPackId, type) => {
+    console.log(type);
 
     const endpointKey = endpoint.key;
     return (
@@ -152,17 +154,21 @@ export default class LeftPanelElements extends React.Component {
             {endpoint.key}
           </div>
           <div className="graph-left-panel-drag-header-border" />
-          <div className="graph-left-panel-drag-header-data-count">{endpoint.value.length}</div>
+          {/* <div className="graph-left-panel-drag-header-data-count">{endpoint.value.length}</div> */}
+          <div className="graph-left-panel-drag-header-data-count">{type === "file" ? "S" : "C"}</div>
         </div>
-        <div className="graph-left-panel-drag-row">{endpoint.value ? endpoint.value.map((method, index) => this.renderMethods(method, index, endpointKey, EndpointPackId)) : ""}</div>
+        <div className="graph-left-panel-drag-row draggable-endpoints">
+          {endpoint.value ? endpoint.value.map((method, index) => this.renderMethods(endpoint.key, method, index, endpointKey, EndpointPackId)) : ""}
+        </div>
       </div>
     );
   };
 
-  renderMethods = (Data, index, DataKey, EndpointPackId) => {
+  renderMethods = (key, Data, index, DataKey, EndpointPackId) => {
+    console.log(key);
     if (Data.method.toLowerCase() === "get") {
       return (
-        <div key={index} className="graph-left-panel-drag-data-container">
+        <div key={index} className="graph-left-panel-drag-data-container endpoint-drag">
           <Whisper placement="bottom" trigger="click" speaker={this.Tooltip("Drag & Drop")}>
             <div
               value={JSON.stringify({
@@ -180,13 +186,14 @@ export default class LeftPanelElements extends React.Component {
             </div>
           </Whisper>
           <div className="graph-left-panel-drag-data-desc" title={Data.description}>
-            {Data.description}
+            {/* {Data.description} */}
+            {Data.description ? Data.description : key}
           </div>
         </div>
       );
     } else if (Data.method.toLowerCase() === "post") {
       return (
-        <div key={index} className="graph-left-panel-drag-data-container">
+        <div key={index} className="graph-left-panel-drag-data-container endpoint-drag">
           <Whisper placement="bottom" trigger="click" speaker={this.Tooltip("Drag & Drop")}>
             <div
               value={JSON.stringify({
@@ -204,13 +211,14 @@ export default class LeftPanelElements extends React.Component {
             </div>
           </Whisper>
           <div className="graph-left-panel-drag-data-desc" title={Data.description}>
-            {Data.description}
+            {/* {Data.description} */}
+            {Data.description ? Data.description : key}
           </div>
         </div>
       );
     } else if (Data.method.toLowerCase() === "put") {
       return (
-        <div key={index} className="graph-left-panel-drag-data-container">
+        <div key={index} className="graph-left-panel-drag-data-container endpoint-drag">
           <Whisper placement="bottom" trigger="click" speaker={this.Tooltip("Drag & Drop")}>
             <div
               value={JSON.stringify({
@@ -228,13 +236,14 @@ export default class LeftPanelElements extends React.Component {
             </div>
           </Whisper>
           <div className="graph-left-panel-drag-data-desc" title={Data.description}>
-            {Data.description}
+            {/* {Data.description} */}
+            {Data.description ? Data.description : key}
           </div>
         </div>
       );
     } else if (Data.method.toLowerCase() === "patch") {
       return (
-        <div key={index} className="graph-left-panel-drag-data-container">
+        <div key={index} className="graph-left-panel-drag-data-container endpoint-drag">
           <Whisper placement="bottom" trigger="click" speaker={this.Tooltip("Drag & Drop")}>
             <div
               value={JSON.stringify({
@@ -252,13 +261,14 @@ export default class LeftPanelElements extends React.Component {
             </div>
           </Whisper>
           <div className="graph-left-panel-drag-data-desc" title={Data.description}>
-            {Data.description}
+            {/* {Data.description} */}
+            {Data.description ? Data.description : key}
           </div>
         </div>
       );
     } else if (Data.method.toLowerCase() === "delete") {
       return (
-        <div key={index} className="graph-left-panel-drag-data-container">
+        <div key={index} className="graph-left-panel-drag-data-container endpoint-drag">
           <Whisper placement="bottom" trigger="click" speaker={this.Tooltip("Drag & Drop")}>
             <div
               value={JSON.stringify({
@@ -276,7 +286,8 @@ export default class LeftPanelElements extends React.Component {
             </div>
           </Whisper>
           <div className="graph-left-panel-drag-data-desc" title={Data.description}>
-            {Data.description}
+            {/* {Data.description} */}
+            {Data.description ? Data.description : key}
           </div>
         </div>
       );
@@ -290,11 +301,11 @@ export default class LeftPanelElements extends React.Component {
   showControls = () => {
     return (
       <div className="graph-left-panel-drag-container animated zoomIn faster">
-        <div className="graph-left-panel-drag-header">
+        {/* <div className="graph-left-panel-drag-header">
           <div className="graph-left-panel-drag-header-title">Conditions</div>
           <div className="graph-left-panel-drag-header-border" />
           <div className="graph-left-panel-drag-header-data-count">1</div>
-        </div>
+        </div> */}
         <div className="graph-left-panel-drag-row">
           <div className="graph-left-panel-drag-data-container">
             <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Condition")}>
@@ -308,9 +319,9 @@ export default class LeftPanelElements extends React.Component {
                 <div className="graph-left-panel-draggable-element-conditions-text">If</div>
               </div>
             </Whisper>
-            {/* <div className="graph-left-panel-drag-data-desc larg-desc" style={{ marginTop: "10px" }}>
-                      Condition
-                    </div> */}
+            <div className="graph-left-panel-drag-data-desc larg-desc" style={{ marginTop: "10px" }}>
+              Condition
+            </div>
           </div>
           <div className="graph-left-panel-drag-data-container">
             <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Iterator")}>
@@ -326,9 +337,9 @@ export default class LeftPanelElements extends React.Component {
                 </div>
               </div>
             </Whisper>
-            {/* <div className="graph-left-panel-drag-data-desc larg-desc" style={{ marginTop: "10px" }}>
-                      Iterator
-                    </div> */}
+            <div className="graph-left-panel-drag-data-desc larg-desc" style={{ marginTop: "10px" }}>
+              Iterator
+            </div>
           </div>
           <div className="graph-left-panel-drag-data-container">
             <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Assertion")}>
@@ -344,9 +355,9 @@ export default class LeftPanelElements extends React.Component {
                 </div>
               </div>
             </Whisper>
-            {/* <div className="graph-left-panel-drag-data-desc larg-desc" style={{ marginTop: "10px" }}>
-                      Assertion
-                    </div> */}
+            <div className="graph-left-panel-drag-data-desc larg-desc" style={{ marginTop: "10px" }}>
+              Assertion
+            </div>
           </div>
           <div className="graph-left-panel-drag-data-container">
             <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Variable")}>
@@ -362,9 +373,9 @@ export default class LeftPanelElements extends React.Component {
                 </div>
               </div>
             </Whisper>
-            {/* <div className="graph-left-panel-drag-data-desc larg-desc" style={{ marginTop: "10px" }}>
-                      Variable
-                    </div> */}
+            <div className="graph-left-panel-drag-data-desc larg-desc" style={{ marginTop: "10px" }}>
+              Variable
+            </div>
           </div>
         </div>
       </div>
@@ -375,89 +386,133 @@ export default class LeftPanelElements extends React.Component {
     return (
       <React.Fragment>
         <div className="collapse-outer-container" id="collapse-outer-container">
-          <PanelGroup accordion defaultActiveKey={1} bordered>
-            <Panel header="Testcase" eventKey={1}>
-              <div className="nested-collapse-container">
-                <PanelGroup accordion defaultActiveKey={4} bordered>
-                  <Panel header="API" eventKey={4}>
-                    <React.Fragment>
-                      {this.state.endpointPacks.map((data, index) => {
-                        const EndpointPackId = data.id;
-                        if (data.name && data.name !== "custom_api") {
-                          return (
-                            <div className="endpoint-pack-accordion-dropdown animated zoomIn faster" key={index}>
-                              <div onClick={() => this.expandRow(index)} className="endpoint-pack-accordion">
+          <PanelGroup accordion defaultActiveKey={6} bordered>
+            {/* <Panel header="Testcase" eventKey={1}> */}
+            {/* <div className="nested-collapse-container"> */}
+            {/* <PanelGroup accordion defaultActiveKey={4} bordered> */}
+            <Panel header="Swagger API" eventKey={1}>
+              <React.Fragment>
+                {this.state.endpointPacks.map((data, index) => {
+                  const EndpointPackId = data.id;
+                  // if (data.name && data.name !== "custom_api" && data.upload_type !== "postman-collection") {
+                  if (data.name && data.name !== "custom_api" && data.upload_type === "file") {
+                    console.log(data);
+                    return (
+                      <div className="endpoint-pack-accordion-dropdown animated zoomIn faster" key={index}>
+                        {/* <div onClick={() => this.expandRow(index)} className="endpoint-pack-accordion">
                                 <div className="endpoint-pack-name">{data.name}</div>
                                 <i style={{ transition: "all 0.3s" }} className={"fa fa-angle-down " + (data.expanded ? "expandBtn" : "")} />
-                              </div>
-                              <div className="endpoint-pack-accordion-bottom" style={data.expanded ? { height: "100%" } : {}}>
-                                {data.endpoints.map((endpoint, index) => {
-                                  return this.renderEndpoints(endpoint, index, EndpointPackId);
-                                })}
-                              </div>
-                            </div>
-                          );
-                        }
-                      })}
-                      <Loader loaded={this.state.loaded} options={spinnerOptions} />
-                    </React.Fragment>
-                  </Panel>
-                  <Panel header="Custom API" eventKey={5}>
-                    <div className="custom-api-drag">
-                      <div className="graph-left-panel-drag-data-container">
-                        <Whisper placement="top" trigger="hover" speaker={this.Tooltip("Drag & Drop")}>
-                          <div
-                            value={JSON.stringify({
-                              EndpointPackId: "",
-                              EndpointId: "",
-                              Uri: "",
-                              Method: "",
-                              Type: "api",
-                              id: "",
-                              custom_api: true,
-                            })}
-                            id="rest-api-drag-cls"
-                            className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api get-method-btn rest-api-drag-cls"
-                          >
-                            Rest API
-                          </div>
-                        </Whisper>
-                      </div>
-                    </div>
-                  </Panel>
-                  <Panel header="UI" eventKey={6}>
-                    <div className="graph-left-panel-drag-container animated zoomIn faster">
-                      <div className="graph-left-panel-drag-row">
-                        <div className="graph-left-panel-drag-data-container">
-                          <Whisper placement="bottom" trigger="click" speaker={this.Tooltip("Drag & Drop")}>
-                            <div
-                              value={JSON.stringify({
-                                Method: "uitestcase",
-                                Type: "api",
-                              })}
-                              className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source uitestcase-bg"
-                            >
-                              UI Testcases
-                            </div>
-                          </Whisper>
-                          <div className="graph-left-panel-drag-data-desc larg-desc">UI Testcases</div>
+                              </div> */}
+                        <div className="endpoint-pack-accordion-bottom" style={{ height: "100%" }}>
+                          {data.endpoints.map((endpoint, index) => {
+                            return this.renderEndpoints(endpoint, index, EndpointPackId, data.upload_type);
+                          })}
                         </div>
+                        {this.state.endpointPacks.length - 1 === index ? "" : <hr style={{ color: "#3d4d74", border: "1px solid" }} />}
+                        {/* {this.state.endpointPacks.length < 1 ? <div> No data found</div> : ""} */}
                       </div>
-                    </div>
-                  </Panel>
-                </PanelGroup>
+                    );
+                  }
+                })}
+                <Loader loaded={this.state.loaded} options={spinnerOptions} />
+              </React.Fragment>
+            </Panel>
+            <Panel header="Postman Collection" eventKey={2}>
+              <React.Fragment>
+                {this.state.endpointPacks.map((data, index) => {
+                  const EndpointPackId = data.id;
+                  // if (data.name && data.name !== "custom_api" && data.upload_type !== "postman-collection") {
+                  if (data.name && data.name !== "custom_api" && data.upload_type === "postman-collection") {
+                    console.log(data);
+                    return (
+                      <div className="endpoint-pack-accordion-dropdown animated zoomIn faster" key={index}>
+                        {/* <div onClick={() => this.expandRow(index)} className="endpoint-pack-accordion">
+                                <div className="endpoint-pack-name">{data.name}</div>
+                                <i style={{ transition: "all 0.3s" }} className={"fa fa-angle-down " + (data.expanded ? "expandBtn" : "")} />
+                              </div> */}
+                        <div className="endpoint-pack-accordion-bottom" style={{ height: "100%" }}>
+                          {data.endpoints.map((endpoint, index) => {
+                            return this.renderEndpoints(endpoint, index, EndpointPackId, data.upload_type);
+                          })}
+                        </div>
+                        {this.state.endpointPacks.length - 1 === index ? "" : <hr style={{ color: "#3d4d74", border: "1px solid" }} />}
+                      </div>
+                    );
+                  }
+                })}
+                <Loader loaded={this.state.loaded} options={spinnerOptions} />
+              </React.Fragment>
+            </Panel>
+            <Panel header="Testcases" eventKey={3}>
+              <div className="graph-left-panel-drag-container animated zoomIn faster">
+                <div className="graph-left-panel-drag-row">
+                  <div className="graph-left-panel-drag-data-container">
+                    <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Drag & Drop")}>
+                      <div
+                        value={JSON.stringify({
+                          Method: "uitestcase",
+                          Type: "api",
+                        })}
+                        className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source uitestcase-bg"
+                      >
+                        Web Testcase
+                      </div>
+                    </Whisper>
+                    <div className="graph-left-panel-drag-data-desc larg-desc">Web</div>
+                  </div>
+                  <div className="graph-left-panel-drag-data-container">
+                    <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Drag & Drop")}>
+                      <div
+                        value={JSON.stringify({
+                          Method: "uitestcase",
+                          Type: "api",
+                        })}
+                        className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source mobile-bg"
+                      >
+                        Mobile Testcase
+                      </div>
+                    </Whisper>
+                    <div className="graph-left-panel-drag-data-desc larg-desc">Mobile</div>
+                  </div>
+                </div>
               </div>
             </Panel>
-            <Panel header="Controls" eventKey={2}>
+            <Panel header="Custom HTTP Request" eventKey={4}>
+              <div className="custom-api-drag">
+                <div className="graph-left-panel-drag-data-container">
+                  <Whisper placement="top" trigger="hover" speaker={this.Tooltip("Drag & Drop")}>
+                    <div
+                      value={JSON.stringify({
+                        EndpointPackId: "",
+                        EndpointId: "",
+                        Uri: "",
+                        Method: "",
+                        Type: "api",
+                        id: "",
+                        custom_api: true,
+                      })}
+                      id="rest-api-drag-cls"
+                      className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api get-method-btn rest-api-drag-cls"
+                    >
+                      http request
+                    </div>
+                  </Whisper>
+                </div>
+              </div>
+              {/* </Panel> */}
+              {/* </PanelGroup> */}
+              {/* </div> */}
+            </Panel>
+            <Panel header="Controls" eventKey={5}>
               {this.showControls()}
             </Panel>
-            <Panel header="Source" eventKey={3}>
+            <Panel header="Source" eventKey={6}>
               <div className="graph-left-panel-drag-container animated zoomIn faster">
-                <div className="graph-left-panel-drag-header">
+                {/* <div className="graph-left-panel-drag-header">
                   <div className="graph-left-panel-drag-header-title">Sources</div>
                   <div className="graph-left-panel-drag-header-border" />
                   <div className="graph-left-panel-drag-header-data-count">9</div>
-                </div>
+                </div> */}
                 <div className="graph-left-panel-drag-row">
                   <div className="graph-left-panel-drag-data-container">
                     <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("MSSQL")}>

@@ -10,6 +10,7 @@ import "brace/mode/json";
 import "brace/mode/xml";
 import "brace/mode/text";
 import "brace/theme/monokai";
+import axios from "axios";
 
 const ApiSidebar = Form.create()(
   class extends React.Component {
@@ -30,7 +31,8 @@ const ApiSidebar = Form.create()(
       };
     }
 
-    SidebarEnter = () => {
+    SidebarEnter = async () => {
+      console.log(this.props.selectedCellData);
       if (this.props.selectedCellData.Method && this.props.selectedCellData.Method.value === "uitestcase") {
         this.setState({
           Method: this.props.selectedCellData.Method.value,
@@ -87,9 +89,12 @@ const ApiSidebar = Form.create()(
         });
       }
       if (this.props.selectedCellData.AceEditorValue) {
-        this.setState({
-          AceEditorValue: JSON.parse(this.props.selectedCellData.AceEditorValue.value),
-        });
+        // console.log(this.props.selectedCellData.AceEditorValue.value);
+        if (this.props.selectedCellData.AceEditorValue.value) {
+          this.setState({
+            AceEditorValue: JSON.parse(this.props.selectedCellData.AceEditorValue.value),
+          });
+        }
       }
 
       if (this.props.selectedCellData.Uri && this.props.selectedCellData.Uri.value.split("{").length > 1) {
@@ -122,6 +127,7 @@ const ApiSidebar = Form.create()(
       const form = this.props.form;
       // For form validation
       let error = false;
+      console.log(form.getFieldValue("Method"));
       form.validateFields((err) => {
         if (err) {
           error = true;
@@ -190,7 +196,7 @@ const ApiSidebar = Form.create()(
           }
         }
 
-        console.log("host--->", host, "uri--->", uri);
+        console.log("editor value", this.state.AceEditorValue);
         this.props.handleConfirm({
           Title: form.getFieldValue("Title"),
           Description: form.getFieldValue("Description"),
@@ -528,6 +534,7 @@ const ApiSidebar = Form.create()(
     };
 
     render() {
+      console.log(this.props.selectedCellData);
       let host_url = "";
       if (this.props.selectedCellData.custom_api && this.props.selectedCellData.custom_api.value === "true") {
         if (this.props.selectedCellData.Host_url && this.props.selectedCellData.Uri) {
@@ -582,7 +589,7 @@ const ApiSidebar = Form.create()(
                             required: true,
                           },
                         ],
-                        initialValue: this.props.selectedCellData.Method ? this.props.selectedCellData.Method.value : "",
+                        initialValue: this.props.selectedCellData.Method ? (this.props.selectedCellData.Method.value !== "" ? this.props.selectedCellData.Method.value : "GET") : "GET",
                       })(
                         this.props.selectedCellData.custom_api && this.props.selectedCellData.custom_api.value === "true" ? (
                           <select className="select-env">

@@ -5,11 +5,11 @@ import constants from "../constants";
 import axios from "axios";
 import Loader from "../Components/Loader";
 
-const AddSwaggerModal = Form.create()(
+const AddCollectionModal = Form.create()(
   class extends React.Component {
     state = {
       uploadedFileName: "",
-      uploadType: "file",
+      uploadType: "postman-collection",
       loader: false,
       spec_name: "",
       file_url: "",
@@ -63,15 +63,10 @@ const AddSwaggerModal = Form.create()(
         let fileUploadReq = "";
         let endpointpackReq = "";
 
-        if (this.state.uploadType === "file") {
+        if (this.state.uploadType === "postman-collection") {
           let fileUpload = new FormData();
           fileUpload.append("files", form.getFieldValue("swaggerFile").file.originFileObj);
-          // fileUpload.append("ref", "endpointpack");
-          // fileUpload.append("refId", this.props.spec_id ? this.props.spec_id : endpointpackReq.data.id);
-          // fileUpload.append("field", "swagger_files");
-
           const config = { headers: { "content-type": "multipart/form-data" } };
-
           fileUploadReq = await axios.post(constants.upload, fileUpload, config);
           // fileUploadReq.data[0].url = fileUploadReq.data[0].url.replace(constants.image_host, "")
           console.log("fileupload request", fileUploadReq);
@@ -81,7 +76,7 @@ const AddSwaggerModal = Form.create()(
           // Endpointpack Request
           const endpointpackData = {
             name: form.getFieldValue("swaggerName"),
-            upload_type: this.state.uploadType,
+            upload_type: "postman-collection",
             application: {
               id: window.location.pathname.split("/")[2],
             },
@@ -91,22 +86,22 @@ const AddSwaggerModal = Form.create()(
         }
 
         const swaggerData = {
-          swagger_url: this.state.uploadType === "file" ? fileUploadReq.data[0].url : form.getFieldValue("swaggerUrl"),
+          swagger_url: this.state.uploadType === "postman-collection" ? fileUploadReq.data[0].url : form.getFieldValue("swaggerUrl"),
           endpointpack_id: this.props.spec_id ? this.props.spec_id : endpointpackReq.data.id,
         };
         console.log("swaggerData", swaggerData);
 
         this.props.spec_id ? (swaggerData["applicationid"] = window.location.pathname.split("/")[2]) : "";
         let data;
-        data = await axios.post(this.props.spec_id ? constants.swaggerUpadte : constants.swaggerFile, swaggerData);
+        data = await axios.post(this.props.spec_id ? constants.createCollection : constants.createCollection, swaggerData);
 
         console.log("swagger data ---->", data);
-        if (this.props.spec_id) {
-          this.props.showconflict(data.data);
-        } else {
-          this.props.loadAddedPack();
-          Alert.success("Api pack created successfully.");
-        }
+        // if (this.props.spec_id) {
+        //   this.props.showconflict(data.data);
+        // } else {
+        this.props.loadAddedPack();
+        Alert.success("Api pack created successfully.");
+        // }
         this.setState({ loader: false });
       } catch (error) {
         Alert.error("Something went wrong");
@@ -124,13 +119,13 @@ const AddSwaggerModal = Form.create()(
       const { getFieldDecorator } = this.props.form;
       return (
         <React.Fragment>
-          <Modal show={this.props.addSwaggerModal} onHide={this.onHide} onEnter={this.loadAddedPack} size="lg">
+          <Modal show={this.props.addCollectionModal} onHide={this.onHide} onEnter={this.loadAddedPack} size="lg">
             <Modal.Header>
-              <Modal.Title>Import Swagger</Modal.Title>
+              <Modal.Title>Import Collection</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <div className="sr-form-button-container-row" style={{ justifyContent: "center" }}>
-                <div onClick={() => this.setState({ uploadType: "file" })} className={"sr-form-button-container " + (this.state.uploadType === "file" ? "sr-form-button-bg" : "")}>
+                {/* <div onClick={() => this.setState({ uploadType: "file" })} className={"sr-form-button-container " + (this.state.uploadType === "file" ? "sr-form-button-bg" : "")}>
                   <div
                     className="fa fa-file-text"
                     style={{
@@ -140,8 +135,8 @@ const AddSwaggerModal = Form.create()(
                     }}
                   />
                   <div className={"sr-form-button-title " + (this.state.uploadType === "file" ? "sr-form-button-title-white" : "sr-form-button-title-black")}>FILE</div>
-                </div>
-                <div onClick={() => this.setState({ uploadType: "url" })} className={"sr-form-button-container " + (this.state.uploadType === "url" ? "sr-form-button-bg" : "")}>
+                </div> */}
+                {/* <div onClick={() => this.setState({ uploadType: "url" })} className={"sr-form-button-container " + (this.state.uploadType === "url" ? "sr-form-button-bg" : "")}>
                   <div
                     className="fa fa-link"
                     style={{
@@ -150,8 +145,8 @@ const AddSwaggerModal = Form.create()(
                       color: this.state.uploadType === "url" ? "#fff" : "",
                     }}
                   />
-                  <div className={"sr-form-button-title " + (this.state.uploadType === "url" ? "sr-form-button-title-white" : "sr-form-button-title-black")}>URL</div>
-                </div>
+                  <div className={"sr-form-button-title " + (this.state.uploadType === "postman-collection" ? "sr-form-button-title-white" : "sr-form-button-title-black")}>URL</div>
+                </div> */}
                 {/* <div className="sr-form-button-container-row" style={{ justifyContent: "center" }}> */}
                 {/* <div
                   onClick={() => this.setState({ uploadType: "postman-collection" })}
@@ -179,7 +174,7 @@ const AddSwaggerModal = Form.create()(
                     initialValue: this.state.spec_name ? this.state.spec_name : "",
                   })(<Input />)}
                 </Form.Item>
-                {this.state.uploadType === "file" ? (
+                {this.state.uploadType === "file" || this.state.uploadType === "postman-collection" ? (
                   <Form.Item label="File">
                     {getFieldDecorator("swaggerFile", {
                       rules: [
@@ -199,7 +194,7 @@ const AddSwaggerModal = Form.create()(
                         }}
                       >
                         <p className="ant-upload-text">{this.state.uploadedFileName ? this.state.uploadedFileName : "Click or drag file to upload."}</p>
-                        <p className="ant-upload-hint"> Accepted Files: .json / .yaml </p>
+                        <p className="ant-upload-hint"> Accepted Files: .json </p>
                       </Upload.Dragger>
                     )}
                   </Form.Item>
@@ -244,4 +239,4 @@ const AddSwaggerModal = Form.create()(
   }
 );
 
-export default AddSwaggerModal;
+export default AddCollectionModal;

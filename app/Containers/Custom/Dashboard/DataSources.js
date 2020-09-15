@@ -408,7 +408,7 @@ export default class DataSources extends React.Component {
       if (node.name === "i") {
         return (
           <div className="action-btns">
-            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Add Query</Tooltip>} key={node + index}>
+            {/* <Whisper placement="top" trigger="hover" speaker={<Tooltip>Add Query</Tooltip>} key={node + index}>
               <div
                 className="table-action-btn btn-space"
                 onClick={() => {
@@ -423,7 +423,7 @@ export default class DataSources extends React.Component {
               >
                 <i className="fa fa-plus" />
               </div>
-            </Whisper>
+            </Whisper> */}
             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Edit</Tooltip>} key={"edit" + node + index}>
               <div
                 className="table-action-btn"

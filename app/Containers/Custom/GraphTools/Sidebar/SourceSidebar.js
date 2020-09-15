@@ -33,6 +33,7 @@ const SourceSidebar = Form.create()(
 
     getSource = () => {
       axios.get(`${constants.application}/${window.location.pathname.split("/")[2]}`).then((response) => {
+        console.log("response --->", response);
         let temp_source = [];
         for (let source of response.data.sourceregistrations) {
           temp_source.push({ id: source["id"].toString(), source_name: source["name"], database_type: source["type"] });
@@ -1243,6 +1244,7 @@ const SourceSidebar = Form.create()(
     };
 
     render() {
+      console.log("sources --->", this.state.source);
       const { getFieldDecorator } = this.props.form;
       return (
         <Drawer size="md" placement="right" show={this.props.visible} onHide={this.hideModal} onEnter={this.SidebarEnter}>
