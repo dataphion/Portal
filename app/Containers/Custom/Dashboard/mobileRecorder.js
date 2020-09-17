@@ -223,7 +223,7 @@ export default class MobileRecorder extends React.Component {
         y_cord: selected_step.y,
         base_image: fileupload_id,
         element_attributes: selected_step,
-        element_value: selected_step_sendkey,
+        element_value: this.state.sendKeyContent,
         pixel_ratio: "3.00",
       }),
     });
@@ -610,7 +610,7 @@ export default class MobileRecorder extends React.Component {
                             <div className="swipe-switch-logo" />
                             Focus
                           </div>
-                          <div onClick={() => this.setState({ sendKeyContainer: true })} className="actions-btn">
+                          <div onClick={() => this.setState({ sendKeyContainer: true, sendKeyContent: "" })} className="actions-btn">
                             <div className="coordinates-switch-logo" />
                             Send Text
                           </div>
@@ -777,7 +777,7 @@ export default class MobileRecorder extends React.Component {
                           element_props: this.state.selected_element.properties,
                           text: this.state.sendKeyContent,
                         });
-                        this.setState({ sendKeyContainer: false, sendKeyContent: "" });
+                        this.setState({ sendKeyContainer: false });
                         let val = this.state.steps_data;
                         val.push({
                           id: await this.sendSteps("sendkey"),
