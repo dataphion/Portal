@@ -24,7 +24,7 @@ export default class ObjectRepository extends React.Component {
       loadTestcase: [],
       loader: false,
       addOR: false,
-      show_ui: true
+      show_ui: true,
     };
   }
 
@@ -38,7 +38,7 @@ export default class ObjectRepository extends React.Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
+        Accept: "application/json",
       },
       body: JSON.stringify({
         query: `{
@@ -76,11 +76,11 @@ export default class ObjectRepository extends React.Component {
               }
             }
           }
-        }`
-      })
+        }`,
+      }),
     })
-      .then(response => response.json())
-      .then(async response => {
+      .then((response) => response.json())
+      .then(async (response) => {
         let objectrepositories = [];
         for (let obj of response.data.applications[0].testcases) {
           for (let component of obj.testcasecomponents) {
@@ -91,22 +91,22 @@ export default class ObjectRepository extends React.Component {
         }
         this.setState({
           loadTestcase: objectrepositories,
-          loader: false
+          loader: false,
         });
         // return this.formTreeStructure(objectrepositories);
         const structure = await this.formTreeStructure(response.data.applications[0].testcases);
         return structure;
         // return this.formTreeStructure(response.data.applications[0].testcases);
       })
-      .then(treeStructure => {
+      .then((treeStructure) => {
         this.setState({
           treeStructure: treeStructure.ui,
           maxLoops: this.getDepth(treeStructure.ui),
           mobile_treeStructure: treeStructure.mobile,
-          mobile_maxLoops: this.getDepth(treeStructure.mobile)
+          mobile_maxLoops: this.getDepth(treeStructure.mobile),
         });
       })
-      .catch(error => {
+      .catch((error) => {
         Alert.error("Something went wrong");
         console.log(error);
       });
@@ -122,7 +122,7 @@ export default class ObjectRepository extends React.Component {
     obj[keyPath[lastKeyIndex]] = value;
   };
 
-  getDepth = object => {
+  getDepth = (object) => {
     var level = 1;
     var key;
     for (key in object) {
@@ -136,7 +136,7 @@ export default class ObjectRepository extends React.Component {
     return level;
   };
 
-  formTreeStructure = resp_data => {
+  formTreeStructure = (resp_data) => {
     let objectrepositories = [];
     let mobile_repositories = [];
     for (let obj of resp_data) {
@@ -187,7 +187,7 @@ export default class ObjectRepository extends React.Component {
         }
         let tree_structure = {
           mobile: mobile_tree,
-          ui: tree
+          ui: tree,
         };
         // resolve(tree);
         resolve(tree_structure);
@@ -271,12 +271,12 @@ export default class ObjectRepository extends React.Component {
                       <div
                         key={index}
                         className={this.state.selected_tag === testcase.tag ? "animated fadeInUp active tag" : "animated fadeInUp tag"}
-                        onClick={e =>
+                        onClick={(e) =>
                           this.setState({ selected_tag: testcase.tag }, () => {
                             // let element = document.getElementById(testcase.tag)
                             // let dims = element.getBoundingClientRect()
                             document.getElementById(testcase.tag).scrollIntoView({
-                              behavior: "smooth"
+                              behavior: "smooth",
                             });
                           })
                         }
@@ -307,12 +307,12 @@ export default class ObjectRepository extends React.Component {
                       <div
                         key={index}
                         className={this.state.selected_tag === testcase.tag ? "animated fadeInUp active tag" : "animated fadeInUp tag"}
-                        onClick={e =>
+                        onClick={(e) =>
                           this.setState({ selected_tag: testcase.tag }, () => {
                             // let element = document.getElementById(testcase.tag)
                             // let dims = element.getBoundingClientRect()
                             document.getElementById(testcase.tag).scrollIntoView({
-                              behavior: "smooth"
+                              behavior: "smooth",
                             });
                           })
                         }
@@ -389,10 +389,10 @@ export default class ObjectRepository extends React.Component {
               ""
             ) : (
               <div className="page-element-right-body">
-                {this.state.loadTestcase.map(element => {
+                {this.state.loadTestcase.map((element, index) => {
                   if (element.url) {
                     if (element.url.includes(this.state.selected_path)) {
-                      return <PageElementBody element_values={element} />;
+                      return <PageElementBody element_values={element} key={index} />;
                     }
                   }
                 })}

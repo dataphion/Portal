@@ -35,20 +35,22 @@ export default class PageElementBody extends React.Component {
     this.setState({
       tagValue: this.props.element_values.tag,
     });
-
-    if (this.props.element_values.element_attributes.class) {
-      this.setState({
-        tagsClass: this.props.element_values.element_attributes.class.split(" "),
-      });
+    console.log(this.props.element_values);
+    if (this.props.element_values.element_attributes) {
+      if (this.props.element_values.element_attributes.class) {
+        this.setState({
+          tagsClass: this.props.element_values.element_attributes.class.split(" "),
+        });
+      }
     }
     this.setState({
       valueSelectorValue: this.props.element_values.element_value,
-      nameSelectorValue: this.props.element_values.element_attributes.name,
+      nameSelectorValue: this.props.element_values.element_attributes ? this.props.element_values.element_attributes.name : "",
       idSelectorValue: this.props.element_values.element_id,
       tagsXPath: this.props.element_values.element_xpaths,
       valueSelector: this.props.element_values.element_value ? true : false,
       idSelectorCondition: this.props.element_values.element_id ? true : false,
-      nameSelectorcondition: this.props.element_values.element_attributes.name ? true : false,
+      nameSelectorcondition: this.props.element_values.element_attributes ? (this.props.element_values.element_attributes.name ? true : false) : false,
     });
   };
 
@@ -250,6 +252,7 @@ export default class PageElementBody extends React.Component {
     let h_url = this.props.element_values.highlighted_image_url;
     let e_url = this.props.element_values.element_snapshot;
     let b_url = this.props.element_values.page_url;
+    console.log("tagsXPath---->", this.state.tagsXPath);
     return (
       <div className="element-details-container">
         <div className="absolute-pixel" id={this.props.element_values.tag} />
@@ -278,11 +281,7 @@ export default class PageElementBody extends React.Component {
             )}
           </div>
         </div>
-        <Collapse
-          className="page-element-right-body-accordian antd-collapse-container"
-          bordered={true}
-          expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
-        >
+        <Collapse className="page-element-right-body-accordian antd-collapse-container" bordered={true} expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}>
           <div className="meta-data-border" />
 
           <Collapse.Panel header="ELEMENT LOCATORS" key="1">
@@ -400,19 +399,22 @@ export default class PageElementBody extends React.Component {
               <div className="element-item-row-border" />
               <div className="input-tag">
                 <ul className="input-tag__tags">
-                  {this.state.tagsXPath.map((tag, i) => (
-                    <li key={tag} onDoubleClick={() => this.editTagXPath(i)}>
-                      {tag}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          this.removeTagXPath(i);
-                        }}
-                      >
-                        +
-                      </button>
-                    </li>
-                  ))}
+                  {this.state.tagsXPath
+                    ? this.state.tagsXPath.map((tag, i) => (
+                        <li key={tag} onDoubleClick={() => this.editTagXPath(i)}>
+                          {tag}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              this.removeTagXPath(i);
+                            }}
+                          >
+                            +
+                          </button>
+                        </li>
+                      ))
+                    : ""}
+
                   <li className="input-tag__tags__input">
                     <input
                       type="text"
@@ -487,10 +489,7 @@ export default class PageElementBody extends React.Component {
                   })
                 }
               >
-                <img
-                  className="img"
-                  src={h_url && h_url.trim() === "" ? require("../../../Assets/Images/blank.png") : constants.image_host + h_url}
-                />
+                <img className="img" src={h_url && h_url.trim() === "" ? require("../../../Assets/Images/blank.png") : constants.image_host + h_url} />
               </div>
 
               <div
@@ -503,10 +502,7 @@ export default class PageElementBody extends React.Component {
                   })
                 }
               >
-                <img
-                  className="img"
-                  src={e_url && e_url.trim() === "" ? require("../../../Assets/Images/blank.png") : constants.image_host + e_url}
-                />
+                <img className="img" src={e_url && e_url.trim() === "" ? require("../../../Assets/Images/blank.png") : constants.image_host + e_url} />
               </div>
 
               <div
@@ -519,10 +515,7 @@ export default class PageElementBody extends React.Component {
                   })
                 }
               >
-                <img
-                  className="img"
-                  src={b_url && b_url.trim() === "" ? require("../../../Assets/Images/blank.png") : constants.image_host + b_url}
-                />
+                <img className="img" src={b_url && b_url.trim() === "" ? require("../../../Assets/Images/blank.png") : constants.image_host + b_url} />
               </div>
             </div>
           </Collapse.Panel>

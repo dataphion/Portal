@@ -31,7 +31,7 @@ const Testsuites = Form.create()(
           "Reliability testing": { count: 0 },
           "Usability testing": { count: 0 },
           "Compliance testing": { count: 0 },
-          "Localization testing": { count: 0 }
+          "Localization testing": { count: 0 },
         },
         suiteId: "", // for delete
         deleteConfirmation: false, // for delete
@@ -49,17 +49,17 @@ const Testsuites = Form.create()(
         Browser_list: [
           {
             id: "chrome",
-            name: "Google Chrome "
+            name: "Google Chrome ",
           },
           {
             id: "firefox",
-            name: "Firefox "
+            name: "Firefox ",
           },
           {
             id: "MicrosoftEdge",
-            name: "Microsoft Edge"
-          }
-        ]
+            name: "Microsoft Edge",
+          },
+        ],
       };
       this.myRef = React.createRef();
     }
@@ -98,7 +98,7 @@ const Testsuites = Form.create()(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json"
+          Accept: "application/json",
         },
         body: JSON.stringify({
           query: `{
@@ -115,16 +115,16 @@ const Testsuites = Form.create()(
               sequence
             }
           }
-        }`
-        })
+        }`,
+        }),
       })
-        .then(response => response.json())
-        .then(response => {
+        .then((response) => response.json())
+        .then((response) => {
           if (response.data && response.data.applications && response.data.applications[0]) {
             if (response.data.applications[0]["testsuites"] && response.data.applications[0]["testsuites"].length > 0) {
               // update the counts
               let exisiting = this.state.existingTypes;
-              response.data.applications[0]["testsuites"].map(suite => {
+              response.data.applications[0]["testsuites"].map((suite) => {
                 if (suite.sequence) {
                   exisiting[suite.type]["count"] += 1;
                 }
@@ -134,13 +134,13 @@ const Testsuites = Form.create()(
               this.setState({
                 existingTypes: exisiting,
                 deleteConfirmation: false,
-                testsuites: response.data.applications[0]["testsuites"]
+                testsuites: response.data.applications[0]["testsuites"],
               });
             }
           }
           this.setState({ loader: false });
         })
-        .catch(error => {
+        .catch((error) => {
           Alert.error("Something went wrong");
           console.log(error);
         });
@@ -152,7 +152,7 @@ const Testsuites = Form.create()(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json"
+          Accept: "application/json",
         },
         body: JSON.stringify({
           query: `{
@@ -168,8 +168,8 @@ const Testsuites = Form.create()(
               port
             }
           }
-        }`
-        })
+        }`,
+        }),
       });
 
       const selenium_address = await get_selenium_details.json();
@@ -178,12 +178,12 @@ const Testsuites = Form.create()(
         testsuiteid: this.state.current_suit_id,
         environment_id: this.state.selected_environment,
         browser: this.state.selected_browser,
-        protractor_host: `http://${selenium_address.data.applications[0].selenium_configure.host}:${selenium_address.data.applications[0].selenium_configure.port}/wd/hub`
+        protractor_host: `http://${selenium_address.data.applications[0].selenium_configure.host}:${selenium_address.data.applications[0].selenium_configure.port}/wd/hub`,
       };
 
       axios
         .post(constants.apiexecutehost, apiExecuteBody)
-        .then(response => {
+        .then((response) => {
           // check if any suites already running
           let running_suites = JSON.parse(sessionStorage.getItem("jobs_id"));
           if (!!running_suites) {
@@ -196,14 +196,15 @@ const Testsuites = Form.create()(
 
           Alert.success("Suite Run started.");
           this.myRef.current.Polling();
+          this.setState({ selected_environment: "", selected_browser: "" });
         })
-        .catch(function(error) {
+        .catch(function (error) {
           Alert.error("Something went wrong");
           console.log(error);
         });
     };
 
-    selectEnvironment = id => {
+    selectEnvironment = (id) => {
       this.setState({ visible: true, current_suit_id: id });
     };
 
@@ -213,7 +214,7 @@ const Testsuites = Form.create()(
         types.push({
           id: key,
           name: key,
-          count: this.state.existingTypes[key]["count"]
+          count: this.state.existingTypes[key]["count"],
         });
       }
 
@@ -239,18 +240,18 @@ const Testsuites = Form.create()(
     delete = () => {
       this.setState({ loader: true });
       fetch(`${constants.testsuites}/${this.state.suiteId}`, {
-        method: "DELETE"
+        method: "DELETE",
       })
-        .then(response => response.json())
-        .then(response => {
+        .then((response) => response.json())
+        .then((response) => {
           this.loadTestSuiteData();
           this.setState({
             loader: false,
             deleteConfirmation: false,
-            suiteId: ""
+            suiteId: "",
           });
         })
-        .catch(error => {
+        .catch((error) => {
           Alert.error("Something went wrong");
           console.log(error);
         });
@@ -269,7 +270,7 @@ const Testsuites = Form.create()(
         Alert.warning("please select browser!");
         return;
       }
-      this.setState({ visible: false, selected_environment: "", selected_browser: "" });
+      this.setState({ visible: false });
       this.runSuite();
       // this.PostXMLorJSON("graphRun")
     };
@@ -278,11 +279,11 @@ const Testsuites = Form.create()(
       this.setState({ visible: false, selected_environment: "", selected_browser: "" });
     };
 
-    handleChange = e => {
+    handleChange = (e) => {
       this.setState({ selected_environment: e.target.value, select_env_err: false });
     };
 
-    SelectBrowser = e => {
+    SelectBrowser = (e) => {
       this.setState({ selected_browser: e.target.value, select_browser_err: false });
     };
 
@@ -301,9 +302,9 @@ const Testsuites = Form.create()(
                   rules: [
                     {
                       required: true,
-                      message: "Please input your environment!"
-                    }
-                  ]
+                      message: "Please input your environment!",
+                    },
+                  ],
                 })(
                   <select className={this.state.select_env_err ? "select-env-err select-env" : "select-env"} onChange={this.handleChange}>
                     <option value="">Select Environment</option>
@@ -323,9 +324,9 @@ const Testsuites = Form.create()(
                   rules: [
                     {
                       required: true,
-                      message: "Please select your browser!"
-                    }
-                  ]
+                      message: "Please select your browser!",
+                    },
+                  ],
                 })(
                   <select className={this.state.select_browser_err ? "select-env-err select-env" : "select-env"} onChange={this.SelectBrowser}>
                     <option value="">Select Browser</option>
@@ -360,7 +361,7 @@ const Testsuites = Form.create()(
     render() {
       let filteredData = [];
       if (this.state.testsuites.length > 0) {
-        this.state.testsuites.map(suite => {
+        this.state.testsuites.map((suite) => {
           if (suite.type === this.state.test_suite_type && suite.sequence) {
             if (this.state.searchText.trim() === "") {
               suite["count"] = suite.sequence.length;
@@ -381,18 +382,18 @@ const Testsuites = Form.create()(
           title: "Name",
           dataIndex: "suite_name",
           key: "suite_name",
-          sorter: (a, b) => a.suite_name.localeCompare(b.suite_name)
+          sorter: (a, b) => a.suite_name.localeCompare(b.suite_name),
         },
         {
           title: "Number of Testcases",
           dataIndex: "count",
-          key: "count"
+          key: "count",
         },
         {
           title: "Action",
           dataIndex: "id",
           key: "x",
-          render: id => (
+          render: (id) => (
             <div className="table-action-btn-container">
               <Whisper placement="top" trigger="hover" speaker={<Tooltip>Run Testsuite</Tooltip>}>
                 <div
@@ -410,7 +411,7 @@ const Testsuites = Form.create()(
                   onClick={() =>
                     this.props.parentData.history.push({
                       pathname: `test-suites/update/${id}`,
-                      parentData: this.props
+                      parentData: this.props,
                     })
                   }
                 >
@@ -429,8 +430,8 @@ const Testsuites = Form.create()(
                 </div>
               </Whisper>
             </div>
-          )
-        }
+          ),
+        },
       ];
 
       return (
@@ -457,7 +458,7 @@ const Testsuites = Form.create()(
                     onClick={() =>
                       this.props.parentData.history.push({
                         pathname: `test-suites/add-testsuite`,
-                        parentData: this.props
+                        parentData: this.props,
                       })
                     }
                     className="positive-button"
@@ -481,7 +482,7 @@ const Testsuites = Form.create()(
                     <div className="testcase-filter-panel-search-btn">
                       <i className="fa fa-search" />
                     </div>
-                    <input autoFocus type="text" placeholder="Search testsuites here" name="search" value={this.state.searchText} onChange={e => this.setState({ searchText: e.target.value })} />
+                    <input autoFocus type="text" placeholder="Search testsuites here" name="search" value={this.state.searchText} onChange={(e) => this.setState({ searchText: e.target.value })} />
                   </div>
                 </div>
                 <div className="testcases-table">
@@ -490,7 +491,7 @@ const Testsuites = Form.create()(
                     dataSource={filteredData}
                     columns={columns}
                     pagination={{
-                      pageSize: document.getElementsByClassName("ant-table-wrapper")[0] ? Math.ceil(document.getElementsByClassName("ant-table-wrapper")[0].offsetHeight / 40 - 3) : 10
+                      pageSize: document.getElementsByClassName("ant-table-wrapper")[0] ? Math.ceil(document.getElementsByClassName("ant-table-wrapper")[0].offsetHeight / 40 - 3) : 10,
                     }}
                     rowKey="id"
                   />
