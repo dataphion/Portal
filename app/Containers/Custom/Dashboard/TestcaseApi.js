@@ -972,6 +972,7 @@ const TestcaseApi = Form.create()(
     };
 
     PostXMLorJSON = async (purpose) => {
+      console.log("purpose --->", purpose);
       const { graph } = this.state;
       let allCells = {};
       for (const cell of graph.getChildVertices(graph.getDefaultParent())) {
@@ -1104,7 +1105,17 @@ const TestcaseApi = Form.create()(
               }
             }
           }
+          console.log("type of allcells", typeof allCells[key]);
+          if (typeof allCells[key] === "object") {
+            console.log(allCells[key]["properties"]["Method"]);
+          }
+          // console.log("methods ---->", typeof allCells[key]);
+          if (typeof allCells[key] === "object" && allCells[key]["properties"]["Method"] === "uitestcase") {
+            console.log("testcases --->");
+            allCells[key]["properties"]["Type"] = "testcase";
+          }
         }
+        console.log("allCells ---->", allCells);
         this.graphSave(allCells, purpose, endpointids);
       }
       return allCells;
