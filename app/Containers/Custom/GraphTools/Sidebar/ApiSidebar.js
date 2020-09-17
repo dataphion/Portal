@@ -534,13 +534,20 @@ const ApiSidebar = Form.create()(
     };
 
     render() {
-      console.log(this.props.selectedCellData);
+      // console.log(this.props.selectedCellData);
       let host_url = "";
       if (this.props.selectedCellData.custom_api && this.props.selectedCellData.custom_api.value === "true") {
         if (this.props.selectedCellData.Host_url && this.props.selectedCellData.Uri) {
-          host_url = this.props.selectedCellData.Host_url.value + this.props.selectedCellData.Uri.value;
+          // console.log(this.props.selectedCellData.Host_url.value);
+          // console.log(this.props.selectedCellData.Uri.value);
+          if (this.props.selectedCellData.Host_url.value === this.props.selectedCellData.Uri.value) {
+            host_url = this.props.selectedCellData.Host_url.value;
+          } else {
+            host_url = this.props.selectedCellData.Host_url.value + this.props.selectedCellData.Uri.value;
+          }
         }
       }
+      console.log("host --->", host_url);
       const { getFieldDecorator } = this.props.form;
       return (
         <Drawer size="md" placement="right" show={this.props.visible} onHide={this.hideModal} onEnter={this.SidebarEnter}>
