@@ -1069,12 +1069,16 @@ const TestcaseApi = Form.create()(
                 const post_endpointpack = await axios.post(`${constants.endpointpacks}`, body);
                 pack_id = post_endpointpack.data.id;
               }
-
+              let endpoint_uri = allCells[key]["properties"]["Uri"];
+              if (allCells[key]["properties"]["Uri"] === allCells[key]["properties"]["Host_url"]) {
+                endpoint_uri = "/";
+              }
               if (!endpoint_id_found || endpoint_id === null) {
                 // entry in endpoints
                 let endpoint_body = {
                   method: allCells[key]["properties"]["Method"],
-                  endpoint: allCells[key]["properties"]["Uri"],
+                  // endpoint: allCells[key]["properties"]["Uri"],
+                  endpoint: endpoint_uri,
                   endpointpack: pack_id,
                   responses: null,
                   tags: null,
