@@ -49,15 +49,18 @@ export default class MobileRecorder extends React.Component {
   }
 
   componentDidMount() {
-    const { state } = this.context;
-    if (state.connected_agent.length == 0) {
-      this.props.history.push({
-        pathname: `/dashboard/${window.location.pathname.split("/")[2]}/test-cases`,
-      });
-      return Alert.warning("Desktop agent is not connected.");
+    if (!sessionStorage.getItem("id")) {
+      this.props.history.push("/login");
+    } else {
+      this.loadSteps();
     }
-
-    this.loadSteps();
+    // const { state } = this.context;
+    // if (state.connected_agent.length == 0) {
+    //   this.props.history.push({
+    //     pathname: `/dashboard/${window.location.pathname.split("/")[2]}/test-cases`,
+    //   });
+    //   return Alert.warning("Desktop agent is not connected.");
+    // }
   }
 
   handleMouseHover = () => {
@@ -475,6 +478,7 @@ export default class MobileRecorder extends React.Component {
   refreshDevice = () => {
     socket.emit("REFRESH", {
       ip: sessionStorage.getItem("publicIP"),
+      capabilities: this.state.capabilities,
     });
   };
 
