@@ -69,9 +69,19 @@ export default class ApiSpecs extends React.Component {
     })
       .then((response) => response.json())
       .then((response) => {
+        console.log("endpoints pack", response);
+        let packs = [];
+        if (response.data.applications[0].endpointpacks.length > 0) {
+          for (const pack of response.data.applications[0].endpointpacks) {
+            if (pack.upload_type !== "custom") {
+              packs.push(pack);
+            }
+          }
+        }
+
         this.setState({
           loader: false,
-          addedPack: response.data.applications[0].endpointpacks,
+          addedPack: packs,
         });
       })
       .catch((error) => {

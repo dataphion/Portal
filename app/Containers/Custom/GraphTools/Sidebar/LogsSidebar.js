@@ -50,7 +50,7 @@ export default class LogsSidebar extends React.Component {
                 ? Object.keys(this.props.logs).map((name, index) => (
                     <Panel
                       extra={renderStatusCode(this.props.logs[name].status_code)}
-                      header={`${this.props.logs[name]["name"]} . . . . . iteration: ${this.props.logs[name]["index"]}`}
+                      header={`${this.props.logs[name]["name"]} . . . . . iteration: ${this.props.logs[name]["index"] ? this.props.logs[name]["index"] : 1}`}
                       key={index}
                     >
                       <JSONTree

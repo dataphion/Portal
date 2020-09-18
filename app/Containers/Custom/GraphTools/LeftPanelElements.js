@@ -120,6 +120,7 @@ export default class LeftPanelElements extends React.Component {
           }
           //sort JSON object Array based on Number of "/" in key of json object
           endpoints.sort((a, b) => a.key.split("/").length - b.key.split("/").length);
+
           formatedPacks.push({
             id: data.id,
             name: data.name,
@@ -155,7 +156,7 @@ export default class LeftPanelElements extends React.Component {
           </div>
           <div className="graph-left-panel-drag-header-border" />
           {/* <div className="graph-left-panel-drag-header-data-count">{endpoint.value.length}</div> */}
-          <div className="graph-left-panel-drag-header-data-count">{type === "file" ? "S" : "C"}</div>
+          <div className="graph-left-panel-drag-header-data-count">{type === "file" || type === "url" ? "S" : "C"}</div>
         </div>
         <div className="graph-left-panel-drag-row draggable-endpoints">
           {endpoint.value ? endpoint.value.map((method, index) => this.renderMethods(endpoint.key, method, index, endpointKey, EndpointPackId)) : ""}
@@ -395,7 +396,7 @@ export default class LeftPanelElements extends React.Component {
                 {this.state.endpointPacks.map((data, index) => {
                   const EndpointPackId = data.id;
                   // if (data.name && data.name !== "custom_api" && data.upload_type !== "postman-collection") {
-                  if (data.name && data.name !== "custom_api" && data.upload_type === "file") {
+                  if (data.upload_type === "file" || data.upload_type === "url") {
                     console.log(data);
                     return (
                       <div className="endpoint-pack-accordion-dropdown animated zoomIn faster" key={index}>
@@ -506,7 +507,7 @@ export default class LeftPanelElements extends React.Component {
             <Panel header="Controls" eventKey={5}>
               {this.showControls()}
             </Panel>
-            <Panel header="Source" eventKey={6}>
+            <Panel header="Sources" eventKey={6}>
               <div className="graph-left-panel-drag-container animated zoomIn faster">
                 {/* <div className="graph-left-panel-drag-header">
                   <div className="graph-left-panel-drag-header-title">Sources</div>

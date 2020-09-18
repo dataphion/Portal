@@ -191,10 +191,12 @@ const ApiSidebar = Form.create()(
           host = split_url[0] + "//" + split_url[1].split("/")[0];
 
           let uri_endpoint = split_url[1].split("/");
+          console.log("endpoints", uri_endpoint);
           for (let i = 1; i < uri_endpoint.length; i++) {
             uri = uri + "/" + uri_endpoint[i];
           }
         }
+        console.log(uri);
 
         console.log("editor value", this.state.AceEditorValue);
         this.props.handleConfirm({
@@ -202,7 +204,8 @@ const ApiSidebar = Form.create()(
           Description: form.getFieldValue("Description"),
           Method: form.getFieldValue("Method"),
           Host_url: host === "" ? form.getFieldValue("Host_url") : host,
-          Uri: uri === "" ? form.getFieldValue("Uri") : uri,
+          // Uri: uri === "" ? form.getFieldValue("Uri") : uri,
+          Uri: this.props.selectedCellData.custom_api && this.props.selectedCellData.custom_api.value === "true" ? uri : form.getFieldValue("Uri"),
           PathParametersAdd: this.state.PathParametersAdd,
           QueryParametersAdd: this.state.QueryParametersAdd,
           AuthorizationUsername: form.getFieldValue("AuthorizationUsername"),

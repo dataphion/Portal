@@ -269,13 +269,18 @@ const TestcaseApi = Form.create()(
           Alert.error("Layout execution failed.");
         }
         // Api call for show log
+        console.log("data ------->", data);
         if (data.status === "successfull" || data.status === "fail") {
+          console.log("execution id", data.testcaseexecutionid);
+          console.log("node id", data.id);
+          console.log("index", data.index);
           fetch(constants.graphql, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
             },
+
             body: JSON.stringify({
               query: `{
                 testcaseexecutions(where: { id: "${data.testcaseexecutionid}" }) {
@@ -296,10 +301,20 @@ const TestcaseApi = Form.create()(
           })
             .then((response) => response.json())
             .then((response) => {
+              console.log(response.data);
               let executionResponse = this.state.executionLogs;
-              executionResponse[`${response.data.testcaseexecutions[0].flowsteps[0].name}_${response.data.testcaseexecutions[0].flowsteps[0].index}`] =
-                response.data.testcaseexecutions[0].flowsteps[0];
-              this.setState({ executionLogs: executionResponse });
+              if (data.type === "testcase") {
+                executionResponse[`ui_execution${data.id}`] = { status: data.status, node_id: data.id, testcaseexecutionid: data.testcaseexecutionid, name: `ui_execution-${data.id}` };
+              } else {
+                if (response.data.testcaseexecutions.length > 0) {
+                  console.log(response.data.testcaseexecutions[0].flowsteps[0]);
+                  executionResponse[`${response.data.testcaseexecutions[0].flowsteps[0].name}_${response.data.testcaseexecutions[0].flowsteps[0].index}`] =
+                    response.data.testcaseexecutions[0].flowsteps[0];
+                }
+                console.log(executionResponse);
+                this.setState({ executionLogs: executionResponse });
+                // }
+              }
             })
             .catch((error) => {
               Alert.error("Something went wrong");
@@ -1070,9 +1085,9 @@ const TestcaseApi = Form.create()(
                 pack_id = post_endpointpack.data.id;
               }
               let endpoint_uri = allCells[key]["properties"]["Uri"];
-              if (allCells[key]["properties"]["Uri"] === allCells[key]["properties"]["Host_url"]) {
-                endpoint_uri = "/";
-              }
+              // if (allCells[key]["properties"]["Uri"] === allCells[key]["properties"]["Host_url"]) {
+              //   endpoint_uri = "/";
+              // }
               if (!endpoint_id_found || endpoint_id === null) {
                 // entry in endpoints
                 let endpoint_body = {

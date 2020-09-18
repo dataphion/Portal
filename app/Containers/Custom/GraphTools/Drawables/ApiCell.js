@@ -54,7 +54,7 @@ export default class ApiCell {
 
     ApiCellHeaderMethodBTN.innerHTML = cell.getAttribute("Method", "");
     ApiCellHeaderMethodTitle.innerHTML = cell.getAttribute("Title", "");
-    ApiCellFooterUri.innerHTML = cell.getAttribute("Uri", "");
+    ApiCellFooterUri.innerHTML = cell.getAttribute("Uri", cell.getAttribute("Host_url"));
 
     return ApiCell;
   }
