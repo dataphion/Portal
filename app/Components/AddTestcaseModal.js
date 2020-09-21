@@ -501,7 +501,7 @@ const AddTestcaseModal = Form.create()(
                     )}
                   </Form.Item>
                 </Col>
-                {this.props.modalTestcaseType === "api" ? (
+                {/* {this.props.modalTestcaseType === "api" ? (
                   <Col xs={12} className="input-forms">
                     <Form.Item label="Collections">
                       {getFieldDecorator("collections", {
@@ -526,7 +526,7 @@ const AddTestcaseModal = Form.create()(
                   </Col>
                 ) : (
                   ""
-                )}
+                )} */}
 
                 {this.state.addNewFeature ? (
                   <Col xs={12} className="input-forms">
