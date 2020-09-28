@@ -4,7 +4,7 @@ export default class SourceCell {
   Cell(graph, cell) {
     let SourceCell = document.createElement("div");
     let SourceCellTitle = document.createElement("div");
-
+    console.log("current-method", cell.getAttribute("Method").toLowerCase());
     SourceCell.appendChild(SourceCellTitle);
     SourceCell.setAttribute("id", `graph-cell-${cell.id}`);
     if (cell.getAttribute("Method").toLowerCase() === "oracle") {
@@ -33,6 +33,9 @@ export default class SourceCell {
       SourceCellTitle.innerHTML = cell.getAttribute("CassandraDatabase", "");
     } else if (cell.getAttribute("Method").toLowerCase() === "kafka") {
       SourceCell.setAttribute("class", "source-cell kafka-source-cell");
+      SourceCellTitle.innerHTML = cell.getAttribute("Title", "");
+    } else if (cell.getAttribute("Method").toLowerCase() === "shell") {
+      SourceCell.setAttribute("class", "source-cell shell-source-cell");
       SourceCellTitle.innerHTML = cell.getAttribute("Title", "");
     }
     SourceCellTitle.setAttribute("class", "source-cell-title");

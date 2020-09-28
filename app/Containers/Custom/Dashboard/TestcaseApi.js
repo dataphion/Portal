@@ -872,6 +872,14 @@ const TestcaseApi = Form.create()(
         this.applyHandler(graph, cell, "OracleDatabase", fields.OracleDatabase);
         this.applyHandler(graph, cell, "RabbitmqSourceId", fields.RabbitmqSourceId);
         this.applyHandler(graph, cell, "KafkaSourceId", fields.KafkaSourceId);
+        this.applyHandler(graph, cell, "ServerIp", fields.ServerIp);
+        this.applyHandler(graph, cell, "SshPort", fields.SshPort);
+        this.applyHandler(graph, cell, "pem_file_url", fields.pem_file_url);
+        this.applyHandler(graph, cell, "uploadedFileName", fields.uploadedFileName);
+        this.applyHandler(graph, cell, "ServerUsername", fields.ServerUsername);
+        this.applyHandler(graph, cell, "ServerPassword", fields.ServerPassword);
+        this.applyHandler(graph, cell, "ShellCommand", fields.ShellCommand);
+        this.applyHandler(graph, cell, "ShellCommand", fields.ShellCommand);
         this.applyHandler(graph, cell, "RabbitmqQueueName", fields.RabbitmqQueueName);
         this.applyHandler(graph, cell, "KafkaTopicName", fields.KafkaTopicName);
         this.applyHandler(graph, cell, "RabbitmqType", fields.RabbitmqType);

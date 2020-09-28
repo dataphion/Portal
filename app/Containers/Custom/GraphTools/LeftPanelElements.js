@@ -641,6 +641,20 @@ export default class LeftPanelElements extends React.Component {
                     </Whisper>
                     {/* <div className="graph-left-panel-drag-data-desc larg-desc">Kafka</div> */}
                   </div>
+                  <div className="graph-left-panel-drag-data-container">
+                    <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Shell")}>
+                      <div
+                        value={JSON.stringify({
+                          Method: "shell",
+                          Type: "source",
+                        })}
+                        className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source shell-bg"
+                      >
+                        Shell
+                      </div>
+                    </Whisper>
+                    {/* <div className="graph-left-panel-drag-data-desc larg-desc">Kafka</div> */}
+                  </div>
                 </div>
               </div>
             </Panel>

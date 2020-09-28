@@ -27,7 +27,7 @@ export default class TestcaseSteps extends React.Component {
     this.myRef = React.createRef();
     this.state = {
       allData: [],
-      socket : socketIOClient(constants.socket_url),
+      socket: socketIOClient(constants.socket_url),
       groupIds: [],
       stepsData: [],
       imageModal: false,
@@ -60,30 +60,29 @@ export default class TestcaseSteps extends React.Component {
       Browser_list: [
         {
           id: "chrome",
-          name: "Google Chrome "
+          name: "Google Chrome ",
         },
         {
           id: "firefox",
-          name: "Firefox "
+          name: "Firefox ",
         },
         {
           id: "MicrosoftEdge",
-          name: "Microsoft Edge"
-        }
+          name: "Microsoft Edge",
+        },
       ],
       select_browser_err: false,
-      group_steps: 0
+      group_steps: 0,
     };
-
   }
 
-  showMetaData = step => {
+  showMetaData = (step) => {
     if (step === "next") {
       if (this.state.current_step < this.state.stepsData.length - 1) {
         this.setState(
           {
             current_step: this.state.current_step + 1,
-            modalInformation: this.state.stepsData[this.state.current_step + 1].objectrepository
+            modalInformation: this.state.stepsData[this.state.current_step + 1].objectrepository,
           },
           () => {
             this.myRef.current.updateProps();
@@ -95,7 +94,7 @@ export default class TestcaseSteps extends React.Component {
         this.setState(
           {
             current_step: this.state.current_step - 1,
-            modalInformation: this.state.stepsData[this.state.current_step - 1].objectrepository
+            modalInformation: this.state.stepsData[this.state.current_step - 1].objectrepository,
           },
           () => {
             this.myRef.current.updateProps();
@@ -109,19 +108,19 @@ export default class TestcaseSteps extends React.Component {
     console.log("Inside component did mount");
     if (sessionStorage.getItem("id")) {
       console.log("Session storage has ID..");
-      
+
       this.loadSteps();
       //socket code for record
 
-      this.state.socket.on('connect', function (){
-        console.log('connected to Socket Server.... ');
-      }); 
-  
-      this.state.socket.on('disconnect', function (){
-        console.log('disconnected to Socket Server.... ');
+      this.state.socket.on("connect", function () {
+        console.log("connected to Socket Server.... ");
+      });
+
+      this.state.socket.on("disconnect", function () {
+        console.log("disconnected to Socket Server.... ");
       });
       const testcase_id = window.location.pathname.split("/")[5];
-      this.state.socket.on(testcase_id+"_play_back", (data) => {
+      this.state.socket.on(testcase_id + "_play_back", (data) => {
         console.log("Received message from Socket.io server");
         console.log(data);
 
@@ -131,7 +130,7 @@ export default class TestcaseSteps extends React.Component {
           for (let find_id_sequence in new_step_data) {
             //condition for check after open url
             //condition for check objectrepo id is same
-  
+
             // ---------------------- IF TESTCASE GROUP FOUND IN RUNNING TESTCASE ----------
             if (!!new_step_data[find_id_sequence]["testcasecomponents"]) {
               let testcase_group = new_step_data[find_id_sequence]["testcasecomponents"];
@@ -142,7 +141,7 @@ export default class TestcaseSteps extends React.Component {
                     new_step_data[find_id_sequence].openUrlLoader = true;
                     new_step_data[find_id_sequence].failedcase = false;
                     this.setState({
-                      stepsData: new_step_data
+                      stepsData: new_step_data,
                     });
                   }
                   if (data.status === "completed") {
@@ -161,7 +160,7 @@ export default class TestcaseSteps extends React.Component {
                     new_step_data[find_id_sequence].failedcase = true;
                     this.setState({
                       stepsData: new_step_data,
-                      openUrlLoader: false
+                      openUrlLoader: false,
                     });
                   }
                 }
@@ -173,7 +172,7 @@ export default class TestcaseSteps extends React.Component {
                   new_step_data[find_id_sequence].openUrlLoader = true;
                   new_step_data[find_id_sequence].failedcase = false;
                   this.setState({
-                    stepsData: new_step_data
+                    stepsData: new_step_data,
                   });
                 }
                 if (data.status === "completed") {
@@ -184,7 +183,7 @@ export default class TestcaseSteps extends React.Component {
                   new_step_data[find_id_sequence].failedcase = false;
                   this.setState({
                     stepsData: new_step_data,
-                    openUrlLoader: false
+                    openUrlLoader: false,
                   });
                 }
                 if (data.status === "failed") {
@@ -193,7 +192,7 @@ export default class TestcaseSteps extends React.Component {
                   new_step_data[find_id_sequence].failedcase = true;
                   this.setState({
                     stepsData: new_step_data,
-                    openUrlLoader: false
+                    openUrlLoader: false,
                   });
                 }
               }
@@ -202,13 +201,13 @@ export default class TestcaseSteps extends React.Component {
         }
       });
 
-      this.state.socket.on(sessionStorage.getItem("id") + "_record", data => {
+      this.state.socket.on(sessionStorage.getItem("id") + "_record", (data) => {
         const testcase_id = window.location.pathname.split("/")[5];
 
         if (data.testcase.id == testcase_id && data.testcase.sequence_number !== "1") {
           this.setState({
             stepsData: [...this.state.stepsData, data.testcase],
-            openUrlLoader: false
+            openUrlLoader: false,
           });
         }
       });
@@ -217,7 +216,6 @@ export default class TestcaseSteps extends React.Component {
       console.log(window.location.pathname.split("/")[5] + "_play_back");
       console.log("----------------------");
       // this.state.socket.on(window.location.pathname.split("/")[5] + "_play_back", data => {
-      
     } else {
       this.props.history.push("/login");
     }
@@ -229,7 +227,7 @@ export default class TestcaseSteps extends React.Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
+        Accept: "application/json",
       },
       body: JSON.stringify({
         query: `{applications(where:
@@ -263,11 +261,11 @@ export default class TestcaseSteps extends React.Component {
             }
           }
         }
-      }`
-      })
+      }`,
+      }),
     })
-      .then(response => response.json())
-      .then(response => {
+      .then((response) => response.json())
+      .then((response) => {
         let respSteps = response.data.applications[0].testcases[0].testcasecomponents;
         const allGroups = response.data.applications[0].testcases[0].testcasegroups;
         if (respSteps.length > 0) {
@@ -284,13 +282,13 @@ export default class TestcaseSteps extends React.Component {
                 // sequence_number: Number(data.sequence_number),
                 sequence_number: Number(data.sequence_number) % 1 == 0 ? (Number(data.sequence_number) == sequence_id ? Number(data.sequence_number) : sequence_id) : Number(data.sequence_number),
                 original_sequence_number: Number(data.sequence_number),
-                objectrepository: data.objectrepository
+                objectrepository: data.objectrepository,
               });
             } else if (data.name && data.testcasecomponents) {
               allSteps.push({
                 id: data.id,
                 name: data.name,
-                testcasecomponents: data.testcasecomponents
+                testcasecomponents: data.testcasecomponents,
               });
             } else if (data.group_name === "from_other" && data.testcasegroup) {
               const filtered = [];
@@ -299,7 +297,7 @@ export default class TestcaseSteps extends React.Component {
                   filtered.push({
                     id: gdata.id,
                     sequence_number: gdata.sequence_number,
-                    objectrepository: gdata.objectrepository
+                    objectrepository: gdata.objectrepository,
                   });
                 }
               }
@@ -310,7 +308,7 @@ export default class TestcaseSteps extends React.Component {
                 sequence_number: Number(data.sequence_number) % 1 == 0 ? (Number(data.sequence_number) == sequence_id ? Number(data.sequence_number) : sequence_id) : Number(data.sequence_number),
                 // original_sequence_number: Number(data.sequence_number),
                 name: data.testcasegroup.name,
-                testcasecomponents: filtered
+                testcasecomponents: filtered,
               });
             }
             if (Number(data.sequence_number) % 1 == 0) {
@@ -322,7 +320,7 @@ export default class TestcaseSteps extends React.Component {
           const groupIds = [];
           for (const i in allGroups) {
             groupIds.push(allGroups[i].id);
-            const id = _.findIndex(allSteps, function(o) {
+            const id = _.findIndex(allSteps, function (o) {
               return o.id === allGroups[i].testcasecomponents[0].id;
             });
             allGroups[i].sequence_number = Number(allGroups[i].testcasecomponents[0].sequence_number);
@@ -334,7 +332,7 @@ export default class TestcaseSteps extends React.Component {
                 allGroups[i].testcasecomponents.push({
                   id: groupStep[s].id,
                   sequence_number: groupStep[s].sequence_number,
-                  objectrepository: groupStep[s].objectrepository
+                  objectrepository: groupStep[s].objectrepository,
                 });
               }
             }
@@ -353,16 +351,16 @@ export default class TestcaseSteps extends React.Component {
             allData: response.data.applications[0],
             stepsData: sortedAllSteps,
             groupIds: groupIds,
-            driven_data: response.data.applications[0].testcases[0].ddt_file || null
+            driven_data: response.data.applications[0].testcases[0].ddt_file || null,
           });
         } else {
           Alert.warning("Steps not available.");
           this.props.history.push({
-            pathname: `/dashboard/${window.location.pathname.split("/")[2]}/test-cases`
+            pathname: `/dashboard/${window.location.pathname.split("/")[2]}/test-cases`,
           });
         }
       })
-      .catch(error => {
+      .catch((error) => {
         Alert.error("Something went wrong");
         console.log(error);
       });
@@ -373,7 +371,7 @@ export default class TestcaseSteps extends React.Component {
     if (stepsDataGroup.length === 0) {
       stepsDataGroup.push({ sequence, id });
     } else {
-      let index = _.findIndex(stepsDataGroup, function(o) {
+      let index = _.findIndex(stepsDataGroup, function (o) {
         return o.id === id;
       });
       if (index > -1) {
@@ -389,7 +387,7 @@ export default class TestcaseSteps extends React.Component {
     this.setState({ stepsDataGroup: stepsDataGroup });
   };
 
-  renderAction = action => {
+  renderAction = (action) => {
     if (action === "mouselclick") {
       return "LEFT CLICK";
     } else if (action === "mouserclick") {
@@ -407,38 +405,38 @@ export default class TestcaseSteps extends React.Component {
     }
   };
 
-  loadModalImages = id => {
+  loadModalImages = (id) => {
     this.setState({ loader: true, imageModal: true });
     fetch(constants.graphql, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
+        Accept: "application/json",
       },
       body: JSON.stringify({
-        query: `{testcasecomponents(where:{id:"${id}"}){objectrepository{height,width,highlighted_image_url,element_snapshot,page_url, pixel_ratio}}}`
-      })
+        query: `{testcasecomponents(where:{id:"${id}"}){objectrepository{height,width,highlighted_image_url,element_snapshot,page_url, pixel_ratio}}}`,
+      }),
     })
-      .then(response => response.json())
-      .then(response => {
+      .then((response) => response.json())
+      .then((response) => {
         this.setState({
           loadModalImages: response.data.testcasecomponents[0].objectrepository,
-          loader: false
+          loader: false,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         Alert.error("Something went wrong");
         console.log(error);
       });
   };
 
-  showImage = step => {
+  showImage = (step) => {
     if (step === "next") {
       // debugger;
       if (this.state.currentViewImage < this.state.stepsData.length - 1) {
         this.setState(
           {
-            currentViewImage: this.state.currentViewImage + 1
+            currentViewImage: this.state.currentViewImage + 1,
           },
           () => {
             this.loadModalImages(this.state.stepsData[this.state.currentViewImage].id);
@@ -449,7 +447,7 @@ export default class TestcaseSteps extends React.Component {
       if (this.state.currentViewImage > 1) {
         this.setState(
           {
-            currentViewImage: this.state.currentViewImage - 1
+            currentViewImage: this.state.currentViewImage - 1,
           },
           () => {
             this.loadModalImages(this.state.stepsData[this.state.currentViewImage].id);
@@ -459,7 +457,7 @@ export default class TestcaseSteps extends React.Component {
     }
   };
 
-  modalSelectedMenu = Selected => {
+  modalSelectedMenu = (Selected) => {
     let modalSelectedMenu = this.state.modalSelectedMenu;
     if (Selected === "highlightedImage") {
       modalSelectedMenu = "highlightedImage";
@@ -478,23 +476,23 @@ export default class TestcaseSteps extends React.Component {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json"
+          Accept: "application/json",
         },
         body: JSON.stringify({
-          query: `mutation{deleteTestcasecomponent(input:{where:{id:"${this.state.deleteTestCaseId}"}}){testcasecomponent{id}}}`
-        })
+          query: `mutation{deleteTestcasecomponent(input:{where:{id:"${this.state.deleteTestCaseId}"}}){testcasecomponent{id}}}`,
+        }),
       })
-        .then(response => response.json())
-        .then(response => {
+        .then((response) => response.json())
+        .then((response) => {
           this.setState({
             loader: false,
             deleteConfirmation: false,
             deleteTestCaseId: "",
-            viewGroupModal: false
+            viewGroupModal: false,
           });
           this.loadSteps();
         })
-        .catch(error => {
+        .catch((error) => {
           Alert.error("Something went wrong");
           console.log(error);
         });
@@ -525,7 +523,7 @@ export default class TestcaseSteps extends React.Component {
     this.setState({ browserModal: true });
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({ selected_browser: e.target.value, select_browser_err: false });
   };
 
@@ -569,7 +567,7 @@ export default class TestcaseSteps extends React.Component {
     );
   };
 
-  triggerPlayback = async function() {
+  triggerPlayback = async function () {
     if (!this.state.selected_browser) {
       Alert.warning("Please Select Browser");
       this.setState({ select_browser_err: true });
@@ -582,7 +580,7 @@ export default class TestcaseSteps extends React.Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
+        Accept: "application/json",
       },
       body: JSON.stringify({
         query: `{
@@ -598,8 +596,8 @@ export default class TestcaseSteps extends React.Component {
               port
             }
           }
-        }`
-      })
+        }`,
+      }),
     });
 
     const selenium_address = await get_selenium_details.json();
@@ -607,7 +605,7 @@ export default class TestcaseSteps extends React.Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
+        Accept: "application/json",
       },
       body: JSON.stringify({
         query: `{
@@ -618,8 +616,8 @@ export default class TestcaseSteps extends React.Component {
             }
           }
         }
-      }`
-      })
+      }`,
+      }),
     });
 
     const get_testsessionexecution_id_res = await get_testsessionexecution_id_req.json();
@@ -627,15 +625,15 @@ export default class TestcaseSteps extends React.Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
+        Accept: "application/json",
       },
       body: JSON.stringify({
         testcaseid: window.location.pathname.split("/")[5],
         testsessionid: 1,
         environment_id: "",
         browser: this.state.selected_browser,
-        protractor_host: `http://${selenium_address.data.applications[0].selenium_configure.host}:${selenium_address.data.applications[0].selenium_configure.port}/wd/hub`
-      })
+        protractor_host: `http://${selenium_address.data.applications[0].selenium_configure.host}:${selenium_address.data.applications[0].selenium_configure.port}/wd/hub`,
+      }),
     });
 
     const api_res = await api_req.json();
@@ -658,7 +656,7 @@ export default class TestcaseSteps extends React.Component {
     }
   }.bind(this);
 
-  Tooltip = tooltip => {
+  Tooltip = (tooltip) => {
     return <Tooltip>{tooltip}</Tooltip>;
   };
 
@@ -673,11 +671,11 @@ export default class TestcaseSteps extends React.Component {
                 metaDataModal: false,
                 modalInformation: [],
                 viewGroupModal: false,
-                current_step: null
+                current_step: null,
               })
             }
             ref={this.myRef}
-            loadTestcase={e => this.loadSteps()}
+            loadTestcase={(e) => this.loadSteps()}
             modalInformation={this.state.modalInformation}
           />
           {/* <i className="fa fa-angle-double-right"></i> */}
@@ -691,9 +689,9 @@ export default class TestcaseSteps extends React.Component {
       const message = {
         type: "insert_middle",
         id: window.location.pathname.split("/")[5],
-        step: Number(after)
+        step: Number(after),
       };
-      chrome.runtime.sendMessage(constants.extension_id, message, response => {
+      chrome.runtime.sendMessage(constants.extension_id, message, (response) => {
         if (!response.status === "success") {
           Alert.error("Remote execution failed");
         }
@@ -704,7 +702,7 @@ export default class TestcaseSteps extends React.Component {
       this.setState({
         allGroupModal: true,
         beforeStepIndex: before,
-        afterStepIndex: after
+        afterStepIndex: after,
       });
     } else if (e.key === "3") {
       this.setState({ expected_condition: "visibilityOf", timeOutField: true, addnewSteps: true, beforeStepIndex: before, afterStepIndex: after });
@@ -734,7 +732,7 @@ export default class TestcaseSteps extends React.Component {
 
     return (
       <Context.Consumer>
-        {context => (
+        {(context) => (
           <React.Fragment>
             {this.setBrowser()}
             <div className="main-container animated fadeIn">
@@ -792,7 +790,7 @@ export default class TestcaseSteps extends React.Component {
                       <Switch
                         onChange={() =>
                           this.setState({
-                            isCard: !this.state.isCard
+                            isCard: !this.state.isCard,
                           })
                         }
                         checkedChildren="TEXT VIEW"
@@ -879,7 +877,7 @@ export default class TestcaseSteps extends React.Component {
                                         className="fa fa-users"
                                         style={{
                                           fontSize: "25px",
-                                          marginRight: "10px"
+                                          marginRight: "10px",
                                         }}
                                       />
                                       GROUP
@@ -897,7 +895,7 @@ export default class TestcaseSteps extends React.Component {
                                             onClick={() => {
                                               this.setState({
                                                 currentViewImage: index,
-                                                current_objectrepo_id: details.objectrepository.id
+                                                current_objectrepo_id: details.objectrepository.id,
                                               });
                                               this.loadModalImages(details.id);
                                             }}
@@ -914,7 +912,7 @@ export default class TestcaseSteps extends React.Component {
                                               this.setState({
                                                 current_step: index,
                                                 metaDataModal: true,
-                                                modalInformation: details.objectrepository
+                                                modalInformation: details.objectrepository,
                                               });
                                             }}
                                             className="testcase-container-footer-tool-btn"
@@ -929,7 +927,7 @@ export default class TestcaseSteps extends React.Component {
                                             onClick={() =>
                                               this.setState({
                                                 viewGroupModal: true,
-                                                viewGroupModalInformation: details
+                                                viewGroupModalInformation: details,
                                               })
                                             }
                                             className="testcase-container-footer-tool-btn"
@@ -943,7 +941,7 @@ export default class TestcaseSteps extends React.Component {
                                             onClick={() =>
                                               this.setState({
                                                 deleteConfirmation: true,
-                                                deleteTestCaseId: details.id
+                                                deleteTestCaseId: details.id,
                                               })
                                             }
                                             className="testcase-container-footer-tool-btn delete"
@@ -963,6 +961,8 @@ export default class TestcaseSteps extends React.Component {
                                         : details.objectrepository
                                         ? details.objectrepository.description
                                           ? details.objectrepository.description
+                                          : details.objectrepository.action === "text_validation" || details.objectrepository.action === "element_validation"
+                                          ? "Validation"
                                           : "Autofocus"
                                         : "No discription"}
                                     </div>
@@ -972,14 +972,14 @@ export default class TestcaseSteps extends React.Component {
                                   <div className={details.visible ? "testcase-steps-right-arrow-container-on-hover" : "testcase-steps-right-arrow-container"}>
                                     <Dropdown
                                       overlay={
-                                        <Menu onClick={e => this.handleMenuClick(e, this.state.stepsData[index - 1].sequence_number, this.state.stepsData[index].sequence_number)}>
+                                        <Menu onClick={(e) => this.handleMenuClick(e, this.state.stepsData[index - 1].sequence_number, this.state.stepsData[index].sequence_number)}>
                                           <SubMenu title="Add Element">
                                             <Menu.Item key="1.1">
                                               <i
                                                 className="fa fa-play"
                                                 aria-hidden="true"
                                                 style={{
-                                                  marginRight: "10px"
+                                                  marginRight: "10px",
                                                 }}
                                               />
                                               Record Element
@@ -989,7 +989,7 @@ export default class TestcaseSteps extends React.Component {
                                                 className="fa fa-plus"
                                                 aria-hidden="true"
                                                 style={{
-                                                  marginRight: "10px"
+                                                  marginRight: "10px",
                                                 }}
                                               />
                                               Create Element
@@ -1002,7 +1002,7 @@ export default class TestcaseSteps extends React.Component {
                                           <Menu.Item key="6">Element Absent</Menu.Item>
                                         </Menu>
                                       }
-                                      onVisibleChange={flag => {
+                                      onVisibleChange={(flag) => {
                                         this.handleVisibleChange(flag, index);
                                       }}
                                       visible={details.visible}
@@ -1030,7 +1030,7 @@ export default class TestcaseSteps extends React.Component {
                                   onClick={() =>
                                     this.setState({
                                       metaDataModal: details.testcasecomponents ? false : true,
-                                      modalInformation: details.objectrepository
+                                      modalInformation: details.objectrepository,
                                     })
                                   }
                                   className="list-view-container animated fadeInUp faster"
@@ -1042,6 +1042,8 @@ export default class TestcaseSteps extends React.Component {
                                       ? `${details.name} (${details.testcasecomponents.length} Steps)`
                                       : details.objectrepository.description
                                       ? details.objectrepository.description
+                                      : details.objectrepository.action === "text_validation" || details.objectrepository.action === "element_validation"
+                                      ? "Validation"
                                       : "Autofocus"}
                                   </div>
                                   <div className="list-view-hover-btn" />
@@ -1054,14 +1056,14 @@ export default class TestcaseSteps extends React.Component {
                       <div className={this.state.visible ? "testcase-steps-right-arrow-container-last" : "testcase-steps-right-arrow-container-last"}>
                         <Dropdown
                           overlay={
-                            <Menu onClick={e => this.handleMenuClick(e, this.state.stepsData[this.state.stepsData.length - 1].sequence_number, "")}>
+                            <Menu onClick={(e) => this.handleMenuClick(e, this.state.stepsData[this.state.stepsData.length - 1].sequence_number, "")}>
                               <SubMenu title="Add Element">
                                 <Menu.Item key="1.1">
                                   <i
                                     className="fa fa-play"
                                     aria-hidden="true"
                                     style={{
-                                      marginRight: "10px"
+                                      marginRight: "10px",
                                     }}
                                   />
                                   Record Element
@@ -1071,7 +1073,7 @@ export default class TestcaseSteps extends React.Component {
                                     className="fa fa-plus"
                                     aria-hidden="true"
                                     style={{
-                                      marginRight: "10px"
+                                      marginRight: "10px",
                                     }}
                                   />
                                   Create Element
@@ -1083,7 +1085,7 @@ export default class TestcaseSteps extends React.Component {
                               <Menu.Item key="5">Data Source</Menu.Item>
                             </Menu>
                           }
-                          onVisibleChange={flag => this.handleVisibleChange(flag, "new")}
+                          onVisibleChange={(flag) => this.handleVisibleChange(flag, "new")}
                           visible={this.state.visible}
                         >
                           {this.state.visible ? <i className="fa fa-plus circle-icon-add" /> : <i className="fa fa-caret-right right-arrow" />}
@@ -1109,7 +1111,7 @@ export default class TestcaseSteps extends React.Component {
                   modalSelectedMenu: "highlightedImage",
                   loadModalImages: [],
                   loader: false,
-                  currentViewImage: null
+                  currentViewImage: null,
                 })
               }
             />
@@ -1118,14 +1120,14 @@ export default class TestcaseSteps extends React.Component {
               <div>
                 {this.state.current_step === 1 ? null : (
                   <div className="flat-btn-container">
-                    <button className="float-btn" onClick={e => this.showMetaData("previous")}>
+                    <button className="float-btn" onClick={(e) => this.showMetaData("previous")}>
                       <i className="fa fa-angle-double-left" style={{ color: "#ff9879", textShadow: "1px 1px 1px #ccc", fontSize: "2.0em" }}></i>
                     </button>
                   </div>
                 )}
                 {this.state.current_step === this.state.stepsData.length - 1 ? null : (
                   <div className="flat-btn-container">
-                    <button className="float-btn-right" onClick={e => this.showMetaData("next")}>
+                    <button className="float-btn-right" onClick={(e) => this.showMetaData("next")}>
                       <i className="fa fa-angle-double-right" style={{ color: "#ff9879", textShadow: "1px 1px 1px #ccc", fontSize: "2.0em" }}></i>
                     </button>
                   </div>
@@ -1136,14 +1138,14 @@ export default class TestcaseSteps extends React.Component {
               <div>
                 {this.state.currentViewImage === 1 ? null : (
                   <div className="flat-btn-container">
-                    <button className="float-btn" onClick={e => this.showImage("previous")}>
+                    <button className="float-btn" onClick={(e) => this.showImage("previous")}>
                       <i className="fa fa-angle-double-left" style={{ color: "#ff9879", textShadow: "1px 1px 1px #ccc", fontSize: "2.0em" }}></i>
                     </button>
                   </div>
                 )}
                 {this.state.currentViewImage === this.state.stepsData.length - 1 ? null : (
                   <div className="flat-btn-container">
-                    <button className="float-btn-right" onClick={e => this.showImage("next")}>
+                    <button className="float-btn-right" onClick={(e) => this.showImage("next")}>
                       <i className="fa fa-angle-double-right" style={{ color: "#ff9879", textShadow: "1px 1px 1px #ccc", fontSize: "2.0em" }}></i>
                     </button>
                   </div>
@@ -1157,23 +1159,23 @@ export default class TestcaseSteps extends React.Component {
               onHide={() =>
                 this.setState({
                   viewGroupModal: false,
-                  viewGroupModalInformation: []
+                  viewGroupModalInformation: [],
                 })
               }
               loadSteps={this.loadSteps}
               viewGroupModalInformation={this.state.viewGroupModalInformation}
-              imageModal={e => this.loadModalImages(e)}
-              modalInformation={details =>
+              imageModal={(e) => this.loadModalImages(e)}
+              modalInformation={(details) =>
                 this.setState({
                   metaDataModal: true,
-                  modalInformation: details
+                  modalInformation: details,
                 })
               }
               sessionUrl={this.state.allData.testcases ? this.state.allData.testcases[0].testcasecomponents[0].objectrepository.url : ""}
-              deleteCard={e =>
+              deleteCard={(e) =>
                 this.setState({
                   deleteConfirmation: true,
-                  deleteTestCaseId: e
+                  deleteTestCaseId: e,
                 })
               }
             />
@@ -1185,7 +1187,7 @@ export default class TestcaseSteps extends React.Component {
                 this.setState({
                   stepsDataGroupModal: false,
                   stepsDataGroup: [],
-                  loader: false
+                  loader: false,
                 })
               }
               loader={() => this.setState({ loader: true })}
@@ -1197,7 +1199,7 @@ export default class TestcaseSteps extends React.Component {
                 this.setState({
                   allGroupModal: false,
                   beforeStepIndex: "",
-                  afterStepIndex: ""
+                  afterStepIndex: "",
                 })
               }
               groupIds={this.state.groupIds}
@@ -1228,7 +1230,7 @@ export default class TestcaseSteps extends React.Component {
               onHide={() =>
                 this.setState({
                   deleteConfirmation: false,
-                  deleteTestCaseId: ""
+                  deleteTestCaseId: "",
                 })
               }
               delete={this.delete}

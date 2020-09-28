@@ -304,6 +304,15 @@
       .kafka-bg:hover {
         background-image: url("../../../Images/kafka_bg.svg") !important;
       }
+      .shell-bg {
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+        background-size: 85% 95% !important;
+        background-image: url("../../../Images/bash-white.svg") !important;
+      }
+      .shell-bg:hover {
+        background-image: url("../../../Images/bash-blue.svg") !important;
+      }
       .mongodb-bg {
         background-position: center !important;
         background-repeat: no-repeat !important;

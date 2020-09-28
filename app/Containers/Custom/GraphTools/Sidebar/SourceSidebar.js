@@ -1,6 +1,6 @@
 import React from "react";
 import "../../../../Assets/Styles/Custom/GraphTools/Sidebar.scss";
-import { Form, Input, Icon, Collapse, Select } from "antd";
+import { Form, Input, Icon, Collapse, Select, Upload } from "antd";
 import { Alert, Drawer, Row, Col } from "rsuite";
 import constants from "../../../../constants";
 import axios from "axios";
@@ -24,6 +24,8 @@ const SourceSidebar = Form.create()(
         AceEditorValidation: [],
         sourcetype: "",
         source_name: "",
+        uploadedFileName: null,
+        pem_file_url: null,
       };
     }
 
@@ -135,6 +137,10 @@ const SourceSidebar = Form.create()(
       if (this.state.sourcetype == "") {
         return Alert.error("Please fill required fields.");
       }
+      let cmd = null;
+      if (form.getFieldValue("ShellCommand")) {
+        cmd = form.getFieldValue("ShellCommand").split(",");
+      }
       let resp = {
         Title: form.getFieldValue("Title"),
         Description: form.getFieldValue("Description"),
@@ -144,6 +150,13 @@ const SourceSidebar = Form.create()(
         KafkaTopicName: form.getFieldValue("KafkaTopicName"),
         RabbitmqSourceId: form.getFieldValue("RabbitmqSourceId"),
         KafkaSourceId: form.getFieldValue("KafkaSourceId"),
+        ServerIp: form.getFieldValue("ServerIp"),
+        SshPort: form.getFieldValue("SshPort"),
+        pem_file_url: this.state.pem_file_url ? this.state.pem_file_url : this.props.selectedCellData.pem_file_url ? this.props.selectedCellData.pem_file_url.value : "",
+        uploadedFileName: this.state.uploadedFileName ? this.state.uploadedFileName : this.props.selectedCellData.uploadedFileName ? this.props.selectedCellData.uploadedFileName.value : "",
+        ServerUsername: form.getFieldValue("ServerUsername"),
+        ServerPassword: form.getFieldValue("ServerPassword"),
+        ShellCommand: form.getFieldValue("ShellCommand"),
         MysqlSourceId: form.getFieldValue("MysqlSourceId"),
         MssqlSourceId: form.getFieldValue("MssqlSourceId"),
         MongoSourceId: form.getFieldValue("MongoSourceId"),
@@ -233,6 +246,20 @@ const SourceSidebar = Form.create()(
       this.setState({
         sourcetype: type,
         source_name: e.props.children,
+      });
+    };
+
+    uploadKeyFile = async (e) => {
+      console.log(e);
+      let keyfile = new FormData();
+      keyfile.append("files", e.file.originFileObj);
+      const config = { headers: { "content-type": "multipart/form-data" } };
+      const fileUploadReq = await axios.post(constants.upload, keyfile, config);
+      console.log("fileupload request", fileUploadReq);
+
+      this.setState({
+        uploadedFileName: e.file.name,
+        pem_file_url: fileUploadReq.data[0].url,
       });
     };
 
@@ -414,6 +441,109 @@ const SourceSidebar = Form.create()(
                 ""
               )}
               {this.RenderBodySelectedMenu()}
+            </div>
+          );
+        } else if (this.props.selectedCellData.Method.value === "shell") {
+          const form = this.props.form;
+          return (
+            <div>
+              <Row>
+                <Col xs={12}>
+                  <div className="sidebar-body-regular-row">
+                    <Form.Item label="IP">
+                      {getFieldDecorator("ServerIp", {
+                        rules: [
+                          {
+                            required: true,
+                          },
+                        ],
+                        initialValue: this.props.selectedCellData.ServerIp ? this.props.selectedCellData.ServerIp.value : "",
+                      })(<Input />)}
+                    </Form.Item>
+                  </div>
+                </Col>
+                <Col xs={12}>
+                  <div className="sidebar-body-regular-row">
+                    <Form.Item label="Port">
+                      {getFieldDecorator("SshPort", {
+                        initialValue: this.props.selectedCellData.SshPort ? this.props.selectedCellData.SshPort.value : "",
+                      })(<Input />)}
+                    </Form.Item>
+                  </div>
+                </Col>
+              </Row>
+              <Row style={{ marginTop: 15 }}>
+                <Col xs={12}>
+                  <div className="sidebar-body-regular-row">
+                    <Form.Item label="Username">
+                      {getFieldDecorator("ServerUsername", {
+                        rules: [
+                          {
+                            required: true,
+                          },
+                        ],
+                        initialValue: this.props.selectedCellData.ServerUsername ? this.props.selectedCellData.ServerUsername.value : "",
+                      })(<Input />)}
+                    </Form.Item>
+                  </div>
+                </Col>
+                <Col xs={12}>
+                  <div className="sidebar-body-regular-row">
+                    <Form.Item label="Password">
+                      {getFieldDecorator("ServerPassword", {
+                        // rules: [
+                        //   {
+                        //     required: true,
+                        //   },
+                        // ],
+                        initialValue: this.props.selectedCellData.ServerPassword ? this.props.selectedCellData.ServerPassword.value : "",
+                      })(<Input />)}
+                    </Form.Item>
+                  </div>
+                </Col>
+              </Row>
+              <Row style={{ marginTop: 15 }}>
+                <Col>
+                  <Form.Item label="Key File">
+                    {getFieldDecorator("KeyFIle", {
+                      // rules: [
+                      //   {
+                      //     required: true,
+                      //   },
+                      // ],
+                      initialValue: "",
+                    })(
+                      <Upload.Dragger multiple={false} showUploadList={false} onChange={(e) => this.uploadKeyFile(e)}>
+                        <p className="ant-upload-text">
+                          {this.state.uploadedFileName
+                            ? this.state.uploadedFileName
+                            : this.props.selectedCellData.uploadedFileName
+                            ? this.props.selectedCellData.uploadedFileName.value
+                            : "Click or drag your SSH Pem file to upload."}
+                        </p>
+                        {/* <p className="ant-upload-hint"> Accepted Files: .json </p> */}
+                      </Upload.Dragger>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row style={{ marginTop: 15 }}>
+                <Col>
+                  <div className="sidebar-body-regular-row" style={{ display: "flex", flexDirection: "column" }}>
+                    <Form.Item label="Shell Command">
+                      {getFieldDecorator("ShellCommand", {
+                        rules: [
+                          {
+                            required: true,
+                          },
+                        ],
+                        initialValue: this.props.selectedCellData.ShellCommand ? this.props.selectedCellData.ShellCommand.value : "",
+                      })(<Input />)}
+                    </Form.Item>
+                    <span className="cmd-helper-note">use comma saperator to give multiple commands</span>
+                  </div>
+                </Col>
+              </Row>
             </div>
           );
         } else if (this.props.selectedCellData.Method.value === "kafka") {
@@ -959,7 +1089,8 @@ const SourceSidebar = Form.create()(
     RenderQuery = () => {
       const { getFieldDecorator } = this.props.form;
       if (this.props.selectedCellData.Method) {
-        if (this.props.selectedCellData.Method.value !== "rabbitmq" && this.props.selectedCellData.Method.value !== "kafka") {
+        console.log(this.props.selectedCellData.Method.value);
+        if (this.props.selectedCellData.Method.value !== "rabbitmq" && this.props.selectedCellData.Method.value !== "kafka" && this.props.selectedCellData.Method.value !== "shell") {
           return (
             <Collapse.Panel header="QUERY" key="2">
               <div className="sidebar-body-regular-row-body-menu-container">
@@ -1013,6 +1144,7 @@ const SourceSidebar = Form.create()(
     RenderQueryTemplate = () => {
       const { getFieldDecorator } = this.props.form;
       if (this.props.selectedCellData.Method) {
+        console.log(":method --->", this.props.selectedCellData.Method.value);
         if (this.props.selectedCellData.Method.value === "oracle") {
           return (
             <div className="sidebar-body-regular-row animated fadeIn">
@@ -1297,7 +1429,7 @@ const SourceSidebar = Form.create()(
                   defaultActiveKey={["1", "2"]}
                   expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
                 >
-                  {this.props.selectedCellData.Method && this.props.selectedCellData.Method.value === "kafka" ? (
+                  {(this.props.selectedCellData.Method && this.props.selectedCellData.Method.value === "kafka") || this.props.selectedCellData.Method.value === "shell" ? (
                     <div style={{ padding: 20 }}>{this.RenderDatabase()}</div>
                   ) : (
                     <Collapse.Panel header="DATABASES" key="1">
