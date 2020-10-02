@@ -121,6 +121,14 @@ const ApiTransformation = Form.create()(
                 },
               };
 
+              // let headers = null;
+              // console.log("-----------------api-----", api);
+              // if (api.hasOwnProperty("headers")) {
+              //   // headers = api["headers"];
+              //   console.log("headers");
+              //   swaggerFile["paths"][url][method]["headers"] = api["headers"];
+              // }
+
               // requestBody----
               let requestBody = {
                 description: "",
@@ -141,6 +149,7 @@ const ApiTransformation = Form.create()(
                   description: api["description"],
                   responses: response,
                   parameteres: parameteres,
+                  headers: api.hasOwnProperty("headers") ? api["headers"] : {},
                 };
               } else {
                 swaggerFile["paths"][url][method] = {
@@ -149,6 +158,7 @@ const ApiTransformation = Form.create()(
                   responses: response,
                   requestBody: requestBody,
                   parameteres: parameteres,
+                  headers: api.hasOwnProperty("headers") ? api["headers"] : {},
                 };
               }
             }

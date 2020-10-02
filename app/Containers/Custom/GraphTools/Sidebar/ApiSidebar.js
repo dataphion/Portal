@@ -73,7 +73,9 @@ const ApiSidebar = Form.create()(
           QueryParametersAdd: JSON.parse(this.props.selectedCellData.QueryParametersAdd.value),
         });
       }
+      console.log(this.props.selectedCellData.HeadersAdd);
       if (this.props.selectedCellData.HeadersAdd) {
+        console.log(this.props.selectedCellData.HeadersAdd.value);
         this.setState({
           HeadersAdd: JSON.parse(this.props.selectedCellData.HeadersAdd.value),
         });
@@ -353,6 +355,7 @@ const ApiSidebar = Form.create()(
 
     RenderHeaders = () => {
       const { getFieldDecorator } = this.props.form;
+      console.log("headers value --->", this.state.HeadersAdd);
       if (this.state.HeadersAdd.length >= 1) {
         return (
           <React.Fragment>
@@ -537,7 +540,7 @@ const ApiSidebar = Form.create()(
     };
 
     render() {
-      // console.log(this.props.selectedCellData);
+      console.log(this.props.selectedCellData);
       let host_url = "";
       if (this.props.selectedCellData.custom_api && this.props.selectedCellData.custom_api.value === "true") {
         if (this.props.selectedCellData.Host_url && this.props.selectedCellData.Uri) {

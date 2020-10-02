@@ -70,7 +70,7 @@ export default class LeftPanelElements extends React.Component {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        query: `{endpointpacks(where:{application:{id:"${this.props.parentProps.split("/")[2]}"}}){id,name,upload_type,endpoints{id,endpoint,method,description,summary}}}`,
+        query: `{endpointpacks(where:{application:{id:"${this.props.parentProps.split("/")[2]}"}}){id,name,upload_type,endpoints{id,endpoint,method,description,summary, headers}}}`,
       }),
     })
       .then((response) => response.json())
@@ -84,16 +84,32 @@ export default class LeftPanelElements extends React.Component {
             var index = _.findIndex(endpoints, function (o) {
               return o.key == api.endpoint;
             });
+
+            let headers_arr = [];
+            if (api.headers) {
+              for (const h in api.headers) {
+                console.log(api.headers[h]);
+                let head = {
+                  HeadersKey: h,
+                  HeadersValue: api.headers[h],
+                };
+                headers_arr.push(head);
+              }
+            }
             if (index < 0) {
               // if endpoint(URL) is not in JSON object Array
               //----------------------------------------
               let valueArray = [];
               //Create JSON object from api variable for pushing in to JSON object Array
               //key must be endpoint(URL) and value must be array of method
+              // [{"HeadersKey":"auth","HeadersValue":"token"}]
+              // let headers = []
+
               valueArray.push({
                 id: api.id,
                 method: api.method,
                 description: api.description || api.summary,
+                headers: JSON.stringify(headers_arr),
               });
               var obj = {
                 key: api.endpoint,
@@ -113,6 +129,7 @@ export default class LeftPanelElements extends React.Component {
                 id: api.id,
                 method: api.method,
                 description: api.description || api.summary,
+                headers: JSON.stringify(headers_arr),
               });
               //store new object to  JSON object Array
               endpoints[index] = object;
@@ -167,6 +184,7 @@ export default class LeftPanelElements extends React.Component {
 
   renderMethods = (key, Data, index, DataKey, EndpointPackId) => {
     console.log(key);
+    console.log("data---->", Data);
     if (Data.method.toLowerCase() === "get") {
       return (
         <div key={index} className="graph-left-panel-drag-data-container endpoint-drag">
@@ -180,6 +198,7 @@ export default class LeftPanelElements extends React.Component {
                 Type: "api",
                 id: Data.id,
                 custom_api: false,
+                HeadersAdd: Data.headers || [],
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api get-method-btn"
             >
@@ -205,6 +224,7 @@ export default class LeftPanelElements extends React.Component {
                 Type: "api",
                 id: Data.id,
                 custom_api: false,
+                HeadersAdd: Data.headers || [],
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api post-method-btn"
             >
@@ -230,6 +250,7 @@ export default class LeftPanelElements extends React.Component {
                 Type: "api",
                 id: Data.id,
                 custom_api: false,
+                HeadersAdd: Data.headers || [],
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api put-method-btn"
             >
@@ -255,6 +276,7 @@ export default class LeftPanelElements extends React.Component {
                 Type: "api",
                 id: Data.id,
                 custom_api: false,
+                HeadersAdd: Data.headers || [],
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api patch-method-btn"
             >
@@ -280,6 +302,7 @@ export default class LeftPanelElements extends React.Component {
                 Type: "api",
                 id: Data.id,
                 custom_api: false,
+                HeadersAdd: Data.headers || [],
               })}
               className="graph-left-panel-draggable-element graph-left-panel-draggable-element-api delete-method-btn"
             >
@@ -503,6 +526,27 @@ export default class LeftPanelElements extends React.Component {
               {/* </Panel> */}
               {/* </PanelGroup> */}
               {/* </div> */}
+            </Panel>
+            <Panel header="Graphql" eventKey={7}>
+              <div className="graph-left-panel-drag-container animated zoomIn faster">
+                <div className="graph-left-panel-drag-row">
+                  <div className="graph-left-panel-drag-data-container">
+                    <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Drag & Drop")}>
+                      <div
+                        value={JSON.stringify({
+                          Method: "graphql",
+                          Type: "api",
+                        })}
+                        className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source graphql-bg"
+                        style={{ padding: 20 }}
+                      >
+                        Graphql
+                      </div>
+                    </Whisper>
+                    <div className="graph-left-panel-drag-data-desc larg-desc">Graphql</div>
+                  </div>
+                </div>
+              </div>
             </Panel>
             <Panel header="Controls" eventKey={5}>
               {this.showControls()}

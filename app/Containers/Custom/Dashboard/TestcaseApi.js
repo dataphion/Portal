@@ -759,6 +759,7 @@ const TestcaseApi = Form.create()(
       }
       obj.setAttribute("custom_api", JSON.parse(value).custom_api);
       obj.setAttribute("Method", JSON.parse(value).Method);
+      obj.setAttribute("HeadersAdd", JSON.parse(value).HeadersAdd);
       obj.setAttribute("Title", "");
       obj.setAttribute("Type", JSON.parse(value).Type);
       var parent = graph.getDefaultParent();
