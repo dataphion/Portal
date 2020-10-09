@@ -536,6 +536,7 @@ export default class LeftPanelElements extends React.Component {
                         value={JSON.stringify({
                           Method: "graphql",
                           Type: "api",
+                          HeadersAdd: "[]",
                         })}
                         className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source graphql-bg"
                         style={{ padding: 20 }}

@@ -5,14 +5,21 @@ import IteratorCell from "./Drawables/IteratorCell";
 import AssertionCell from "./Drawables/AssertionCell";
 import VariableCell from "./Drawables/VariableCell";
 import SourceCell from "./Drawables/SourceCell";
+import GraphqlCell from "./Drawables/GraphqlCell";
 
 export default class NewCell {
   NewCell(graph, cell) {
+    // debugger;
+    console.log("------------cell----------------------");
     let NewCell;
+    console.log("method --->", cell.getAttribute("Method"));
     if (cell.getAttribute("Type") === "api" && cell.getAttribute("Method") === "uitestcase") {
       NewCell = new UiCell();
+    } else if (cell.getAttribute("Type") === "api" && cell.getAttribute("Method") === "graphql") {
+      NewCell = new GraphqlCell();
     } else if (cell.getAttribute("Type") === "api" && cell.getAttribute("Method") !== "uitestcase") {
       NewCell = new ApiCell();
+      // NewCell = new GraphqlCell();
     } else if (cell.getAttribute("Type") === "controls" && cell.getAttribute("Method") === "conditions") {
       NewCell = new ConditionCell();
     } else if (cell.getAttribute("Type") === "controls" && cell.getAttribute("Method") === "iterator") {

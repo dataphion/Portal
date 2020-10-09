@@ -10,7 +10,26 @@ import "brace/mode/json";
 import "brace/mode/xml";
 import "brace/mode/text";
 import "brace/theme/monokai";
+import GraphiQL from "graphiql";
+import fetch from "isomorphic-fetch";
+import "graphiql/graphiql.min.css";
 import axios from "axios";
+
+const defaultQuery = `
+{
+  allFilms {
+    edges {
+      node {
+        id
+        title
+        producers
+        episodeID
+        created
+      }
+    }
+  }
+}
+`;
 
 const ApiSidebar = Form.create()(
   class extends React.Component {
@@ -28,11 +47,18 @@ const ApiSidebar = Form.create()(
         AceEditorValue: [],
         AceEditorValidation: [],
         showPassword: false,
+        graphqlQuery: null,
       };
     }
 
     SidebarEnter = async () => {
-      console.log(this.props.selectedCellData);
+      // console.log("------------>", this.props.selectedCellData);
+      // check for graphql method
+      if (this.props.selectedCellData.Method && this.props.selectedCellData.Method.value === "graphql") {
+        this.setState({
+          Method: this.props.selectedCellData.Method.value,
+        });
+      }
       if (this.props.selectedCellData.Method && this.props.selectedCellData.Method.value === "uitestcase") {
         this.setState({
           Method: this.props.selectedCellData.Method.value,
@@ -73,12 +99,14 @@ const ApiSidebar = Form.create()(
           QueryParametersAdd: JSON.parse(this.props.selectedCellData.QueryParametersAdd.value),
         });
       }
-      console.log(this.props.selectedCellData.HeadersAdd);
+      // console.log(this.props.selectedCellData.HeadersAdd);
       if (this.props.selectedCellData.HeadersAdd) {
-        console.log(this.props.selectedCellData.HeadersAdd.value);
-        this.setState({
-          HeadersAdd: JSON.parse(this.props.selectedCellData.HeadersAdd.value),
-        });
+        // console.log(typeof this.props.selectedCellData.HeadersAdd.value);
+        if (this.props.selectedCellData.HeadersAdd.value && this.props.selectedCellData.HeadersAdd.value !== "undefined") {
+          this.setState({
+            HeadersAdd: JSON.parse(this.props.selectedCellData.HeadersAdd.value),
+          });
+        }
       }
       if (this.props.selectedCellData.BodySelectedMenu) {
         this.setState({
@@ -129,7 +157,7 @@ const ApiSidebar = Form.create()(
       const form = this.props.form;
       // For form validation
       let error = false;
-      console.log(form.getFieldValue("Method"));
+      // console.log(form.getFieldValue("Method"));
       form.validateFields((err) => {
         if (err) {
           error = true;
@@ -139,8 +167,9 @@ const ApiSidebar = Form.create()(
       if (error) {
         return;
       }
+      // console.log("headers value.....", this.state.HeadersAdd);
 
-      if (this.state.Method !== "uitestcase") {
+      if (this.state.Method !== "uitestcase" && this.state.Method !== "graphql") {
         // Check key dupalication in QueryParameters, Headers, BodyFormData
         const QueryParametersDuplicates = this.findDuplicate("QueryParameters");
         if (QueryParametersDuplicates.length > 0) {
@@ -178,29 +207,30 @@ const ApiSidebar = Form.create()(
             HeadersKey: form.getFieldValue("HeadersKey"),
             HeadersValue: form.getFieldValue("HeadersValue"),
           });
+          // console.log("headerssss --->", HeadersAdd);
           form.resetFields("HeadersKey");
           form.resetFields("HeadersValue");
         }
 
         // Save all form fields
-        console.log(form.getFieldValue("Uri"));
+        // console.log(form.getFieldValue("Uri"));
         let host = "";
         let uri = "";
         if (this.props.selectedCellData.custom_api && this.props.selectedCellData.custom_api.value === "true") {
-          console.log(this.props.selectedCellData.custom_api.value);
+          // console.log(this.props.selectedCellData.custom_api.value);
           let host_endpoint_url = form.getFieldValue("Uri");
           let split_url = host_endpoint_url.split("//");
           host = split_url[0] + "//" + split_url[1].split("/")[0];
 
           let uri_endpoint = split_url[1].split("/");
-          console.log("endpoints", uri_endpoint);
+          // console.log("endpoints", uri_endpoint);
           for (let i = 1; i < uri_endpoint.length; i++) {
             uri = uri + "/" + uri_endpoint[i];
           }
         }
-        console.log(uri);
+        // console.log(uri);
 
-        console.log("editor value", this.state.AceEditorValue);
+        // console.log("editor value", form.getFieldValue("Method"));
         this.props.handleConfirm({
           Title: form.getFieldValue("Title"),
           Description: form.getFieldValue("Description"),
@@ -217,12 +247,33 @@ const ApiSidebar = Form.create()(
           BodyFormDataAdd: this.state.BodyFormDataAdd,
           AceEditorValue: this.state.AceEditorValue,
         });
-      } else {
+      } else if (this.state.Method === "uitestcase") {
         this.props.handleConfirm({
           Title: form.getFieldValue("Title"),
           Description: form.getFieldValue("Description"),
           UiTestcase: form.getFieldValue("UiTestcase").split("//name")[0],
           UiTestcaseName: this.state.UiTestcaseName,
+        });
+      } else if (this.state.Method === "graphql") {
+        // console.log(this.state.HeadersAdd);
+        // let HeadersAdd = this.state.HeadersAdd;
+        if (form.getFieldValue("HeadersKey") && form.getFieldValue("HeadersValue")) {
+          let HeadersAdd = this.state.HeadersAdd;
+          HeadersAdd.push({
+            HeadersKey: form.getFieldValue("HeadersKey"),
+            HeadersValue: form.getFieldValue("HeadersValue"),
+          });
+          // console.log("graphql headerssss --->", HeadersAdd);
+
+          form.resetFields("HeadersKey");
+          form.resetFields("HeadersValue");
+        }
+        this.props.handleConfirm({
+          Title: form.getFieldValue("Title"),
+          Description: form.getFieldValue("Description"),
+          GraphqlUrl: form.getFieldValue("GraphqlUrl"),
+          graphqlQuery: this.state.graphqlQuery ? this.state.graphqlQuery : this.props.selectedCellData.graphqlQuery ? this.props.selectedCellData.graphqlQuery.value : {},
+          HeadersAdd: this.state.HeadersAdd,
         });
       }
       this.hideModal();
@@ -323,6 +374,8 @@ const ApiSidebar = Form.create()(
     };
 
     HeadersAdd = () => {
+      // debugger;
+      // console.log("make headers ---->", this.state.headers);
       const form = this.props.form;
       if (form.getFieldValue("HeadersKey") && form.getFieldValue("HeadersValue")) {
         if (this.state.HeadersAdd.length === 0) {
@@ -355,7 +408,7 @@ const ApiSidebar = Form.create()(
 
     RenderHeaders = () => {
       const { getFieldDecorator } = this.props.form;
-      console.log("headers value --->", this.state.HeadersAdd);
+      // console.log("headers value --->", this.state.HeadersAdd);
       if (this.state.HeadersAdd.length >= 1) {
         return (
           <React.Fragment>
@@ -370,7 +423,13 @@ const ApiSidebar = Form.create()(
                         },
                       ],
                       initialValue: Data.HeadersKey,
-                    })(<Input onChange={(e) => (this.state.HeadersAdd[index].HeadersKey = e.target.value)} />)}
+                    })(
+                      <Input
+                        onChange={(e) => {
+                          this.state.HeadersAdd[index].HeadersKey = e.target.value;
+                        }}
+                      />
+                    )}
                   </Form.Item>
                   <Form.Item>
                     {getFieldDecorator("HeadersValue" + index, {
@@ -380,7 +439,13 @@ const ApiSidebar = Form.create()(
                         },
                       ],
                       initialValue: Data.HeadersValue,
-                    })(<Input onChange={(e) => (this.state.HeadersAdd[index].HeadersValue = e.target.value)} />)}
+                    })(
+                      <Input
+                        onChange={(e) => {
+                          this.state.HeadersAdd[index].HeadersValue = e.target.value;
+                        }}
+                      />
+                    )}
                   </Form.Item>
                   <div onClick={() => this.HeadersRemove(index)} className="sidebar-body-regular-row-right-btn">
                     <i className="fa fa-minus " />
@@ -539,8 +604,26 @@ const ApiSidebar = Form.create()(
       this.setState({ BodyFormDataAdd: BodyFormDataRemove });
     };
 
+    graphQLFetcher = (graphQLParams) => {
+      const form = this.props.form;
+      // console.log("---------inside  fetcher---------------");
+      // console.log(form.getFieldValue("GraphqlUrl"));
+      return fetch(form.getFieldValue("GraphqlUrl"), {
+        method: "post",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(graphQLParams),
+      }).then((response) => response.json());
+    };
+
+    onEditQuery = (query) => {
+      // console.log("query---->", query);
+      this.setState({ graphqlQuery: query });
+    };
+
     render() {
-      console.log(this.props.selectedCellData);
+      // console.log(this.props.selectedCellData);
+      // console.log(this.state.Method);
       let host_url = "";
       if (this.props.selectedCellData.custom_api && this.props.selectedCellData.custom_api.value === "true") {
         if (this.props.selectedCellData.Host_url && this.props.selectedCellData.Uri) {
@@ -553,15 +636,15 @@ const ApiSidebar = Form.create()(
           }
         }
       }
-      console.log("host --->", host_url);
+      // console.log("host --->", host_url);
       const { getFieldDecorator } = this.props.form;
       return (
-        <Drawer size="md" placement="right" show={this.props.visible} onHide={this.hideModal} onEnter={this.SidebarEnter}>
+        <Drawer size="lg" placement="right" show={this.props.visible} onHide={this.hideModal} onEnter={this.SidebarEnter} className={this.state.Method === "graphql" ? "drawer-width" : ""}>
           <div className="animated fadeIn slow">
             <div className="sidebar-header-container">
               <div className="sidebar-header-title">
                 Configure
-                {this.state.Method === "uitestcase" ? " UI Testcase" : " API"}
+                {this.state.Method === "uitestcase" ? " UI Testcase" : this.state.Method === "graphql" ? " Graphql" : " API"}
               </div>
               <div className="sidebar-header-btn-container">
                 <div onClick={this.hideModal} className="sidebar-header-btn-close">
@@ -591,8 +674,24 @@ const ApiSidebar = Form.create()(
                   })(<Input placeholder="Description" />)}
                 </Form.Item>
               </div>
+              {this.state.Method === "graphql" ? (
+                <div className="sidebar-body-second-row">
+                  <Form.Item label="Graphql URL">
+                    {getFieldDecorator("GraphqlUrl", {
+                      rules: [
+                        {
+                          required: true,
+                        },
+                      ],
+                      initialValue: this.props.selectedCellData.GraphqlUrl ? this.props.selectedCellData.GraphqlUrl.value : "",
+                    })(<Input placeholder="http://localhost:5000/graphql" />)}
+                  </Form.Item>
+                </div>
+              ) : (
+                ""
+              )}
 
-              {this.state.Method !== "uitestcase" ? (
+              {this.state.Method !== "uitestcase" && this.state.Method !== "graphql" ? (
                 <div className="sidebar-body-second-row">
                   <div className="sidebar-body-second-row-method" style={{ width: 180 }}>
                     <Form.Item>
@@ -711,7 +810,7 @@ const ApiSidebar = Form.create()(
 
                 <div className="sidebar-body-divider" />
 
-                {this.state.Method !== "uitestcase" ? (
+                {this.state.Method !== "uitestcase" && this.state.Method !== "graphql" ? (
                   <Collapse.Panel header="QUERY PARAMETERS" key="2">
                     <div className="lable-key-value-container">
                       <div className="lable-key-value">KEY</div>
@@ -731,7 +830,7 @@ const ApiSidebar = Form.create()(
 
                 <div className="sidebar-body-divider" />
 
-                {this.state.Method !== "uitestcase" ? (
+                {this.state.Method !== "uitestcase" && this.state.Method !== "graphql" ? (
                   <Collapse.Panel header="AUTHORIZATION" key="3">
                     <div className="sidebar-body-regular-row">
                       <Form.Item label="USERNAME">
@@ -784,7 +883,7 @@ const ApiSidebar = Form.create()(
                   <div className={this.props.selectedCellData.Method ? (this.props.selectedCellData.Method.value === "get" ? "display-none-div" : "sidebar-body-divider") : ""} />
                 ) : null}
 
-                {this.state.Method !== "uitestcase" ? (
+                {this.state.Method !== "uitestcase" && this.state.Method !== "graphql" ? (
                   <Collapse.Panel
                     className={this.props.selectedCellData.Method ? (this.props.selectedCellData.Method.value === "get" ? "display-none-div" : "body-background") : ""}
                     header="BODY"
@@ -892,6 +991,12 @@ const ApiSidebar = Form.create()(
                       )}
                     </Form.Item>
                   </Collapse.Panel>
+                ) : null}
+
+                {this.state.Method === "graphql" ? (
+                  <div className="App" id="graphiql">
+                    <GraphiQL fetcher={this.graphQLFetcher} onEditQuery={this.onEditQuery} defaultQuery={defaultQuery} defaultVariableEditorOpen headerEditorEnabled />
+                  </div>
                 ) : null}
               </Collapse>
             </Form>

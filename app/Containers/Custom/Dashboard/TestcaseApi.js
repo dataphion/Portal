@@ -47,7 +47,7 @@ var ALLOW_EDGE = true;
 
 class mxCellAttributeChange extends React.Component {
   constructor(cell, attribute, value) {
-    console.log(value);
+    // console.log(value);
     super();
     this.cell = cell;
     this.attribute = attribute;
@@ -214,7 +214,7 @@ const TestcaseApi = Form.create()(
       })
         .then((response) => response.json())
         .then((response) => {
-          console.log("response --->", response.data.applications[0].testcases[0].flow);
+          // console.log("response --->", response.data.applications[0].testcases[0].flow);
           if (response.data.applications[0].testcases[0].flow) {
             this.setState({
               graphId: response.data.applications[0].testcases[0].flow.id,
@@ -269,11 +269,11 @@ const TestcaseApi = Form.create()(
           Alert.error("Layout execution failed.");
         }
         // Api call for show log
-        console.log("data ------->", data);
+        // console.log("data ------->", data);
         if (data.status === "successfull" || data.status === "fail") {
-          console.log("execution id", data.testcaseexecutionid);
-          console.log("node id", data.id);
-          console.log("index", data.index);
+          // console.log("execution id", data.testcaseexecutionid);
+          // console.log("node id", data.id);
+          // console.log("index", data.index);
           fetch(constants.graphql, {
             method: "POST",
             headers: {
@@ -301,17 +301,17 @@ const TestcaseApi = Form.create()(
           })
             .then((response) => response.json())
             .then((response) => {
-              console.log(response.data);
+              // console.log(response.data);
               let executionResponse = this.state.executionLogs;
               if (data.type === "testcase") {
                 executionResponse[`ui_execution${data.id}`] = { status: data.status, node_id: data.id, testcaseexecutionid: data.testcaseexecutionid, name: `ui_execution-${data.id}` };
               } else {
                 if (response.data.testcaseexecutions.length > 0) {
-                  console.log(response.data.testcaseexecutions[0].flowsteps[0]);
+                  // console.log(response.data.testcaseexecutions[0].flowsteps[0]);
                   executionResponse[`${response.data.testcaseexecutions[0].flowsteps[0].name}_${response.data.testcaseexecutions[0].flowsteps[0].index}`] =
                     response.data.testcaseexecutions[0].flowsteps[0];
                 }
-                console.log(executionResponse);
+                // console.log(executionResponse);
                 this.setState({ executionLogs: executionResponse });
                 // }
               }
@@ -745,6 +745,7 @@ const TestcaseApi = Form.create()(
 
     funct = (graph, evt, target, x, y, value) => {
       // console.log(value);
+      console.log("valuessss---->", JSON.parse(value).HeadersAdd);
 
       var doc = mxUtils.createXmlDocument();
       var obj = doc.createElement("TaskObject");
@@ -773,7 +774,7 @@ const TestcaseApi = Form.create()(
       const cell = graph.getSelectionCell();
       if (cell && cell.value !== "Edge") {
         // console.log(cell);
-
+        console.log("selected cell data --->", cell.value.attributes);
         this.setState({
           sidebarModal: true,
           currentNode: cell,
@@ -820,7 +821,7 @@ const TestcaseApi = Form.create()(
     };
 
     handleConfirm = async (fields) => {
-      console.log(fields.AceEditorValue);
+      console.log(fields.HeadersAdd);
       console.log(JSON.stringify(fields.AceEditorValue));
 
       const { graph } = this.state;
@@ -828,11 +829,13 @@ const TestcaseApi = Form.create()(
 
       this.applyHandler(graph, cell, "Title", fields.Title);
       this.applyHandler(graph, cell, "Description", fields.Description);
+      console.log(cell.getAttribute("Method"));
       if (cell.getAttribute("Type") === "api") {
-        if (cell.getAttribute("Method") !== "uitestcase") {
+        if (cell.getAttribute("Method") !== "uitestcase" && cell.getAttribute("Method") !== "graphql") {
           this.applyHandler(graph, cell, "Method", fields.Method);
           this.applyHandler(graph, cell, "Host_url", fields.Host_url);
           this.applyHandler(graph, cell, "Uri", fields.Uri);
+          // this.applyHandler(graph, cell, "GraphqlUrl", fields.GraphqlUrl);
           this.applyHandler(graph, cell, "PathParametersAdd", JSON.stringify(fields.PathParametersAdd));
           this.applyHandler(graph, cell, "QueryParametersAdd", JSON.stringify(fields.QueryParametersAdd));
           this.applyHandler(graph, cell, "AuthorizationUsername", fields.AuthorizationUsername);
@@ -841,9 +844,14 @@ const TestcaseApi = Form.create()(
           this.applyHandler(graph, cell, "BodySelectedMenu", fields.BodySelectedMenu);
           this.applyHandler(graph, cell, "BodyFormDataAdd", JSON.stringify(fields.BodyFormDataAdd));
           this.applyHandler(graph, cell, "AceEditorValue", JSON.stringify(fields.AceEditorValue));
-        } else {
+        } else if (cell.getAttribute("Method") === "uitestcase") {
           this.applyHandler(graph, cell, "UiTestcase", fields.UiTestcase);
           this.applyHandler(graph, cell, "UiTestcaseName", fields.UiTestcaseName);
+        } else if (cell.getAttribute("Method") === "graphql") {
+          console.log("---> value", fields.graphqlQuery);
+          this.applyHandler(graph, cell, "GraphqlUrl", fields.GraphqlUrl);
+          this.applyHandler(graph, cell, "graphqlQuery", fields.graphqlQuery);
+          this.applyHandler(graph, cell, "HeadersAdd", JSON.stringify(fields.HeadersAdd));
         }
       } else if (cell.getAttribute("Type") === "controls") {
         if (cell.getAttribute("Method") === "conditions") {
@@ -945,7 +953,8 @@ const TestcaseApi = Form.create()(
       }
 
       // Converting array to JSON
-      if (respJson.Type === "api" && respJson.Method !== "uitestcase") {
+
+      if (respJson.Type === "api" && respJson.Method !== "uitestcase" && respJson.Method !== "graphql") {
         const BodyFormDataAdd = {};
         const HeadersAdd = {};
         const PathParametersAdd = {};
@@ -992,6 +1001,14 @@ const TestcaseApi = Form.create()(
         respJson.QueryParametersAdd = QueryParametersAdd;
       }
 
+      if (respJson.Method === "graphql") {
+        let HeadersAdd = {};
+        for (const data of respJson.HeadersAdd) {
+          HeadersAdd[data.HeadersKey] = data.HeadersValue;
+        }
+        respJson.HeadersAdd = HeadersAdd;
+      }
+
       return respJson;
     };
 
@@ -1018,13 +1035,13 @@ const TestcaseApi = Form.create()(
         if (tmpCell.parent.length === 0) {
           allCells.root = cell.id;
         }
-        try {
-          tmpCell.properties = this.NamedNodeToJSON(cell.value.attributes);
-          allCells[tmpCell.id] = tmpCell;
-        } catch (error) {
-          Alert.error("Something went wrong");
-          console.log(error);
-        }
+        // try {
+        tmpCell.properties = this.NamedNodeToJSON(cell.value.attributes);
+        allCells[tmpCell.id] = tmpCell;
+        // } catch (error) {
+        //   Alert.error("Something went wrong");
+        //   console.log(error);
+        // }
       }
 
       // console.log("api cells --->", allCells);

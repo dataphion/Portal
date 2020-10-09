@@ -532,3 +532,16 @@ input {
   color: grey;
   margin-left: 5px;
 }
+
+#graphiql {
+  height: 100vh;
+}
+
+.graphiql-container div .query-editor {
+  flex: none !important;
+  height: 250px !important;
+}
+
+.drawer-width {
+  width: 80% !important;
+}
