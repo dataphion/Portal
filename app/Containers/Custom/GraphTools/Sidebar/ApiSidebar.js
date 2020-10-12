@@ -607,10 +607,10 @@ const ApiSidebar = Form.create()(
     graphQLFetcher = (graphQLParams) => {
       const form = this.props.form;
       // console.log("---------inside  fetcher---------------");
-      // console.log(form.getFieldValue("GraphqlUrl"));
+      console.log(form.getFieldValue("GraphqlUrl"));
       return fetch(form.getFieldValue("GraphqlUrl"), {
         method: "post",
-        mode: "no-cors",
+        // mode: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(graphQLParams),
       }).then((response) => response.json());

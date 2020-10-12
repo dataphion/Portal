@@ -10,7 +10,7 @@ import constants from "../../constants";
 const Register = Form.create()(
   class extends React.Component {
     state = {
-      loader: false
+      loader: false,
     };
 
     componentDidMount() {
@@ -22,7 +22,7 @@ const Register = Form.create()(
     handleSave = async () => {
       const form = this.props.form;
       let error = false;
-      form.validateFields(err => {
+      form.validateFields((err) => {
         if (err) {
           error = true;
           return Alert.warning("Please fill required fields.");
@@ -41,26 +41,26 @@ const Register = Form.create()(
         password: form.getFieldValue("password"),
         email: form.getFieldValue("email"),
         designation: form.getFieldValue("designation"),
-        confirmed : false
+        confirmed: false,
       };
       try {
         await axios.post(constants.register, registerData);
         // await axios.post(constants.send_email, {'email': registerData.email});
         this.props.history.push({
           pathname: "register-successful",
-          parentData: "afterRegister"
+          parentData: "afterRegister",
         });
       } catch (error) {
         this.setState({ loader: false });
-          const err = JSON.stringify(error);
-          const msg = JSON.parse(err);
-          if (msg.response.data.message === "Email is already taken.") {
-            Alert.error("Email is already taken.");
-          } else {
-            Alert.error("Something went wrong");
-          }
+        const err = JSON.stringify(error);
+        const msg = JSON.parse(err);
+        if (msg.response.data.message === "Email is already taken.") {
+          Alert.error("Email is already taken.");
+        } else {
+          Alert.error("Something went wrong");
+        }
         console.log(error);
-      } 
+      }
     };
 
     handleReset = () => {
@@ -83,7 +83,10 @@ const Register = Form.create()(
               </div>
               <div>
                 <div className="register-sub-title">The most advance testing tool ever!</div>
-                <div className="register-description">Now your QA Automation will never break with <br />our unique auto healing technology</div>
+                <div className="register-description">
+                  Now your QA Automation will never break with <br />
+                  our unique auto healing technology
+                </div>
               </div>
               <div className="registration-graphic" />
             </div>
@@ -93,48 +96,49 @@ const Register = Form.create()(
                 <div className="border-container" />
                 <Form layout="vertical">
                   {/* <div className="form-row-flex"> */}
-                    <Form.Item label="Username">
-                      {getFieldDecorator("username", {
-                        rules: [
-                          {
-                            required: true
-                          }
-                        ],
-                        initialValue: ""
-                      })(<Input autoFocus />)}
-                    </Form.Item>
-                    <Form.Item label="Password">
-                      {getFieldDecorator("password", {
-                        rules: [
-                          {
-                            required: true
-                          }
-                        ],
-                        initialValue: ""
-                      })(<Input type="password" />)}
-                    </Form.Item>
+                  <Form.Item label="Username">
+                    {getFieldDecorator("username", {
+                      rules: [
+                        {
+                          required: true,
+                        },
+                      ],
+                      initialValue: "",
+                    })(<Input autoFocus />)}
+                  </Form.Item>
+                  <Form.Item label="Email">
+                    {getFieldDecorator("email", {
+                      rules: [
+                        {
+                          required: true,
+                        },
+                      ],
+                      initialValue: "",
+                    })(<Input />)}
+                  </Form.Item>
+                  <Form.Item label="Password">
+                    {getFieldDecorator("password", {
+                      rules: [
+                        {
+                          required: true,
+                        },
+                      ],
+                      initialValue: "",
+                    })(<Input type="password" />)}
+                  </Form.Item>
                   {/* </div> */}
                   {/* <div className="form-row-flex"> */}
-                    <Form.Item label="Email">
-                      {getFieldDecorator("email", {
-                        rules: [
-                          {
-                            required: true
-                          }
-                        ],
-                        initialValue: ""
-                      })(<Input />)}
-                    </Form.Item>
-                    <Form.Item label="Designation">
-                      {getFieldDecorator("designation", {
-                        rules: [
-                          {
-                            required: true
-                          }
-                        ],
-                        initialValue: ""
-                      })(<Input />)}
-                    </Form.Item>
+
+                  <Form.Item label="Designation">
+                    {getFieldDecorator("designation", {
+                      // rules: [
+                      //   {
+                      //     required: true
+                      //   }
+                      // ],
+                      initialValue: "",
+                    })(<Input />)}
+                  </Form.Item>
                   {/* </div> */}
                   <div className="register-button-container between">
                     <div onClick={this.handleReset} className="negative-button">

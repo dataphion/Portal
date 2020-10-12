@@ -768,14 +768,14 @@ export default class TestcaseSteps extends React.Component {
                       <i className="fa fa-play fa-lg fa-color-run" />
                       {/* Run Steps */}
                     </Whisper>
-                    <Whisper
+                    {/* <Whisper
                       placement="bottom"
                       trigger="hover"
                       speaker={this.Tooltip("stop")}
                       // onClick={this.triggerPlayback}
                     >
                       <i className="fa fa-stop-circle fa-lg fa-color-stop" aria-hidden="true"></i>
-                    </Whisper>
+                    </Whisper> */}
                     <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("data source")}>
                       <div
                         // onClick={this.triggerExtension}
