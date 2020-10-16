@@ -55,6 +55,10 @@ export default class DataSources extends React.Component {
           label: "Kafka",
           value: "kafka",
         },
+        {
+          label: "Gmail",
+          value: "gmail",
+        },
       ],
     };
   }

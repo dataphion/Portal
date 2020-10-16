@@ -700,6 +700,20 @@ export default class LeftPanelElements extends React.Component {
                     </Whisper>
                     {/* <div className="graph-left-panel-drag-data-desc larg-desc">Kafka</div> */}
                   </div>
+                  <div className="graph-left-panel-drag-data-container">
+                    <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Gmail reader")}>
+                      <div
+                        value={JSON.stringify({
+                          Method: "gmail_reader",
+                          Type: "source",
+                        })}
+                        className="graph-left-panel-draggable-element graph-left-panel-draggable-element-source gmail-bg"
+                      >
+                        Gmail Reader
+                      </div>
+                    </Whisper>
+                    {/* <div className="graph-left-panel-drag-data-desc larg-desc">Kafka</div> */}
+                  </div>
                 </div>
               </div>
             </Panel>

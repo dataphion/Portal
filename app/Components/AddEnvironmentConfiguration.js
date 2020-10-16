@@ -50,56 +50,59 @@ const AddEnvironmentConfiguration = Form.create()(
       if (error) {
         return;
       }
-
-      const formData = this.getCurrentData();
-      this.setState({ loader: true });
-      axios
-        .post(constants.dbregistrationsCheck, formData)
-        .then((response) => {
-          console.log(response);
-          if (response.data.status === "success") {
-            if (type === "test") {
-              Alert.success("Connection has been established successfully.");
+      if (this.props.record["type"] === "gmail") {
+        this.handleSave(e);
+      } else {
+        const formData = this.getCurrentData();
+        this.setState({ loader: true });
+        axios
+          .post(constants.dbregistrationsCheck, formData)
+          .then((response) => {
+            console.log(response);
+            if (response.data.status === "success") {
+              if (type === "test") {
+                Alert.success("Connection has been established successfully.");
+              } else {
+                this.handleSave(e);
+              }
+              this.setState({ loader: false });
             } else {
-              this.handleSave(e);
-            }
-            this.setState({ loader: false });
-          } else {
-            console.log(formData.database_type);
+              console.log(formData.database_type);
 
-            if (formData.database_type === "redis") {
-              Alert.error("Unable to connect to the database, Please verify again.");
-            } else if (formData.database_type === "mysql") {
-              // Alert.error(response.data.error.message, 2000);
-              Alert.error("error in mysql connection!", 2000);
-            } else if (formData.database_type === "rabbitmq") {
-              Alert.error("error in rabbitmq connection!", 2000);
-            } else if (formData.database_type === "oracle") {
-              // Alert.error(`Unable to connect to the database, Error code ${response.data.error.errorNum}`, 10000);
-              Alert.error(`Unable to connect to the Oracle database`, 2000);
-            } else if (formData.database_type === "mongodb") {
-              // Alert.error(response.data.error, 2000);
-              Alert.error("error in mongodb connection!", 2000);
-            } else if (formData.database_type === "mssql") {
-              // Alert.error(response.data.error, 2000);
-              Alert.error("error in mssql connection!", 2000);
-            } else if (formData.database_type === "postgres") {
-              // Alert.error(response.data.error, 2000);
-              Alert.error("error in postgres connection!", 2000);
-            } else if (formData.database_type === "cassandra") {
-              // Alert.error(response.data.error, 2000);
-              Alert.error("error in cassandra connection!", 2000);
-            } else if (formData.database_type === "kafka") {
-              Alert.error("error in kafka connection!", 2000);
+              if (formData.database_type === "redis") {
+                Alert.error("Unable to connect to the database, Please verify again.");
+              } else if (formData.database_type === "mysql") {
+                // Alert.error(response.data.error.message, 2000);
+                Alert.error("error in mysql connection!", 2000);
+              } else if (formData.database_type === "rabbitmq") {
+                Alert.error("error in rabbitmq connection!", 2000);
+              } else if (formData.database_type === "oracle") {
+                // Alert.error(`Unable to connect to the database, Error code ${response.data.error.errorNum}`, 10000);
+                Alert.error(`Unable to connect to the Oracle database`, 2000);
+              } else if (formData.database_type === "mongodb") {
+                // Alert.error(response.data.error, 2000);
+                Alert.error("error in mongodb connection!", 2000);
+              } else if (formData.database_type === "mssql") {
+                // Alert.error(response.data.error, 2000);
+                Alert.error("error in mssql connection!", 2000);
+              } else if (formData.database_type === "postgres") {
+                // Alert.error(response.data.error, 2000);
+                Alert.error("error in postgres connection!", 2000);
+              } else if (formData.database_type === "cassandra") {
+                // Alert.error(response.data.error, 2000);
+                Alert.error("error in cassandra connection!", 2000);
+              } else if (formData.database_type === "kafka") {
+                Alert.error("error in kafka connection!", 2000);
+              }
+              this.setState({ loader: false });
             }
+          })
+          .catch((error) => {
             this.setState({ loader: false });
-          }
-        })
-        .catch((error) => {
-          this.setState({ loader: false });
 
-          Alert.error("Something went wrong");
-        });
+            Alert.error("Something went wrong");
+          });
+      }
     };
 
     handleCancel = () => {
@@ -162,37 +165,46 @@ const AddEnvironmentConfiguration = Form.create()(
                 )}
               </Form.Item>
             </Col>
+            {this.props.record["type"] !== "gmail" ? (
+              <Col xs={12} className="input-forms">
+                <Form.Item label="IP">
+                  {getFieldDecorator("Ip", {
+                    rules: [
+                      {
+                        required: true,
+                        message: "Please input your Ip!",
+                      },
+                    ],
+                    initialValue: this.props.editConfigurationData ? this.props.editConfigurationData.ip : "",
+                  })(<Input />)}
+                </Form.Item>
+              </Col>
+            ) : (
+              ""
+            )}
 
-            <Col xs={12} className="input-forms">
-              <Form.Item label="IP">
-                {getFieldDecorator("Ip", {
-                  rules: [
-                    {
-                      required: true,
-                      message: "Please input your Ip!",
-                    },
-                  ],
-                  initialValue: this.props.editConfigurationData ? this.props.editConfigurationData.ip : "",
-                })(<Input />)}
-              </Form.Item>
-            </Col>
             {/* </Row> */}
 
             <React.Fragment>
               {/* <Row> */}
-              <Col xs={12} className="input-forms">
-                <Form.Item label="Port">
-                  {getFieldDecorator("Port", {
-                    rules: [
-                      {
-                        required: true,
-                      },
-                    ],
-                    initialValue: this.props.editConfigurationData ? this.props.editConfigurationData.port : "",
-                  })(<Input maxLength={5} />)}
-                </Form.Item>
-              </Col>
-              {this.props.record["type"] !== "redis" ? (
+              {this.props.record["type"] !== "gmail" ? (
+                <Col xs={12} className="input-forms">
+                  <Form.Item label="Port">
+                    {getFieldDecorator("Port", {
+                      rules: [
+                        {
+                          required: true,
+                        },
+                      ],
+                      initialValue: this.props.editConfigurationData ? this.props.editConfigurationData.port : "",
+                    })(<Input maxLength={5} />)}
+                  </Form.Item>
+                </Col>
+              ) : (
+                ""
+              )}
+
+              {this.props.record["type"] !== "redis" && this.props.record["type"] !== "gmail" ? (
                 <Col xs={12} className="input-forms">
                   <Form.Item label="Username">
                     {getFieldDecorator("Username", {
@@ -208,9 +220,41 @@ const AddEnvironmentConfiguration = Form.create()(
               ) : (
                 ""
               )}
-              {/* </Row>
-            <Row> */}
-              {this.props.record["type"] !== "redis" ? (
+
+              {this.props.record["type"] === "gmail" ? (
+                <Col xs={12} className="input-forms">
+                  <Form.Item label="Email">
+                    {getFieldDecorator("Username", {
+                      rules: [
+                        {
+                          required: true,
+                        },
+                      ],
+                      initialValue: this.props.editConfigurationData ? this.props.editConfigurationData.username : "",
+                    })(<Input />)}
+                  </Form.Item>
+                </Col>
+              ) : (
+                ""
+              )}
+              {this.props.record["type"] === "gmail" ? (
+                <Col xs={12} className="input-forms">
+                  <Form.Item label="Password">
+                    {getFieldDecorator("EmailPassword", {
+                      rules: [
+                        {
+                          required: true,
+                        },
+                      ],
+                      initialValue: this.props.editConfigurationData ? this.props.editConfigurationData.database : "",
+                    })(<Input type="password" />)}
+                  </Form.Item>
+                </Col>
+              ) : (
+                ""
+              )}
+
+              {this.props.record["type"] !== "redis" && this.props.record["type"] !== "gmail" ? (
                 <Col xs={12} className="input-forms">
                   <Form.Item label="Password">
                     {getFieldDecorator("Password", {
@@ -226,7 +270,7 @@ const AddEnvironmentConfiguration = Form.create()(
               ) : (
                 ""
               )}
-              {this.props.record["type"] !== "rabbitmq" && this.props.record["type"] !== "kafka" ? (
+              {this.props.record["type"] !== "rabbitmq" && this.props.record["type"] !== "kafka" && this.props.record["type"] !== "gmail" ? (
                 <Col xs={12} className="input-forms">
                   <Form.Item label={this.props.record["type"] === "cassandra" ? "Keyspace" : "Database"}>
                     {getFieldDecorator("Database", {
@@ -323,6 +367,12 @@ const AddEnvironmentConfiguration = Form.create()(
             let env_id = [this.props.form.getFieldValue("environment")];
 
             let application = window.location.pathname.split("/")[2];
+
+            if (this.props.record["type"] === "gmail") {
+              // used for temporary email password
+              database = form.getFieldValue("EmailPassword");
+            }
+
             let data = {
               ip: ip,
               port: port,
@@ -406,10 +456,15 @@ const AddEnvironmentConfiguration = Form.create()(
               <div onClick={this.handleCancel} className="negative-button">
                 <i className="fa fa-close" /> Cancel
               </div>
-              <div onClick={(e) => this.testSourceConnection(e, "test")} className="negative-button" style={{ marginLeft: "10px" }}>
-                <i className="fa fa-cog" />
-                Test Connection
-              </div>
+              {this.props.record["type"] !== "gmail" ? (
+                <div onClick={(e) => this.testSourceConnection(e, "test")} className="negative-button" style={{ marginLeft: "10px" }}>
+                  <i className="fa fa-cog" />
+                  Test Connection
+                </div>
+              ) : (
+                ""
+              )}
+
               {this.renderBtn()}
             </div>
           </Modal.Footer>

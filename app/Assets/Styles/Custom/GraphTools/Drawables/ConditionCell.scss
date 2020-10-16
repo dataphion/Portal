@@ -57,6 +57,29 @@
   background-image: url("../../../../Images/graphql_cell.svg");
 }
 
+.cmd-shell-right {
+  display: flex;
+  justify-content: center;
+}
+
+.ui-shell-cell-left {
+  margin-right: 10px;
+  height: 54px;
+  background-size: cover;
+  width: 49px;
+  background-repeat: no-repeat;
+  background-image: url("../../../../Images/bash-blue.svg");
+}
+
+.ui-gmail-cell-left {
+  margin-right: 10px;
+  height: 54px;
+  background-size: cover;
+  width: 49px;
+  background-repeat: no-repeat;
+  background-image: url("../../../../Images/gmail_icon.svg");
+}
+
 .condition-cell-right {
   width: 151px;
   text-align: left;

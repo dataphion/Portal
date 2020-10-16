@@ -26,6 +26,10 @@ const AddDataSources = Form.create()(
             label: "Kafka",
             value: "kafka",
           },
+          {
+            label: "Gmail",
+            value: "gmail",
+          },
         ],
       };
     }

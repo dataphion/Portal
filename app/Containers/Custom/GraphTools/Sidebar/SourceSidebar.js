@@ -7,6 +7,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import TextArea from "antd/lib/input/TextArea";
 import AceEditor from "react-ace";
+import { constant } from "lodash";
 
 const SourceSidebar = Form.create()(
   class extends React.Component {
@@ -26,6 +27,7 @@ const SourceSidebar = Form.create()(
         source_name: "",
         uploadedFileName: null,
         pem_file_url: null,
+        email_accounts: [],
       };
     }
 
@@ -33,7 +35,7 @@ const SourceSidebar = Form.create()(
       this.getSource();
     }
 
-    getSource = () => {
+    getSource = async () => {
       axios.get(`${constants.application}/${window.location.pathname.split("/")[2]}`).then((response) => {
         console.log("response --->", response);
         let temp_source = [];
@@ -41,6 +43,26 @@ const SourceSidebar = Form.create()(
           temp_source.push({ id: source["id"].toString(), source_name: source["name"], database_type: source["type"] });
         }
         this.setState({ source: temp_source });
+      });
+
+      // get email accounts for selected source
+      let accounts = [];
+      if (this.props.selectedCellData.gmailSourceId) {
+        const dbs = await axios.get(`${constants.sourceregistration}/${this.props.selectedCellData.gmailSourceId.value}`);
+        console.log("dbs ---->", dbs);
+        if (dbs.data.dbregistrations.length > 0) {
+          for (const db of dbs.data.dbregistrations) {
+            console.log("dbs--->", db);
+            accounts.push({
+              id: db.id.toString(),
+              email: db.username,
+            });
+          }
+        }
+      }
+
+      this.setState({
+        email_accounts: accounts,
       });
     };
 
@@ -146,9 +168,11 @@ const SourceSidebar = Form.create()(
         Description: form.getFieldValue("Description"),
         DatabaseType: this.props.selectedCellData.Method.value,
         OracleSourceId: form.getFieldValue("OracleSourceId"),
+        gmailSourceId: form.getFieldValue("gmailSourceId"),
         RabbitmqQueueName: form.getFieldValue("RabbitmqQueueName"),
         KafkaTopicName: form.getFieldValue("KafkaTopicName"),
         RabbitmqSourceId: form.getFieldValue("RabbitmqSourceId"),
+        SelectedEmailId: form.getFieldValue("SelectedEmailId"),
         KafkaSourceId: form.getFieldValue("KafkaSourceId"),
         ServerIp: form.getFieldValue("ServerIp"),
         SshPort: form.getFieldValue("SshPort"),
@@ -181,6 +205,9 @@ const SourceSidebar = Form.create()(
         kafkaValidation: form.getFieldValue("kafkaValidation"),
         KafkaWaitingTime: form.getFieldValue("KafkaWaitingTime"),
         PollingInterval: form.getFieldValue("PollingInterval"),
+        emailWaitingTime: form.getFieldValue("emailWaitingTime"),
+        readerEmail: form.getFieldValue("readerEmail"),
+        readerPassword: form.getFieldValue("readerPassword"),
         ExpectedIncrement: form.getFieldValue("ExpectedIncrement"),
         // ExpectedKafkaReponse: this.state.ExpectedKafkaReponse,
       };
@@ -242,10 +269,31 @@ const SourceSidebar = Form.create()(
       }
       this.setState({ publishDataSelected: publishDataSelected });
     };
-    handleSourceChange = (value, e, type) => {
+    handleSourceChange = async (value, e, type) => {
+      console.log(value);
+      console.log(e);
+      console.log(type);
+
+      // get selected source
+      let accounts = [];
+      if (type === "gmail") {
+        const dbs = await axios.get(`${constants.sourceregistration}/${value}`);
+        console.log("dbs ---->", dbs);
+        if (dbs.data.dbregistrations.length > 0) {
+          for (const db of dbs.data.dbregistrations) {
+            console.log("dbs--->", db);
+            accounts.push({
+              id: db.id.toString(),
+              email: db.username,
+            });
+          }
+        }
+      }
+
       this.setState({
         sourcetype: type,
         source_name: e.props.children,
+        email_accounts: accounts,
       });
     };
 
@@ -294,35 +342,6 @@ const SourceSidebar = Form.create()(
                   </Select>
                 )}
               </Form.Item>
-              {/* <Form.Item label="Select Database">
-                {getFieldDecorator("OracleDatabase", {
-                  rules: [
-                    {
-                      required: true
-                    }
-                  ],
-                  initialValue: this.props.selectedCellData.OracleDatabase
-                    ? this.props.selectedCellData.OracleDatabase.value
-                    : ""
-                })(
-                  <Select>
-                    {this.state.registeredDatabase.length > 0
-                      ? this.state.registeredDatabase.map((Data, index) => {
-                        if (
-                          Data.id ===
-                          this.props.form.getFieldValue("OracleSourceId")
-                        ) {
-                          return (
-                            <Select.Option key={index} value={Data.database}>
-                              {Data.database}
-                            </Select.Option>
-                          );
-                        }
-                      })
-                      : ""}
-                  </Select>
-                )}
-              </Form.Item> */}
             </div>
           );
         } else if (this.props.selectedCellData.Method.value === "rabbitmq") {
@@ -441,6 +460,129 @@ const SourceSidebar = Form.create()(
                 ""
               )}
               {this.RenderBodySelectedMenu()}
+            </div>
+          );
+        } else if (this.props.selectedCellData.Method.value === "gmail_reader") {
+          if (this.props.selectedCellData.gmailSourceId) {
+            console.log(this.state.source);
+            console.log(this.state.email_accounts);
+            console.log(this.props.selectedCellData.gmailSourceId.value);
+            console.log(this.props.selectedCellData.SelectedEmailId.value);
+          }
+          const form = this.props.form;
+          return (
+            <div>
+              <Row>
+                <Col xs={12}>
+                  <div className="sidebar-body-regular-row">
+                    <Form.Item label="Select Source">
+                      {getFieldDecorator("gmailSourceId", {
+                        rules: [
+                          {
+                            required: true,
+                          },
+                        ],
+                        initialValue: this.props.selectedCellData.gmailSourceId ? this.props.selectedCellData.gmailSourceId.value : "",
+                      })(
+                        <Select onChange={(val, e) => this.handleSourceChange(val, e, "gmail")}>
+                          {this.state.source.length > 0
+                            ? this.state.source.map((Data, index) => {
+                                if (Data.database_type === "gmail") {
+                                  return (
+                                    <Select.Option key={index} value={Data.id}>
+                                      {Data.source_name}
+                                    </Select.Option>
+                                  );
+                                }
+                              })
+                            : ""}
+                        </Select>
+                      )}
+                    </Form.Item>
+                    {/* <Form.Item label="Email">
+                      {getFieldDecorator("readerEmail", {
+                        rules: [
+                          {
+                            required: true,
+                          },
+                        ],
+                        initialValue: this.props.selectedCellData.readerEmail ? this.props.selectedCellData.readerEmail.value : "",
+                      })(<Input />)}
+                    </Form.Item> */}
+                  </div>
+                </Col>
+                <Col xs={12}>
+                  <div className="sidebar-body-regular-row">
+                    <Form.Item label="Select Account">
+                      {getFieldDecorator("SelectedEmailId", {
+                        rules: [
+                          {
+                            required: true,
+                          },
+                        ],
+                        initialValue: this.props.selectedCellData.SelectedEmailId ? this.props.selectedCellData.SelectedEmailId.value : "",
+                      })(
+                        <Select>
+                          {this.state.email_accounts.length > 0
+                            ? this.state.email_accounts.map((Data, index) => {
+                                console.log(Data);
+                                return (
+                                  <Select.Option key={index} value={Data.id}>
+                                    {Data.email}
+                                  </Select.Option>
+                                );
+                              })
+                            : ""}
+                        </Select>
+                      )}
+                    </Form.Item>
+                  </div>
+                </Col>
+              </Row>
+              <Row className="col-margin">
+                <Col xs={8}>
+                  <div className="sidebar-body-regular-row">
+                    <Form.Item label="Maximum Timeout(min)">
+                      {getFieldDecorator("emailWaitingTime", {
+                        rules: [
+                          {
+                            required: true,
+                          },
+                        ],
+                        initialValue: this.props.selectedCellData.emailWaitingTime ? this.props.selectedCellData.emailWaitingTime.value : "",
+                      })(<Input type="number" />)}
+                    </Form.Item>
+                  </div>
+                </Col>
+                <Col xs={8}>
+                  <div className="sidebar-body-regular-row">
+                    <Form.Item label="Polling Interval(s)">
+                      {getFieldDecorator("PollingInterval", {
+                        rules: [
+                          {
+                            required: true,
+                          },
+                        ],
+                        initialValue: this.props.selectedCellData.PollingInterval ? this.props.selectedCellData.PollingInterval.value : "",
+                      })(<Input type="number" />)}
+                    </Form.Item>
+                  </div>
+                </Col>
+                <Col xs={8}>
+                  <div className="sidebar-body-regular-row">
+                    <Form.Item label="Expected Emails">
+                      {getFieldDecorator("ExpectedIncrement", {
+                        rules: [
+                          {
+                            required: true,
+                          },
+                        ],
+                        initialValue: this.props.selectedCellData.ExpectedIncrement ? this.props.selectedCellData.ExpectedIncrement.value : "",
+                      })(<Input type="number" />)}
+                    </Form.Item>
+                  </div>
+                </Col>
+              </Row>
             </div>
           );
         } else if (this.props.selectedCellData.Method.value === "shell") {
@@ -1090,7 +1232,12 @@ const SourceSidebar = Form.create()(
       const { getFieldDecorator } = this.props.form;
       if (this.props.selectedCellData.Method) {
         console.log(this.props.selectedCellData.Method.value);
-        if (this.props.selectedCellData.Method.value !== "rabbitmq" && this.props.selectedCellData.Method.value !== "kafka" && this.props.selectedCellData.Method.value !== "shell") {
+        if (
+          this.props.selectedCellData.Method.value !== "rabbitmq" &&
+          this.props.selectedCellData.Method.value !== "kafka" &&
+          this.props.selectedCellData.Method.value !== "shell" &&
+          this.props.selectedCellData.Method.value !== "gmail_reader"
+        ) {
           return (
             <Collapse.Panel header="QUERY" key="2">
               <div className="sidebar-body-regular-row-body-menu-container">
@@ -1429,7 +1576,9 @@ const SourceSidebar = Form.create()(
                   defaultActiveKey={["1", "2"]}
                   expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
                 >
-                  {(this.props.selectedCellData.Method && this.props.selectedCellData.Method.value === "kafka") || this.props.selectedCellData.Method.value === "shell" ? (
+                  {(this.props.selectedCellData.Method && this.props.selectedCellData.Method.value === "kafka") ||
+                  this.props.selectedCellData.Method.value === "shell" ||
+                  this.props.selectedCellData.Method.value === "gmail_reader" ? (
                     <div style={{ padding: 20 }}>{this.RenderDatabase()}</div>
                   ) : (
                     <Collapse.Panel header="DATABASES" key="1">

@@ -879,6 +879,8 @@ const TestcaseApi = Form.create()(
         this.applyHandler(graph, cell, "DatabaseType", fields.DatabaseType);
         this.applyHandler(graph, cell, "OracleSourceId", fields.OracleSourceId);
         this.applyHandler(graph, cell, "OracleDatabase", fields.OracleDatabase);
+        this.applyHandler(graph, cell, "gmailSourceId", fields.gmailSourceId);
+        this.applyHandler(graph, cell, "SelectedEmailId", fields.SelectedEmailId);
         this.applyHandler(graph, cell, "RabbitmqSourceId", fields.RabbitmqSourceId);
         this.applyHandler(graph, cell, "KafkaSourceId", fields.KafkaSourceId);
         this.applyHandler(graph, cell, "ServerIp", fields.ServerIp);
@@ -896,6 +898,9 @@ const TestcaseApi = Form.create()(
         this.applyHandler(graph, cell, "kafkaValidation", fields.kafkaValidation);
         this.applyHandler(graph, cell, "KafkaWaitingTime", fields.KafkaWaitingTime);
         this.applyHandler(graph, cell, "PollingInterval", fields.PollingInterval);
+        this.applyHandler(graph, cell, "emailWaitingTime", fields.emailWaitingTime);
+        this.applyHandler(graph, cell, "readerEmail", fields.readerEmail);
+        this.applyHandler(graph, cell, "readerPassword", fields.readerPassword);
         this.applyHandler(graph, cell, "ExpectedIncrement", fields.ExpectedIncrement);
         this.applyHandler(graph, cell, "rmqData", fields.AceEditorValue);
         this.applyHandler(graph, cell, "ExpectedKafkaReponse", fields.ExpectedKafkaReponse);
@@ -1345,6 +1350,28 @@ const TestcaseApi = Form.create()(
               console.log("get_source_details ----", current_offset);
               // latestOffset = get_offset;
               allCells[prop]["properties"]["offsetValue"] = current_offset;
+            }
+          }
+
+          // get unread email counts
+          if (allCells[prop]["properties"]["DatabaseType"]) {
+            let email_count = 0;
+            if (allCells[prop]["properties"]["DatabaseType"] === "gmail_reader") {
+              // get email details
+              const email_details = await axios.get(`${constants.dbregistrations}/${allCells[prop]["properties"]["SelectedEmailId"]}`);
+              console.log("email details --->", email_details);
+              let get_user_details = {
+                email: email_details.data.username,
+                password: email_details.data.database,
+                database_type: "checkEmailCount",
+              };
+
+              console.log("user gmail details", get_user_details);
+              email_count = await axios.post(`${constants.kafkaoffset}`, get_user_details);
+              console.log("unseen email counts ---->", email_count.data.current_email_count);
+              allCells[prop]["properties"]["last_email_count"] = email_count.data.current_email_count;
+              allCells[prop]["properties"]["email"] = email_details.data.username;
+              allCells[prop]["properties"]["password"] = email_details.data.database;
             }
           }
         }
