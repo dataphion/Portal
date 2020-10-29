@@ -622,10 +622,6 @@ const ApiSidebar = Form.create()(
     // };
     graphQLFetcher = (graphQLParams) => {
       const form = this.props.form;
-      // console.log("---------inside  fetcher---------------");
-      // console.log("HeadersKey ---->", form.getFieldValue("HeadersKey"));
-      // console.log("HeadersValue ---->", form.getFieldValue("HeadersValue"));
-      // console.log("form-date=====", this.props.selectedCellData);
       console.log(form.getFieldValue("GraphqlUrl"));
       let headers = {
         "Content-Type": "application/json",
@@ -634,16 +630,15 @@ const ApiSidebar = Form.create()(
       if (form.getFieldValue("HeadersKey") && form.getFieldValue("HeadersValue")) {
         headers[form.getFieldValue("HeadersKey")] = form.getFieldValue("HeadersValue");
       } else if (this.props.selectedCellData.HeadersAdd) {
-        // if(this.state.BodyFormDataAdd.value)
         let h = JSON.parse(this.props.selectedCellData.HeadersAdd.value);
-        // console.log("data ----------->", h);
+
         for (const k of h) {
           console.log(k);
           headers[k["HeadersKey"]] = k["HeadersValue"];
         }
       }
 
-      console.log("headers --->", headers);
+      // console.log("headers --->", headers);
 
       return fetch(form.getFieldValue("GraphqlUrl"), {
         method: "post",
