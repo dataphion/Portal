@@ -604,14 +604,51 @@ const ApiSidebar = Form.create()(
       this.setState({ BodyFormDataAdd: BodyFormDataRemove });
     };
 
+    // graphQLFetcher = (graphQLParams) => {
+    //   const form = this.props.form;
+    //   // console.log("---------inside  fetcher---------------");
+    //   console.log(form.getFieldValue("GraphqlUrl"));
+    //   return fetch(form.getFieldValue("GraphqlUrl"), {
+    //     method: "post",
+    //     // mode: "no-cors",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(graphQLParams),
+    //   }).then((response) => response.json());
+    // };
+
+    // onEditQuery = (query) => {
+    //   // console.log("query---->", query);
+    //   this.setState({ graphqlQuery: query });
+    // };
     graphQLFetcher = (graphQLParams) => {
       const form = this.props.form;
       // console.log("---------inside  fetcher---------------");
+      // console.log("HeadersKey ---->", form.getFieldValue("HeadersKey"));
+      // console.log("HeadersValue ---->", form.getFieldValue("HeadersValue"));
+      // console.log("form-date=====", this.props.selectedCellData);
       console.log(form.getFieldValue("GraphqlUrl"));
+      let headers = {
+        "Content-Type": "application/json",
+      };
+
+      if (form.getFieldValue("HeadersKey") && form.getFieldValue("HeadersValue")) {
+        headers[form.getFieldValue("HeadersKey")] = form.getFieldValue("HeadersValue");
+      } else if (this.props.selectedCellData.HeadersAdd) {
+        // if(this.state.BodyFormDataAdd.value)
+        let h = JSON.parse(this.props.selectedCellData.HeadersAdd.value);
+        // console.log("data ----------->", h);
+        for (const k of h) {
+          console.log(k);
+          headers[k["HeadersKey"]] = k["HeadersValue"];
+        }
+      }
+
+      console.log("headers --->", headers);
+
       return fetch(form.getFieldValue("GraphqlUrl"), {
         method: "post",
         // mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(graphQLParams),
       }).then((response) => response.json());
     };
@@ -995,7 +1032,8 @@ const ApiSidebar = Form.create()(
 
                 {this.state.Method === "graphql" ? (
                   <div className="App" id="graphiql">
-                    <GraphiQL fetcher={this.graphQLFetcher} onEditQuery={this.onEditQuery} defaultQuery={defaultQuery} defaultVariableEditorOpen headerEditorEnabled />
+                    {/* <GraphiQL fetcher={this.graphQLFetcher} onEditQuery={this.onEditQuery} defaultQuery={defaultQuery} defaultVariableEditorOpen headerEditorEnabled /> */}
+                    <GraphiQL fetcher={this.graphQLFetcher} onEditQuery={this.onEditQuery} defaultQuery={defaultQuery} />
                   </div>
                 ) : null}
               </Collapse>

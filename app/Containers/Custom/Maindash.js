@@ -15,6 +15,7 @@ import ManageEnvironments from "../Custom/Dashboard/ManageEnvironments";
 import NativeAgents from "../Custom/Dashboard/NativeAgents";
 import RelationGraph from "../Custom/Dashboard/RelationGraph";
 import Settings from "../Custom/Dashboard/Settings";
+import Demonstration from "../Custom/Dashboard/Demonstration";
 import { Alert } from "rsuite";
 import { Context } from "../Context";
 
@@ -85,6 +86,8 @@ export default class Maindash extends React.Component {
       return <RelationGraph parentData={this.props} />;
     } else if (window.location.pathname.split("/")[3] === "settings") {
       return <Settings parentData={this.props} />;
+    } else if (window.location.pathname.split("/")[3] === "demo") {
+      return <Demonstration parentData={this.props} />;
     }
   };
 
@@ -96,11 +99,7 @@ export default class Maindash extends React.Component {
             <div className="main-container animated fadeIn">
               {context.state.smallSidebar ? <Header /> : <DashboardSidebar />}
               {this.loadSidebarComponent()}
-              <div
-                onClick={context.toggelSidebar}
-                style={context.state.smallSidebar ? { left: "56px" } : {}}
-                className="dashboard-sidebar-select-button"
-              >
+              <div onClick={context.toggelSidebar} style={context.state.smallSidebar ? { left: "56px" } : {}} className="dashboard-sidebar-select-button">
                 <i className="fa fa-angle-left" style={context.state.smallSidebar ? { transform: "rotate(180deg)" } : {}} />
               </div>
             </div>

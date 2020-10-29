@@ -10,7 +10,7 @@ export default class DashboardSidebar extends React.Component {
     this.state = {
       userInfo: [],
       profileContainer: false,
-      activeMenu: ""
+      activeMenu: "",
     };
   }
 
@@ -40,7 +40,7 @@ export default class DashboardSidebar extends React.Component {
     }
   }
 
-  Tooltip = tooltip => {
+  Tooltip = (tooltip) => {
     return <Tooltip>{tooltip}</Tooltip>;
   };
 
@@ -65,7 +65,9 @@ export default class DashboardSidebar extends React.Component {
               to={`/${pathname[1]}/${pathname[2]}`}
               onClick={() => this.setState({ activeMenu: "dashboard" })}
               className="dashboard-sidebar-menu-item"
-              style={this.state.activeMenu === "dashboard" ? { color: 'white', color: 'white', background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
+              style={
+                this.state.activeMenu === "dashboard" ? { color: "white", color: "white", background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}
+              }
             >
               <i className="fa fa-tachometer" />
               Dashboard
@@ -74,7 +76,7 @@ export default class DashboardSidebar extends React.Component {
               to={`/${pathname[1]}/${pathname[2]}/test-suites`}
               onClick={() => this.setState({ activeMenu: "testSuites" })}
               className="dashboard-sidebar-menu-item"
-              style={this.state.activeMenu === "testSuites" ? { color: 'white', background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
+              style={this.state.activeMenu === "testSuites" ? { color: "white", background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
             >
               <i className="fa fa-th-large" />
               Test Suites
@@ -84,7 +86,7 @@ export default class DashboardSidebar extends React.Component {
               to={`/${pathname[1]}/${pathname[2]}/test-cases`}
               onClick={() => this.setState({ activeMenu: "testCases" })}
               className="dashboard-sidebar-menu-item"
-              style={this.state.activeMenu === "testCases" ? { color: 'white', background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
+              style={this.state.activeMenu === "testCases" ? { color: "white", background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
             >
               <i className="fa fa-cubes" />
               Test Cases
@@ -93,7 +95,7 @@ export default class DashboardSidebar extends React.Component {
               to={`/${pathname[1]}/${pathname[2]}/object-repository`}
               onClick={() => this.setState({ activeMenu: "objectRepository" })}
               className="dashboard-sidebar-menu-item"
-              style={this.state.activeMenu === "objectRepository" ? { color: 'white', background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
+              style={this.state.activeMenu === "objectRepository" ? { color: "white", background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
             >
               <i className="fa fa-folder-open" />
               Object Repository
@@ -102,7 +104,7 @@ export default class DashboardSidebar extends React.Component {
               to={`/${pathname[1]}/${pathname[2]}/data-sources`}
               onClick={() => this.setState({ activeMenu: "dataSources" })}
               className="dashboard-sidebar-menu-item"
-              style={this.state.activeMenu === "dataSources" ? { color: 'white', background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
+              style={this.state.activeMenu === "dataSources" ? { color: "white", background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
             >
               <i className="fa fa-database" />
               Data Platforms
@@ -111,7 +113,7 @@ export default class DashboardSidebar extends React.Component {
               to={`/${pathname[1]}/${pathname[2]}/reports`}
               onClick={() => this.setState({ activeMenu: "reports" })}
               className="dashboard-sidebar-menu-item"
-              style={this.state.activeMenu === "reports" ? { color: 'white', background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
+              style={this.state.activeMenu === "reports" ? { color: "white", background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
             >
               <i className="fa fa-pie-chart" />
               Reports
@@ -120,7 +122,7 @@ export default class DashboardSidebar extends React.Component {
               to={`/${pathname[1]}/${pathname[2]}/api-specs`}
               onClick={() => this.setState({ activeMenu: "apiSpecs" })}
               className="dashboard-sidebar-menu-item"
-              style={this.state.activeMenu === "apiSpecs" ? { color: 'white', background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
+              style={this.state.activeMenu === "apiSpecs" ? { color: "white", background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
             >
               <i className="fa fa-rocket" />
               Api Specs
@@ -129,7 +131,7 @@ export default class DashboardSidebar extends React.Component {
               to={`/${pathname[1]}/${pathname[2]}/native-agents`}
               onClick={() => this.setState({ activeMenu: "nativeAgents" })}
               className="dashboard-sidebar-menu-item"
-              style={this.state.activeMenu === "nativeAgents" ? { color: 'white', background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
+              style={this.state.activeMenu === "nativeAgents" ? { color: "white", background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
             >
               <i className="fa fa-mobile" />
               Native Agents
@@ -138,7 +140,7 @@ export default class DashboardSidebar extends React.Component {
               to={`/${pathname[1]}/${pathname[2]}/manage-environments`}
               onClick={() => this.setState({ activeMenu: "manageEnvironments" })}
               className="dashboard-sidebar-menu-item"
-              style={this.state.activeMenu === "manageEnvironments" ? { color: 'white', background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
+              style={this.state.activeMenu === "manageEnvironments" ? { color: "white", background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
             >
               <i className="fa fa-tasks" />
               Manage Environments
@@ -147,7 +149,7 @@ export default class DashboardSidebar extends React.Component {
               to={`/${pathname[1]}/${pathname[2]}/relation-graph`}
               onClick={() => this.setState({ activeMenu: "relation-graph" })}
               className="dashboard-sidebar-menu-item"
-              style={this.state.activeMenu === "relation-graph" ? { color: 'white', background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
+              style={this.state.activeMenu === "relation-graph" ? { color: "white", background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
             >
               <i className="fas fa-sitemap" />
               Relation Graph
@@ -156,11 +158,20 @@ export default class DashboardSidebar extends React.Component {
               to={`/${pathname[1]}/${pathname[2]}/settings`}
               onClick={() => this.setState({ activeMenu: "settings" })}
               className="dashboard-sidebar-menu-item"
-              style={this.state.activeMenu === "settings" ? { color: 'white', background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
+              style={this.state.activeMenu === "settings" ? { color: "white", background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
             >
               <i className="fa fa-sliders" />
               Settings
             </Link>
+            {/* <Link
+              to={`/${pathname[1]}/${pathname[2]}/demo`}
+              onClick={() => this.setState({ activeMenu: "demo" })}
+              className="dashboard-sidebar-menu-item"
+              style={this.state.activeMenu === "demo" ? { color: "white", background: `linear-gradient(90deg, ${constants.HIGHLIGHT_COLOR}, ${constants.HIGHLIGHT_END_COLOR})` } : {}}
+            >
+              <i className="fa fa-sliders" />
+              Demonstration
+            </Link> */}
           </div>
           <div className="dashboard-sidebar-profile-container">
             <div
@@ -168,7 +179,7 @@ export default class DashboardSidebar extends React.Component {
               onMouseEnter={() => this.setState({ profileContainer: true })}
               onClick={() =>
                 this.setState({
-                  profileContainer: !this.state.profileContainer
+                  profileContainer: !this.state.profileContainer,
                 })
               }
             >
@@ -180,7 +191,7 @@ export default class DashboardSidebar extends React.Component {
             </Link>
           </div>
           <div
-            onMouseLeave={e => this.setState({ profileContainer: false })}
+            onMouseLeave={(e) => this.setState({ profileContainer: false })}
             className={"hover-header-profile-container animated fadeIn " + (this.state.profileContainer ? " hidden-hover-header-profile-container" : "")}
           >
             <div className="hover-header-profile-body">

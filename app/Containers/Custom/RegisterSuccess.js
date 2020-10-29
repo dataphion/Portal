@@ -18,7 +18,10 @@ export default class RegisterSuccess extends React.Component {
           </div>
           <div>
             <div className="register-sub-title">The most advance testing tool ever!</div>
-            <div className="register-description">Now your QA Automation will never break with <br />our unique auto healing technology</div>
+            <div className="register-description">
+              Now your QA Automation will never break with <br />
+              our unique auto healing technology
+            </div>
           </div>
           <div className="registration-graphic" />
         </div>
@@ -29,21 +32,15 @@ export default class RegisterSuccess extends React.Component {
             <div className="register-intro-title">NEXT STEPS</div>
             <div className="register-intro-step">
               <div className="register-intro-step-count">1</div>
-              <div className="register-intro-step-desc">
-                You’ll get the confirmation email from us (dataphion.com).
-              </div>
+              <div className="register-intro-step-desc">You’ll get the confirmation email from us (easelqa.com).</div>
             </div>
             <div className="register-intro-step">
               <div className="register-intro-step-count">2</div>
-              <div className="register-intro-step-desc">
-                Click on the provided link to verify your account.
-              </div>
+              <div className="register-intro-step-desc">Click on the provided link to verify your account.</div>
             </div>
             <div className="register-intro-step">
               <div className="register-intro-step-count">3</div>
-              <div className="register-intro-step-desc">
-                Start recording the testcases.
-              </div>
+              <div className="register-intro-step-desc">Start recording the testcases.</div>
             </div>
             <div className="flex">
               <Link to="/" className="negative-button">

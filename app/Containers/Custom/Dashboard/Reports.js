@@ -50,6 +50,7 @@ export default class Reports extends React.Component {
     })
       .then((response) => response.json())
       .then((response) => {
+        console.log("response ---->", response);
         let row = [];
         for (let main_data of response.data.applications) {
           if (main_data["testsuites"].length > 0) {
@@ -97,9 +98,13 @@ export default class Reports extends React.Component {
 
                   let duration = moment.duration(`${t_hours}:${t_minutes}:${t_seconds}`);
 
+                  var gmtDateTime = moment.utc(testcase.start_time, "DD-MM-YY HH:mm:ss");
+                  // convert utc to local
+                  var local = gmtDateTime.local().format("DD-MM-YY HH:mm:ss");
+                  print("ist time ===", local);
                   testcases.push({
                     id: testcase.id,
-                    start_time: moment(testcase.start_time).format("DD-MM-YY HH:mm:ss"),
+                    start_time: local,
                     total_pass: testcase.total_pass,
                     total_fail: testcase.total_fail,
                     execution_time: `${duration._data.hours}hr ${duration._data.minutes}min ${duration._data.seconds}sec`,
@@ -199,6 +204,7 @@ export default class Reports extends React.Component {
   };
 
   render() {
+    console.log("testcases ---->", this.state.testcase);
     const COLORS = ["#1dd1a1", "#ff6b6b"];
     return (
       <React.Fragment>
@@ -246,14 +252,7 @@ export default class Reports extends React.Component {
                   <div className="testcase-filter-panel-search-btn">
                     <i className="fa fa-search" />
                   </div>
-                  <input
-                    autoFocus
-                    type="text"
-                    placeholder="Search reports here"
-                    name="search"
-                    value={this.state.searchText}
-                    onChange={(e) => this.setState({ searchText: e.target.value })}
-                  />
+                  <input autoFocus type="text" placeholder="Search reports here" name="search" value={this.state.searchText} onChange={(e) => this.setState({ searchText: e.target.value })} />
                 </div>
               </div>
               <div className="testcases-table">

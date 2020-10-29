@@ -11,7 +11,7 @@
     align-items: center;
     justify-content: space-between;
     width: 50vw;
-    
+
     .register-logo-container {
       margin-top: 100px;
       display: flex;
@@ -19,11 +19,11 @@
       align-items: center;
 
       .register-logo {
-				height: 46px;
-				width: 162px;
-				background-image: url("../../Images/logo_dark.png");
-				background-size: contain;
-				background-repeat: no-repeat;
+        height: 46px;
+        width: 162px;
+        background-image: url("../../Images/logo_dark.png");
+        background-size: contain;
+        background-repeat: no-repeat;
       }
 
       .register-name {
@@ -36,19 +36,19 @@
     }
 
     .register-sub-title {
-			margin-top: 50px;
-			font-size: 26px;
-			color: white;
-			text-align: center;
-			font-family: $PRIMARY;
-			font-weight: $PRIMARY_LIGHT;
+      margin-top: 50px;
+      font-size: 26px;
+      color: white;
+      text-align: center;
+      font-family: $PRIMARY;
+      font-weight: $PRIMARY_LIGHT;
     }
-    
-		.register-description {
-			font-size: 16px;
-			color: white;
-			opacity: 0.75;
-			text-align: center;
+
+    .register-description {
+      font-size: 16px;
+      color: white;
+      opacity: 0.75;
+      text-align: center;
       font-weight: $SECONDARY_SEMI_BOLD;
     }
 
@@ -89,7 +89,7 @@
       border-radius: 10px;
       box-shadow: 0 5px 30px rgba($color: black, $alpha: 0.5);
     }
-    
+
     .register-form-title {
       margin-bottom: -8px;
       font-family: $PRIMARY;
@@ -166,4 +166,15 @@
       }
     }
   }
+}
+
+.terms_condition {
+  display: flex;
+  align-items: center;
+}
+
+.disabled-cls {
+  pointer-events: none;
+  cursor: cell !important;
+  background: #808080a8 !important;
 }

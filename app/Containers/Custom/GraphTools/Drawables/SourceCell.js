@@ -4,6 +4,7 @@ export default class SourceCell {
   Cell(graph, cell) {
     let SourceCell = document.createElement("div");
     let SourceCellTitle = document.createElement("div");
+    SourceCellTitle.setAttribute("class", "source-cell-title");
     console.log("current-method", cell.getAttribute("Method").toLowerCase());
     SourceCell.appendChild(SourceCellTitle);
     SourceCell.setAttribute("id", `graph-cell-${cell.id}`);

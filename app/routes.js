@@ -18,6 +18,8 @@ import ReportsErrorLog from "./Containers/Custom/Dashboard/ReportsErrorLog";
 import EmailConfiguration from "./Containers/Custom/Dashboard/EmailConfiguration";
 import SeleniumConfiguration from "./Containers/Custom/Dashboard/SeleniumConfiguration";
 import MobileRecorder from "./Containers/Custom/Dashboard/mobileRecorder";
+// demo urls
+import ApiDemo from "./Containers/Custom/Dashboard/Apidemo";
 
 export default (
   <Switch>
@@ -36,6 +38,7 @@ export default (
     <Route exact path="/dashboard/:id/reports/reportSteps/:id/:id/logs" component={ReportsErrorLog} />
     <Route exact path="/dashboard/:id/settings/configuration" component={EmailConfiguration} />
     <Route exact path="/dashboard/:id/settings/selenium-configuration" component={SeleniumConfiguration} />
+    <Route exact path="/dashboard/:id/demo/Api-demo" component={ApiDemo} />
     <Route exact path="/dashboard/:id/:id/layout/:id" component={TestcaseApi} />
     <Route exact path="/dashboard/:id/:id/query/:id" component={DataSourcesQuerys} />
     <Route exact path="/dashboard/:id/:id/add-testsuite" component={AddTestsuites} />

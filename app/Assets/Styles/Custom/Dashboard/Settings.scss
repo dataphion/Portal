@@ -69,3 +69,21 @@
 .transformation-btn:hover {
   transform: none !important;
 }
+
+// ---------------demonstration css
+
+.swagger-sample-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffff;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 5px 20px #0000000d;
+  padding: 10px;
+}
+
+.row-title {
+  font-size: 20px;
+  font-weight: 600;
+}

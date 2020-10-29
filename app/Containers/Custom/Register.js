@@ -11,6 +11,7 @@ const Register = Form.create()(
   class extends React.Component {
     state = {
       loader: false,
+      terms_and_condition_checked: false,
     };
 
     componentDidMount() {
@@ -69,6 +70,11 @@ const Register = Form.create()(
       form.resetFields("password");
       form.resetFields("email");
       form.resetFields("designation");
+    };
+
+    conditionCheck = (e) => {
+      console.log("checkbox value ---->", e.target.checked);
+      this.setState({ terms_and_condition_checked: e.target.checked });
     };
 
     render() {
@@ -140,12 +146,22 @@ const Register = Form.create()(
                     })(<Input />)}
                   </Form.Item>
                   {/* </div> */}
+                  <div className="terms_condition">
+                    <input type="checkbox" className="" onChange={this.conditionCheck} />
+                    <span style={{ marginLeft: 8 }}>
+                      I Agree{" "}
+                      <a style={{ color: "green" }} href="">
+                        {" "}
+                        Terms & Conditions
+                      </a>{" "}
+                    </span>
+                  </div>
                   <div className="register-button-container between">
                     <div onClick={this.handleReset} className="negative-button">
                       <i className="fa fa-refresh" />
                       Reset
                     </div>
-                    <div onClick={this.handleSave} className="positive-button">
+                    <div onClick={this.handleSave} className={this.state.terms_and_condition_checked ? "positive-button" : "positive-button disabled-cls"}>
                       <i className="fa fa-check" />
                       Register
                     </div>

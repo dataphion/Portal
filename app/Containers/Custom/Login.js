@@ -12,7 +12,7 @@ const Login = Form.create()(
   class extends React.Component {
     state = {
       loader: false,
-      forgetModal: false
+      forgetModal: false,
     };
 
     componentDidMount() {
@@ -24,7 +24,7 @@ const Login = Form.create()(
     handleSave = () => {
       const form = this.props.form;
       let error = false;
-      form.validateFields(err => {
+      form.validateFields((err) => {
         if (err) {
           error = true;
           return Alert.warning("Please fill required fields.");
@@ -40,17 +40,17 @@ const Login = Form.create()(
       this.setState({ loader: true });
       let loginData = {
         identifier: form.getFieldValue("email"),
-        password: form.getFieldValue("password")
+        password: form.getFieldValue("password"),
       };
       axios
         .post(constants.login, loginData)
-        .then(response => {
+        .then((response) => {
           sessionStorage.setItem("id", response.data.user.id);
           sessionStorage.setItem("username", response.data.user.username);
           sessionStorage.setItem("jwt", response.data.jwt);
           this.props.history.push("/");
         })
-        .catch(error => {
+        .catch((error) => {
           this.setState({ loader: false });
           const err = JSON.stringify(error);
           const msg = JSON.parse(err);
@@ -75,6 +75,7 @@ const Login = Form.create()(
               <div className="login-sub-title">Hey, Welcome Back!</div>
               <div className="login-description">We are glad to see you here</div>
             </div>
+
             <div className="login-right-part">
               <div className="login-form login-box">
                 <div className="login-form-title">Login</div>
@@ -84,20 +85,20 @@ const Login = Form.create()(
                     {getFieldDecorator("email", {
                       rules: [
                         {
-                          required: true
-                        }
+                          required: true,
+                        },
                       ],
-                      initialValue: ""
+                      initialValue: "",
                     })(<Input autoFocus onPressEnter={this.handleSave} />)}
                   </Form.Item>
                   <Form.Item label="Password">
                     {getFieldDecorator("password", {
                       rules: [
                         {
-                          required: true
-                        }
+                          required: true,
+                        },
                       ],
-                      initialValue: ""
+                      initialValue: "",
                     })(<Input type="password" onPressEnter={this.handleSave} />)}
                   </Form.Item>
                   <div className="login-button-container">
@@ -119,6 +120,13 @@ const Login = Form.create()(
                   <i className="fa fa-user-plus" />
                   Create a new account
                 </Link>
+              </div>
+            </div>
+            <div>
+              <div className="documentation-link">
+                <a href="https://documentation.easelqa.com" target="_blank" style={{ color: "#ffff" }}>
+                  Documentation
+                </a>
               </div>
             </div>
           </div>
