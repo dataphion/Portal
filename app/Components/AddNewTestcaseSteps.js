@@ -1,11 +1,15 @@
 import React from "react";
 import "../Assets/Styles/Custom/Dashboard/MetaDataModal.scss";
 import { Modal, Alert } from "rsuite";
-import { Icon, Collapse, Input, Upload, Form } from "antd";
+import { Icon, Collapse, Input, Upload, Form, Tabs } from "antd";
 import constants from "../constants";
 import axios from "axios";
 import Loader from "./Loader";
 import AutosizeInput from "react-input-autosize";
+import AceEditor from "react-ace";
+const { Panel } = Collapse;
+
+const { TabPane } = Tabs;
 
 const AddNewTestcaseSteps = Form.create()(
   class extends React.Component {
@@ -28,6 +32,19 @@ const AddNewTestcaseSteps = Form.create()(
         fileupload_or_not: false,
         uploadedFileName: "",
         configureTimeoutcondition: false,
+
+        Method: null,
+        UiTestcase: [],
+        UiTestcaseName: "",
+        PathParametersAdd: [],
+        QueryParametersAdd: [],
+        HeadersAdd: [],
+        BodySelectedMenu: "None",
+        BodyFormDataAdd: [],
+        AceEditorValue: [],
+        AceEditorValidation: [],
+        showPassword: false,
+        tab: 1,
       };
     }
 
@@ -46,7 +63,11 @@ const AddNewTestcaseSteps = Form.create()(
     inputKeyDown = (e) => {
       const val = e.target.value;
       if (e.key === "Enter" && val) {
-        if (this.state.tagsClass.find((tag) => tag.toLowerCase() === val.toLowerCase())) {
+        if (
+          this.state.tagsClass.find(
+            (tag) => tag.toLowerCase() === val.toLowerCase()
+          )
+        ) {
           return;
         }
         let newElementAttributesJson = this.state.elementAttributesJson;
@@ -75,7 +96,11 @@ const AddNewTestcaseSteps = Form.create()(
     inputKeyDownXpath = (e) => {
       const val = e.target.value;
       if (e.key === "Enter" && val) {
-        if (this.state.tagsXPath.find((tag) => tag.toLowerCase() === val.toLowerCase())) {
+        if (
+          this.state.tagsXPath.find(
+            (tag) => tag.toLowerCase() === val.toLowerCase()
+          )
+        ) {
           return;
         }
         this.setState({ tagsXPath: [...this.state.tagsXPath, val] });
@@ -175,7 +200,10 @@ const AddNewTestcaseSteps = Form.create()(
       let fileupload_url;
       if (this.state.fileupload_or_not) {
         let fileUpload = new FormData();
-        fileUpload.append("files", form.getFieldValue("StepFileUpload").file.originFileObj);
+        fileUpload.append(
+          "files",
+          form.getFieldValue("StepFileUpload").file.originFileObj
+        );
         const reqFileUpload = await axios.post(constants.upload, fileUpload, {
           headers: {
             "content-type": "multipart/form-data",
@@ -290,12 +318,512 @@ const AddNewTestcaseSteps = Form.create()(
       });
     };
 
+    PathParametersAdd = () => {
+      const form = this.props.form;
+      if (
+        form.getFieldValue("PathParametersKey") &&
+        form.getFieldValue("PathParametersValue")
+      ) {
+        if (this.state.PathParametersAdd.length === 0) {
+          this.state.PathParametersAdd.push({
+            PathParametersKey: form.getFieldValue("PathParametersKey"),
+            PathParametersValue: form.getFieldValue("PathParametersValue"),
+          });
+        } else {
+          let Checker = true;
+          this.state.PathParametersAdd.map((data) => {
+            if (
+              data.PathParametersKey === form.getFieldValue("PathParametersKey")
+            ) {
+              Checker = false;
+            }
+          });
+          if (Checker) {
+            this.state.PathParametersAdd.push({
+              PathParametersKey: form.getFieldValue("PathParametersKey"),
+              PathParametersValue: form.getFieldValue("PathParametersValue"),
+            });
+          } else {
+            return Alert.error(
+              `Dupalicate key "${form.getFieldValue("PathParametersKey")}"`
+            );
+          }
+        }
+        form.resetFields("PathParametersKey");
+        form.resetFields("PathParametersValue");
+      } else {
+        return Alert.error("Please insert key and value properly");
+      }
+    };
+
+    RenderPathParameters = () => {
+      const { getFieldDecorator } = this.props.form;
+      if (this.state.PathParametersAdd.length >= 1) {
+        return (
+          <React.Fragment>
+            {this.state.PathParametersAdd.map((Data, index) => {
+              return (
+                <div
+                  className="sidebar-body-regular-row animated fadeIn"
+                  key={index}
+                >
+                  <Form.Item>
+                    {getFieldDecorator("PathParametersKey" + index, {
+                      rules: [
+                        {
+                          required: true,
+                        },
+                      ],
+                      initialValue: Data.PathParametersKey,
+                    })(
+                      <Input
+                        onChange={(e) =>
+                          (this.state.PathParametersAdd[
+                            index
+                          ].PathParametersKey = e.target.value)
+                        }
+                      />
+                    )}
+                  </Form.Item>
+                  <Form.Item>
+                    {getFieldDecorator("PathParametersValue" + index, {
+                      rules: [
+                        {
+                          required: true,
+                        },
+                      ],
+                      initialValue: Data.PathParametersValue,
+                    })(
+                      <Input
+                        onChange={(e) =>
+                          (this.state.PathParametersAdd[
+                            index
+                          ].PathParametersValue = e.target.value)
+                        }
+                      />
+                    )}
+                  </Form.Item>
+                  <div
+                    onClick={() => this.PathParametersRemove(index)}
+                    className="sidebar-body-regular-row-right-btn"
+                  >
+                    <i className="fa fa-minus " />
+                  </div>
+                </div>
+              );
+            })}
+          </React.Fragment>
+        );
+      }
+    };
+
+    PathParametersRemove = (index) => {
+      let QueryParametersRemove = this.state.PathParametersAdd;
+      QueryParametersRemove.splice(index, 1);
+      this.setState({ PathParametersAdd: QueryParametersRemove });
+    };
+    QueryParametersAdd = () => {
+      const form = this.props.form;
+      if (
+        form.getFieldValue("QueryParametersKey") &&
+        form.getFieldValue("QueryParametersValue")
+      ) {
+        if (this.state.QueryParametersAdd.length === 0) {
+          this.state.QueryParametersAdd.push({
+            QueryParametersKey: form.getFieldValue("QueryParametersKey"),
+            QueryParametersValue: form.getFieldValue("QueryParametersValue"),
+          });
+        } else {
+          let Checker = true;
+          this.state.QueryParametersAdd.map((data) => {
+            if (
+              data.QueryParametersKey ===
+              form.getFieldValue("QueryParametersKey")
+            ) {
+              Checker = false;
+            }
+          });
+          if (Checker) {
+            this.state.QueryParametersAdd.push({
+              QueryParametersKey: form.getFieldValue("QueryParametersKey"),
+              QueryParametersValue: form.getFieldValue("QueryParametersValue"),
+            });
+          } else {
+            return Alert.error(
+              `Dupalicate key "${form.getFieldValue("QueryParametersKey")}"`
+            );
+          }
+        }
+        form.resetFields("QueryParametersKey");
+        form.resetFields("QueryParametersValue");
+      } else {
+        return Alert.error("Please insert key and value properly");
+      }
+    };
+
+    RenderQueryParameters = () => {
+      const { getFieldDecorator } = this.props.form;
+      if (this.state.QueryParametersAdd.length >= 1) {
+        return (
+          <React.Fragment>
+            {this.state.QueryParametersAdd.map((Data, index) => {
+              return (
+                <div
+                  className="sidebar-body-regular-row animated fadeIn"
+                  key={index}
+                >
+                  <Form.Item>
+                    {getFieldDecorator("QueryParametersKey" + index, {
+                      rules: [
+                        {
+                          required: true,
+                        },
+                      ],
+                      initialValue: Data.QueryParametersKey,
+                    })(
+                      <Input
+                        onChange={(e) =>
+                          (this.state.QueryParametersAdd[
+                            index
+                          ].QueryParametersKey = e.target.value)
+                        }
+                      />
+                    )}
+                  </Form.Item>
+                  <Form.Item>
+                    {getFieldDecorator("QueryParametersValue" + index, {
+                      rules: [
+                        {
+                          required: true,
+                        },
+                      ],
+                      initialValue: Data.QueryParametersValue,
+                    })(
+                      <Input
+                        onChange={(e) =>
+                          (this.state.QueryParametersAdd[
+                            index
+                          ].QueryParametersValue = e.target.value)
+                        }
+                      />
+                    )}
+                  </Form.Item>
+                  <div
+                    onClick={() => this.QueryParametersRemove(index)}
+                    className="sidebar-body-regular-row-right-btn"
+                  >
+                    <i className="fa fa-minus " />
+                  </div>
+                </div>
+              );
+            })}
+          </React.Fragment>
+        );
+      }
+    };
+
+    QueryParametersRemove = (index) => {
+      let QueryParametersRemove = this.state.QueryParametersAdd;
+      QueryParametersRemove.splice(index, 1);
+      this.setState({ QueryParametersAdd: QueryParametersRemove });
+    };
+
+    HeadersAdd = () => {
+      // debugger;
+      // console.log("make headers ---->", this.state.headers);
+      const form = this.props.form;
+      if (
+        form.getFieldValue("HeadersKey") &&
+        form.getFieldValue("HeadersValue")
+      ) {
+        if (this.state.HeadersAdd.length === 0) {
+          this.state.HeadersAdd.push({
+            HeadersKey: form.getFieldValue("HeadersKey"),
+            HeadersValue: form.getFieldValue("HeadersValue"),
+          });
+        } else {
+          let Checker = true;
+          this.state.HeadersAdd.map((data) => {
+            if (data.HeadersKey === form.getFieldValue("HeadersKey")) {
+              Checker = false;
+            }
+          });
+          if (Checker) {
+            this.state.HeadersAdd.push({
+              HeadersKey: form.getFieldValue("HeadersKey"),
+              HeadersValue: form.getFieldValue("HeadersValue"),
+            });
+          } else {
+            return Alert.error(
+              `Dupalicate key "${form.getFieldValue("HeadersKey")}"`
+            );
+          }
+        }
+        form.resetFields("HeadersKey");
+        form.resetFields("HeadersValue");
+      } else {
+        return Alert.error("Please insert key and value properly");
+      }
+    };
+
+    RenderHeaders = () => {
+      const { getFieldDecorator } = this.props.form;
+      // console.log("headers value --->", this.state.HeadersAdd);
+      if (this.state.HeadersAdd.length >= 1) {
+        return (
+          <React.Fragment>
+            {this.state.HeadersAdd.map((Data, index) => {
+              return (
+                <div
+                  className="sidebar-body-regular-row animated fadeIn"
+                  key={index}
+                >
+                  <Form.Item>
+                    {getFieldDecorator("HeadersKey" + index, {
+                      rules: [
+                        {
+                          required: true,
+                        },
+                      ],
+                      initialValue: Data.HeadersKey,
+                    })(
+                      <Input
+                        onChange={(e) => {
+                          this.state.HeadersAdd[index].HeadersKey =
+                            e.target.value;
+                        }}
+                      />
+                    )}
+                  </Form.Item>
+                  <Form.Item>
+                    {getFieldDecorator("HeadersValue" + index, {
+                      rules: [
+                        {
+                          required: true,
+                        },
+                      ],
+                      initialValue: Data.HeadersValue,
+                    })(
+                      <Input
+                        onChange={(e) => {
+                          this.state.HeadersAdd[index].HeadersValue =
+                            e.target.value;
+                        }}
+                      />
+                    )}
+                  </Form.Item>
+                  <div
+                    onClick={() => this.HeadersRemove(index)}
+                    className="sidebar-body-regular-row-right-btn"
+                  >
+                    <i className="fa fa-minus " />
+                  </div>
+                </div>
+              );
+            })}
+          </React.Fragment>
+        );
+      }
+    };
+
+    HeadersRemove = (index) => {
+      let HeadersRemove = this.state.HeadersAdd;
+      HeadersRemove.splice(index, 1);
+      this.setState({ HeadersAdd: HeadersRemove });
+    };
+
+    BodySelectedMenu = (Selected) => {
+      let BodySelectedMenu = this.state.BodySelectedMenu;
+      if (Selected === "None") {
+        BodySelectedMenu = "None";
+      } else if (Selected === "FormData") {
+        BodySelectedMenu = "FormData";
+      } else if (Selected === "XML") {
+        BodySelectedMenu = "XML";
+      } else if (Selected === "JSON") {
+        BodySelectedMenu = "JSON";
+      } else if (Selected === "TEXT") {
+        BodySelectedMenu = "TEXT";
+      }
+      this.setState({ BodySelectedMenu: BodySelectedMenu });
+    };
+
+    RenderBodySelectedMenu = () => {
+      if (this.state.BodySelectedMenu === "FormData") {
+        return (
+          <React.Fragment>
+            <div className="formdata-select-button-container animated fadeIn">
+              <div
+                onClick={() => this.BodyFormDataAdd("Text")}
+                className="formdata-select-button"
+              >
+                Add Text
+                <i className="fa fa-pencil" style={{ color: "#c5c6c7" }} />
+              </div>
+              <div
+                onClick={() => this.BodyFormDataAdd("File")}
+                className="formdata-select-button"
+              >
+                Add File
+                <i className="fa fa-file" style={{ color: "#c5c6c7" }} />
+              </div>
+            </div>
+            {this.RenderBodyFormDataType()}
+          </React.Fragment>
+        );
+      } else if (
+        this.state.BodySelectedMenu === "XML" ||
+        this.state.BodySelectedMenu === "JSON" ||
+        this.state.BodySelectedMenu === "TEXT"
+      ) {
+        return (
+          <AceEditor
+            className="animated fadeIn"
+            mode={this.state.BodySelectedMenu.toLowerCase()}
+            theme="monokai"
+            onValidate={(e) => this.setState({ AceEditorValidation: e })}
+            onChange={(value) => this.setState({ AceEditorValue: value })}
+            fontSize={14}
+            showPrintMargin={true}
+            showGutter={true}
+            highlightActiveLine={true}
+            style={{ width: "100%", height: "300px", borderRadius: "10px" }}
+            value={`${this.state.AceEditorValue}`}
+            setOptions={{
+              enableBasicAutocompletion: true,
+              enableLiveAutocompletion: true,
+              enableSnippets: true,
+              showLineNumbers: true,
+              tabSize: 2,
+            }}
+          />
+        );
+      }
+    };
+
+    BodyFormDataAdd = (Type) => {
+      let BodyFormDataAdd = this.state.BodyFormDataAdd;
+      BodyFormDataAdd.push({
+        BodyFormDataKey: "",
+        BodyFormDataType: Type,
+        BodyFormDataValue: "",
+      });
+      this.setState({ BodyFormDataAdd: BodyFormDataAdd });
+    };
+
+    RenderBodyFormDataType = () => {
+      const { getFieldDecorator } = this.props.form;
+      if (this.state.BodyFormDataAdd.length >= 1) {
+        return (
+          <React.Fragment>
+            <div className="sidebar-inner-body-divider" />
+            <div className="lable-key-value-container">
+              <div className="lable-key-value">KEY</div>
+              <div className="lable-key-value">VALUE</div>
+              <div className="lable-key-value-blank" />
+            </div>
+            {this.state.BodyFormDataAdd.map((Data, index) => {
+              return (
+                <div
+                  className="sidebar-body-regular-row animated fadeIn"
+                  key={index}
+                >
+                  <Form.Item>
+                    {getFieldDecorator("BodyFormDataKey" + index, {
+                      rules: [
+                        {
+                          required: true,
+                        },
+                      ],
+                      initialValue: Data.BodyFormDataKey,
+                    })(
+                      <Input
+                        onChange={(e) =>
+                          (this.state.BodyFormDataAdd[index].BodyFormDataKey =
+                            e.target.value)
+                        }
+                      />
+                    )}
+                  </Form.Item>
+                  {Data.BodyFormDataType === "Text" ? (
+                    <Form.Item>
+                      {getFieldDecorator("BodyFormDataValue" + index, {
+                        rules: [
+                          {
+                            required: true,
+                          },
+                        ],
+                        initialValue: Data.BodyFormDataValue,
+                      })(
+                        <Input
+                          onChange={(e) =>
+                            (this.state.BodyFormDataAdd[
+                              index
+                            ].BodyFormDataValue = e.target.value)
+                          }
+                        />
+                      )}
+                    </Form.Item>
+                  ) : (
+                    <Form.Item>
+                      {getFieldDecorator("BodyFormDataValue" + index, {
+                        rules: [
+                          {
+                            required: true,
+                          },
+                        ],
+                        initialValue: Data.BodyFormDataValue,
+                      })(
+                        <Upload
+                          showUploadList={false}
+                          action=""
+                          onChange={(e) =>
+                            (this.state.BodyFormDataAdd[
+                              index
+                            ].BodyFormDataValue = e.file)
+                          }
+                        >
+                          <Button>
+                            <Icon type="upload" />
+                            <b>
+                              {Data.BodyFormDataValue.name
+                                ? " " + Data.BodyFormDataValue.name
+                                : " Upload"}
+                            </b>
+                          </Button>
+                        </Upload>
+                      )}
+                    </Form.Item>
+                  )}
+                  <div
+                    onClick={() => this.BodyFormDataRemove(index)}
+                    className="sidebar-body-regular-row-right-btn"
+                  >
+                    <i className="fa fa-minus " />
+                  </div>
+                </div>
+              );
+            })}
+          </React.Fragment>
+        );
+      }
+    };
+
+    BodyFormDataRemove = (index) => {
+      let BodyFormDataRemove = this.state.BodyFormDataAdd;
+      BodyFormDataRemove.splice(index, 1);
+      this.setState({ BodyFormDataAdd: BodyFormDataRemove });
+    };
+    setTabs = (index) => {
+      this.setState({ tab: index });
+    };
+
     render() {
       const { getFieldDecorator } = this.props.form;
       return (
         <React.Fragment>
           <Modal
-            className="meta-data-modal-body"
+            className="meta-data-modal-body-add"
             full
             show={this.props.addnewSteps}
             onHide={this.hideModal}
@@ -303,7 +831,9 @@ const AddNewTestcaseSteps = Form.create()(
           >
             <Modal.Header closeButton={false} className="modal-fixed-header">
               <div className="modal-container-with-button">
-                <div className="meta-data-modal-header-title">Add New TestCase Steps</div>
+                <div className="meta-data-modal-header-title">
+                  Add New TestCase Steps
+                </div>
                 <div className="sr-form-footer-btn-container">
                   <div onClick={this.props.onHide} className="negative-button">
                     <i className="fa fa-close" /> Close
@@ -315,7 +845,7 @@ const AddNewTestcaseSteps = Form.create()(
                 </div>
               </div>
             </Modal.Header>
-            <Modal.Body className="modal-body-scrool">
+            <Modal.Body>
               {/* <div className="meta-data-modal-body-header-container">
                 <div className="meta-data-modal-body-header-url">
                   <i className="globe-icon" />
@@ -337,21 +867,28 @@ const AddNewTestcaseSteps = Form.create()(
                   </div>
                 </div>
               </div> */}
-              <Collapse
-                className="antd-collapse-container"
-                bordered={true}
-                defaultActiveKey={["1", "2", "3"]}
-                expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
-              >
-                <div className="meta-data-border" />
-                <Collapse.Panel header="ELEMENT LOCATORS" key="2">
+              <Tabs defaultActiveKey="1" type="card" onChange={this.setTabs}>
+                {/* <div className="meta-data-border" /> */}
+                {/* <Collapse.Panel header="ELEMENT LOCATORS" key="2"> */}
+                <TabPane tab="ELEMENT LOCATORS" key="1">
                   <div className="element-item-row">
                     <div
                       className="element-item-row-header"
-                      onClick={() => this.setState({ fileupload_or_not: !this.state.fileupload_or_not })}
+                      onClick={() =>
+                        this.setState({
+                          fileupload_or_not: !this.state.fileupload_or_not,
+                        })
+                      }
                       style={{ height: "39.09px", cursor: "pointer" }}
                     >
-                      <i className="fa fa-caret-right" style={this.state.fileupload_or_not ? { transform: "rotate(90deg)" } : {}} />
+                      <i
+                        className="fa fa-caret-right"
+                        style={
+                          this.state.fileupload_or_not
+                            ? { transform: "rotate(90deg)" }
+                            : {}
+                        }
+                      />
                       File Upload
                     </div>
                     {this.state.fileupload_or_not ? (
@@ -366,10 +903,16 @@ const AddNewTestcaseSteps = Form.create()(
                                 <Upload.Dragger
                                   multiple={false}
                                   showUploadList={false}
-                                  onChange={(e) => this.setState({ uploadedFileName: e.file.name })}
+                                  onChange={(e) =>
+                                    this.setState({
+                                      uploadedFileName: e.file.name,
+                                    })
+                                  }
                                 >
                                   <p className="ant-upload-text">
-                                    {this.state.uploadedFileName ? this.state.uploadedFileName : "Click or drag file to upload."}
+                                    {this.state.uploadedFileName
+                                      ? this.state.uploadedFileName
+                                      : "Click or drag file to upload."}
                                   </p>
                                 </Upload.Dragger>
                               )}
@@ -386,8 +929,12 @@ const AddNewTestcaseSteps = Form.create()(
                     </div>
                     <div className="element-item-row-border" />
                     <div className="element-item-row-footer">
-                      {this.state.valueSelectorValue && this.state.valueSelector ? (
-                        <div className="element-item-row-footer-btn" onDoubleClick={() => this.editValueSelector()}>
+                      {this.state.valueSelectorValue &&
+                      this.state.valueSelector ? (
+                        <div
+                          className="element-item-row-footer-btn"
+                          onDoubleClick={() => this.editValueSelector()}
+                        >
                           {this.state.valueSelectorValue}
                         </div>
                       ) : (
@@ -409,8 +956,12 @@ const AddNewTestcaseSteps = Form.create()(
                     </div>
                     <div className="element-item-row-border">
                       <div className="element-item-row-footer">
-                        {this.state.idSelectorValue && this.state.idSelectorCondition ? (
-                          <div className="element-item-row-footer-btn" onDoubleClick={() => this.editIdSelector()}>
+                        {this.state.idSelectorValue &&
+                        this.state.idSelectorCondition ? (
+                          <div
+                            className="element-item-row-footer-btn"
+                            onDoubleClick={() => this.editIdSelector()}
+                          >
                             {this.state.idSelectorValue}
                           </div>
                         ) : (
@@ -433,8 +984,12 @@ const AddNewTestcaseSteps = Form.create()(
                     </div>
                     <div className="element-item-row-border" />
                     <div className="element-item-row-footer">
-                      {this.state.nameSelectorValue && this.state.nameSelectorcondition ? (
-                        <div className="element-item-row-footer-btn" onDoubleClick={() => this.editnameSelector()}>
+                      {this.state.nameSelectorValue &&
+                      this.state.nameSelectorcondition ? (
+                        <div
+                          className="element-item-row-footer-btn"
+                          onDoubleClick={() => this.editnameSelector()}
+                        >
                           {this.state.nameSelectorValue}
                         </div>
                       ) : (
@@ -457,8 +1012,12 @@ const AddNewTestcaseSteps = Form.create()(
                       </div>
                       <div className="element-item-row-border" />
                       <div className="element-item-row-footer">
-                        {this.state.configureTimeout && this.state.configureTimeoutcondition ? (
-                          <div className="element-item-row-footer-btn" onDoubleClick={() => this.editcofigureTimeout()}>
+                        {this.state.configureTimeout &&
+                        this.state.configureTimeoutcondition ? (
+                          <div
+                            className="element-item-row-footer-btn"
+                            onDoubleClick={() => this.editcofigureTimeout()}
+                          >
                             {this.state.configureTimeout}
                           </div>
                         ) : (
@@ -466,8 +1025,12 @@ const AddNewTestcaseSteps = Form.create()(
                             type="number"
                             className="input-container-text"
                             placeholder="Add Name Selector"
-                            onKeyPress={(e) => this.handleConfigureTimeoutChange(e)}
-                            onChange={(e) => this.handleConfigureTimeoutChange(e)}
+                            onKeyPress={(e) =>
+                              this.handleConfigureTimeoutChange(e)
+                            }
+                            onChange={(e) =>
+                              this.handleConfigureTimeoutChange(e)
+                            }
                             value={this.state.configureTimeout}
                           />
                         )}
@@ -521,7 +1084,10 @@ const AddNewTestcaseSteps = Form.create()(
                     <div className="input-tag">
                       <ul className="input-tag__tags">
                         {this.state.tagsXPath.map((tag, i) => (
-                          <li key={tag} onDoubleClick={() => this.editTagXPath(i)}>
+                          <li
+                            key={tag}
+                            onDoubleClick={() => this.editTagXPath(i)}
+                          >
                             {tag}
                             <button
                               type="button"
@@ -561,14 +1127,244 @@ const AddNewTestcaseSteps = Form.create()(
                       <span className="element-item-row-footer-bold-text">&nbsp;</span>.
                     </div>
                   </div> */}
-                </Collapse.Panel>
+                  {/* </Collapse.Panel> */}
+                </TabPane>
                 {/* <div className="meta-data-border" />
                  <Collapse.Panel header="ELEMENT ATTRIBUTES" key="3">
                   <div className="element-attributes-container">
                     <JSONTree hideRoot="true" data={this.state.elementAttributesJson} shouldExpandNode={() => {}} />
                   </div>
                 </Collapse.Panel> */}
-              </Collapse>
+                <TabPane tab="API" key="2">
+                  <div className="element-item-row-method-uri">
+                    <div
+                      className="element-item-row-method"
+                      style={{ width: 180 }}
+                    >
+                      <Form.Item>
+                        {getFieldDecorator("Method", {
+                          rules: [
+                            {
+                              required: true,
+                            },
+                          ],
+                          initialValue: "GET",
+                        })(
+                          <select className="select-env">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="DELETE">DELETE</option>
+                            <option value="PATCH">PATCH</option>
+                          </select>
+                        )}
+                      </Form.Item>
+                    </div>
+                    <div className="element-item-row-uri">
+                      <Form.Item>
+                        {getFieldDecorator("Uri", {
+                          rules: [
+                            {
+                              required: true,
+                            },
+                          ],
+                          initialValue: "",
+                        })(
+                          <Input placeholder="http://localhost:3000/api/endpoint" />
+                        )}
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <Collapse
+                    className="antd-collapse-container element-item-row-api"
+                    bordered={true}
+                    defaultActiveKey={["1", "2", "3", "4", "5", "6"]}
+                    expandIcon={({ isActive }) => (
+                      <Icon type="caret-right" rotate={isActive ? 90 : 0} />
+                    )}
+                  >
+                    <Collapse.Panel header="PATH PARAMETERS" key="1">
+                      <div className="lable-key-value-container">
+                        <div className="lable-key-value">KEY</div>
+                        <div className="lable-key-value">VALUE</div>
+                        <div className="lable-key-value-blank" />
+                      </div>
+                      {this.RenderPathParameters()}
+                      <div className="sidebar-body-regular-row">
+                        <Form.Item>
+                          {getFieldDecorator("PathParametersKey")(<Input />)}
+                        </Form.Item>
+                        <Form.Item>
+                          {getFieldDecorator("PathParametersValue")(<Input />)}
+                        </Form.Item>
+                        <div
+                          onClick={this.PathParametersAdd}
+                          className="sidebar-body-regular-row-right-btn"
+                        >
+                          <i className="fa fa-plus" />
+                        </div>
+                      </div>
+                    </Collapse.Panel>
+                    <div className="sidebar-body-divider" />
+
+                    <Collapse.Panel header="QUERY PARAMETERS" key="2">
+                      <div className="lable-key-value-container">
+                        <div className="lable-key-value">KEY</div>
+                        <div className="lable-key-value">VALUE</div>
+                        <div className="lable-key-value-blank" />
+                      </div>
+                      {this.RenderQueryParameters()}
+                      <div className="sidebar-body-regular-row">
+                        <Form.Item>
+                          {getFieldDecorator("QueryParametersKey")(<Input />)}
+                        </Form.Item>
+                        <Form.Item>
+                          {getFieldDecorator("QueryParametersValue")(<Input />)}
+                        </Form.Item>
+                        <div
+                          onClick={this.QueryParametersAdd}
+                          className="sidebar-body-regular-row-right-btn"
+                        >
+                          <i className="fa fa-plus" />
+                        </div>
+                      </div>
+                    </Collapse.Panel>
+
+                    <div className="sidebar-body-divider" />
+
+                    <Collapse.Panel header="AUTHORIZATION" key="3">
+                      <div className="sidebar-body-regular-row">
+                        <Form.Item label="USERNAME">
+                          {getFieldDecorator("AuthorizationUsername", {
+                            initialValue: "",
+                          })(<Input autoComplete="new-password" />)}
+                        </Form.Item>
+                        <Form.Item label="PASSWORD">
+                          {getFieldDecorator("AuthorizationPassword", {
+                            initialValue: "",
+                          })(
+                            <Input
+                              type={
+                                this.state.showPassword ? "text" : "password"
+                              }
+                              autoComplete="new-password"
+                            />
+                          )}
+                        </Form.Item>
+
+                        <div
+                          onClick={() =>
+                            this.setState({
+                              showPassword: !this.state.showPassword,
+                            })
+                          }
+                          className="sidebar-body-regular-row-right-btn"
+                          style={{ marginTop: "53px" }}
+                        >
+                          <i
+                            className={
+                              "fa " +
+                              (this.state.showPassword
+                                ? "fa-eye-slash"
+                                : "fa-eye")
+                            }
+                          />
+                        </div>
+                      </div>
+                    </Collapse.Panel>
+
+                    <div className="sidebar-body-divider" />
+
+                    <Collapse.Panel header="HEADERS" key="4">
+                      <div className="lable-key-value-container">
+                        <div className="lable-key-value">KEY</div>
+                        <div className="lable-key-value">VALUE</div>
+                        <div className="lable-key-value-blank" />
+                      </div>
+                      {this.RenderHeaders()}
+                      <div className="sidebar-body-regular-row">
+                        <Form.Item>
+                          {getFieldDecorator("HeadersKey")(<Input />)}
+                        </Form.Item>
+                        <Form.Item>
+                          {getFieldDecorator("HeadersValue")(<Input />)}
+                        </Form.Item>
+                        <div
+                          onClick={this.HeadersAdd}
+                          className="sidebar-body-regular-row-right-btn"
+                        >
+                          <i className="fa fa-plus" />
+                        </div>
+                      </div>
+                    </Collapse.Panel>
+
+                    <div className={"sidebar-body-divider"} />
+
+                    <Collapse.Panel header="BODY" key="5">
+                      <div className="sidebar-body-regular-row-body-menu-container">
+                        <div className="sidebar-body-regular-row-body-menu">
+                          <div
+                            onClick={() => this.BodySelectedMenu("None")}
+                            className={
+                              "sidebar-body-regular-row-body-menu-items " +
+                              (this.state.BodySelectedMenu === "None"
+                                ? "sidebar-body-regular-row-body-menu-items-active"
+                                : "")
+                            }
+                          >
+                            None
+                          </div>
+                          <div
+                            onClick={() => this.BodySelectedMenu("FormData")}
+                            className={
+                              "sidebar-body-regular-row-body-menu-items " +
+                              (this.state.BodySelectedMenu === "FormData"
+                                ? "sidebar-body-regular-row-body-menu-items-active"
+                                : "")
+                            }
+                          >
+                            Form Data
+                          </div>
+                          <div
+                            onClick={() => this.BodySelectedMenu("XML")}
+                            className={
+                              "sidebar-body-regular-row-body-menu-items " +
+                              (this.state.BodySelectedMenu === "XML"
+                                ? "sidebar-body-regular-row-body-menu-items-active"
+                                : "")
+                            }
+                          >
+                            XML
+                          </div>
+                          <div
+                            onClick={() => this.BodySelectedMenu("JSON")}
+                            className={
+                              "sidebar-body-regular-row-body-menu-items " +
+                              (this.state.BodySelectedMenu === "JSON"
+                                ? "sidebar-body-regular-row-body-menu-items-active"
+                                : "")
+                            }
+                          >
+                            JSON
+                          </div>
+                          <div
+                            onClick={() => this.BodySelectedMenu("TEXT")}
+                            className={
+                              "sidebar-body-regular-row-body-menu-items " +
+                              (this.state.BodySelectedMenu === "TEXT"
+                                ? "sidebar-body-regular-row-body-menu-items-active"
+                                : "")
+                            }
+                          >
+                            TEXT
+                          </div>
+                        </div>
+                      </div>
+                      {this.RenderBodySelectedMenu()}
+                    </Collapse.Panel>
+                  </Collapse>
+                </TabPane>
+              </Tabs>
             </Modal.Body>
           </Modal>
           <Loader status={this.state.loader} />
