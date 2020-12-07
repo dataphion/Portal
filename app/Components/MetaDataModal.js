@@ -376,7 +376,7 @@ class MetaDataModal extends React.Component {
                     >
                       Drag & Drop
                     </div>
-                    <div className={"event-container-items " + (this.props.modalInformation.action === "custom" ? "active" : "")}>Custom</div>
+                    <div className={"event-container-items " + (this.props.modalInformation.action.includes("custom") ? "active" : "")}>Custom</div>
                     <div className={"event-container-items " + (this.props.modalInformation.action === "fileupload" ? "active" : "")}>
                       File Upload
                     </div>
