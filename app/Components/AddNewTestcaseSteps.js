@@ -311,13 +311,25 @@ const AddNewTestcaseSteps = Form.create()(
             return Alert.error(error.text, 5000);
           });
         }
-
+        let PathParametersAdd = this.state.PathParametersAdd;
+        let QueryParametersAdd = this.state.QueryParametersAdd;
+        let HeadersAdd = this.state.HeadersAdd;
         // Auto save key and value if only written and not added in array
+        if (
+          form.getFieldValue("PathParametersKey") &&
+          form.getFieldValue("PathParametersValue")
+        ) {
+          PathParametersAdd.push({
+            PathParametersKey: form.getFieldValue("PathParametersKey"),
+            PathParametersValue: form.getFieldValue("PathParametersValue"),
+          });
+          form.resetFields("PathParametersKey");
+          form.resetFields("PathParametersValue");
+        }
         if (
           form.getFieldValue("QueryParametersKey") &&
           form.getFieldValue("QueryParametersValue")
         ) {
-          let QueryParametersAdd = this.state.QueryParametersAdd;
           QueryParametersAdd.push({
             QueryParametersKey: form.getFieldValue("QueryParametersKey"),
             QueryParametersValue: form.getFieldValue("QueryParametersValue"),
@@ -329,7 +341,6 @@ const AddNewTestcaseSteps = Form.create()(
           form.getFieldValue("HeadersKey") &&
           form.getFieldValue("HeadersValue")
         ) {
-          let HeadersAdd = this.state.HeadersAdd;
           HeadersAdd.push({
             HeadersKey: form.getFieldValue("HeadersKey"),
             HeadersValue: form.getFieldValue("HeadersValue"),
@@ -345,11 +356,11 @@ const AddNewTestcaseSteps = Form.create()(
           // Host_url: host === "" ? form.getFieldValue("Host_url") : host,
           // Uri: uri === "" ? form.getFieldValue("Uri") : uri,
           Uri: form.getFieldValue("Uri"),
-          PathParametersAdd: this.state.PathParametersAdd,
-          QueryParametersAdd: this.state.QueryParametersAdd,
+          PathParametersAdd: PathParametersAdd,
+          QueryParametersAdd: QueryParametersAdd,
           AuthorizationUsername: form.getFieldValue("AuthorizationUsername"),
           AuthorizationPassword: form.getFieldValue("AuthorizationPassword"),
-          HeadersAdd: this.state.HeadersAdd,
+          HeadersAdd: HeadersAdd,
           BodySelectedMenu: this.state.BodySelectedMenu,
           BodyFormDataAdd: this.state.BodyFormDataAdd,
           AceEditorValue: this.state.AceEditorValue,
@@ -534,9 +545,9 @@ const AddNewTestcaseSteps = Form.create()(
     };
 
     PathParametersRemove = (index) => {
-      let QueryParametersRemove = this.state.PathParametersAdd;
-      QueryParametersRemove.splice(index, 1);
-      this.setState({ PathParametersAdd: QueryParametersRemove });
+      let PathParametersRemove = this.state.PathParametersAdd;
+      PathParametersRemove.splice(index, 1);
+      this.setState({ PathParametersAdd: PathParametersRemove });
     };
     QueryParametersAdd = () => {
       const form = this.props.form;
@@ -905,36 +916,36 @@ const AddNewTestcaseSteps = Form.create()(
                       )}
                     </Form.Item>
                   ) : (
-                    <Form.Item>
-                      {getFieldDecorator("BodyFormDataValue" + index, {
-                        rules: [
-                          {
-                            required: true,
-                          },
-                        ],
-                        initialValue: Data.BodyFormDataValue,
-                      })(
-                        <Upload
-                          showUploadList={false}
-                          action=""
-                          onChange={(e) =>
-                            (this.state.BodyFormDataAdd[
-                              index
-                            ].BodyFormDataValue = e.file)
-                          }
-                        >
-                          <Button>
-                            <Icon type="upload" />
-                            <b>
-                              {Data.BodyFormDataValue.name
-                                ? " " + Data.BodyFormDataValue.name
-                                : " Upload"}
-                            </b>
-                          </Button>
-                        </Upload>
-                      )}
-                    </Form.Item>
-                  )}
+                      <Form.Item>
+                        {getFieldDecorator("BodyFormDataValue" + index, {
+                          rules: [
+                            {
+                              required: true,
+                            },
+                          ],
+                          initialValue: Data.BodyFormDataValue,
+                        })(
+                          <Upload
+                            showUploadList={false}
+                            action=""
+                            onChange={(e) =>
+                              (this.state.BodyFormDataAdd[
+                                index
+                              ].BodyFormDataValue = e.file)
+                            }
+                          >
+                            <Button>
+                              <Icon type="upload" />
+                              <b>
+                                {Data.BodyFormDataValue.name
+                                  ? " " + Data.BodyFormDataValue.name
+                                  : " Upload"}
+                              </b>
+                            </Button>
+                          </Upload>
+                        )}
+                      </Form.Item>
+                    )}
                   <div
                     onClick={() => this.BodyFormDataRemove(index)}
                     className="sidebar-body-regular-row-right-btn"
@@ -967,7 +978,7 @@ const AddNewTestcaseSteps = Form.create()(
             full
             show={this.props.addnewSteps}
             onHide={this.hideModal}
-            // onEnter={this.onEnterAction}
+          // onEnter={this.onEnterAction}
           >
             <Modal.Header closeButton={false} className="modal-fixed-header">
               <div className="modal-container-with-button">
@@ -1076,25 +1087,25 @@ const AddNewTestcaseSteps = Form.create()(
                       <div className="element-item-row-border" />
                       <div className="element-item-row-footer">
                         {this.state.valueSelectorValue &&
-                        this.state.valueSelector ? (
-                          <div
-                            className="element-item-row-footer-btn"
-                            onDoubleClick={() => this.editValueSelector()}
-                          >
-                            {this.state.valueSelectorValue}
-                          </div>
-                        ) : (
-                          <Input
-                            type="text"
-                            placeholder="Add Id Selector"
-                            className="input-container-text"
-                            onKeyPress={(e) =>
-                              this.handleValueSelectorChange(e)
-                            }
-                            onChange={(e) => this.handleValueSelectorChange(e)}
-                            value={this.state.valueSelectorValue}
-                          />
-                        )}
+                          this.state.valueSelector ? (
+                            <div
+                              className="element-item-row-footer-btn"
+                              onDoubleClick={() => this.editValueSelector()}
+                            >
+                              {this.state.valueSelectorValue}
+                            </div>
+                          ) : (
+                            <Input
+                              type="text"
+                              placeholder="Add Id Selector"
+                              className="input-container-text"
+                              onKeyPress={(e) =>
+                                this.handleValueSelectorChange(e)
+                              }
+                              onChange={(e) => this.handleValueSelectorChange(e)}
+                              value={this.state.valueSelectorValue}
+                            />
+                          )}
                       </div>
                     </div>
                     <div className="element-item-row">
@@ -1105,23 +1116,23 @@ const AddNewTestcaseSteps = Form.create()(
                       <div className="element-item-row-border">
                         <div className="element-item-row-footer">
                           {this.state.idSelectorValue &&
-                          this.state.idSelectorCondition ? (
-                            <div
-                              className="element-item-row-footer-btn"
-                              onDoubleClick={() => this.editIdSelector()}
-                            >
-                              {this.state.idSelectorValue}
-                            </div>
-                          ) : (
-                            <Input
-                              type="text"
-                              placeholder="Add Id Selector"
-                              className="input-container-text"
-                              onKeyPress={(e) => this.handleIdSelectorChange(e)}
-                              onChange={(e) => this.handleIdSelectorChange(e)}
-                              value={this.state.idSelectorValue}
-                            />
-                          )}
+                            this.state.idSelectorCondition ? (
+                              <div
+                                className="element-item-row-footer-btn"
+                                onDoubleClick={() => this.editIdSelector()}
+                              >
+                                {this.state.idSelectorValue}
+                              </div>
+                            ) : (
+                              <Input
+                                type="text"
+                                placeholder="Add Id Selector"
+                                className="input-container-text"
+                                onKeyPress={(e) => this.handleIdSelectorChange(e)}
+                                onChange={(e) => this.handleIdSelectorChange(e)}
+                                value={this.state.idSelectorValue}
+                              />
+                            )}
                         </div>
                       </div>
                     </div>
@@ -1133,23 +1144,23 @@ const AddNewTestcaseSteps = Form.create()(
                       <div className="element-item-row-border" />
                       <div className="element-item-row-footer">
                         {this.state.nameSelectorValue &&
-                        this.state.nameSelectorcondition ? (
-                          <div
-                            className="element-item-row-footer-btn"
-                            onDoubleClick={() => this.editnameSelector()}
-                          >
-                            {this.state.nameSelectorValue}
-                          </div>
-                        ) : (
-                          <Input
-                            type="text"
-                            className="input-container-text"
-                            placeholder="Add Name Selector"
-                            onKeyPress={(e) => this.handleNameSelectorChange(e)}
-                            onChange={(e) => this.handleNameSelectorChange(e)}
-                            value={this.state.nameSelectorValue}
-                          />
-                        )}
+                          this.state.nameSelectorcondition ? (
+                            <div
+                              className="element-item-row-footer-btn"
+                              onDoubleClick={() => this.editnameSelector()}
+                            >
+                              {this.state.nameSelectorValue}
+                            </div>
+                          ) : (
+                            <Input
+                              type="text"
+                              className="input-container-text"
+                              placeholder="Add Name Selector"
+                              onKeyPress={(e) => this.handleNameSelectorChange(e)}
+                              onChange={(e) => this.handleNameSelectorChange(e)}
+                              value={this.state.nameSelectorValue}
+                            />
+                          )}
                       </div>
                     </div>
                     {this.props.showTimeoutField ? (
@@ -1161,32 +1172,32 @@ const AddNewTestcaseSteps = Form.create()(
                         <div className="element-item-row-border" />
                         <div className="element-item-row-footer">
                           {this.state.configureTimeout &&
-                          this.state.configureTimeoutcondition ? (
-                            <div
-                              className="element-item-row-footer-btn"
-                              onDoubleClick={() => this.editcofigureTimeout()}
-                            >
-                              {this.state.configureTimeout}
-                            </div>
-                          ) : (
-                            <Input
-                              type="number"
-                              className="input-container-text"
-                              placeholder="Add Name Selector"
-                              onKeyPress={(e) =>
-                                this.handleConfigureTimeoutChange(e)
-                              }
-                              onChange={(e) =>
-                                this.handleConfigureTimeoutChange(e)
-                              }
-                              value={this.state.configureTimeout}
-                            />
-                          )}
+                            this.state.configureTimeoutcondition ? (
+                              <div
+                                className="element-item-row-footer-btn"
+                                onDoubleClick={() => this.editcofigureTimeout()}
+                              >
+                                {this.state.configureTimeout}
+                              </div>
+                            ) : (
+                              <Input
+                                type="number"
+                                className="input-container-text"
+                                placeholder="Add Name Selector"
+                                onKeyPress={(e) =>
+                                  this.handleConfigureTimeoutChange(e)
+                                }
+                                onChange={(e) =>
+                                  this.handleConfigureTimeoutChange(e)
+                                }
+                                value={this.state.configureTimeout}
+                              />
+                            )}
                         </div>
                       </div>
                     ) : (
-                      ""
-                    )}
+                        ""
+                      )}
 
                     <div className="element-item-row">
                       <div className="element-item-row-header">

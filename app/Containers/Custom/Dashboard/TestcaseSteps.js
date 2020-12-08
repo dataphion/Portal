@@ -241,7 +241,7 @@ export default class TestcaseSteps extends React.Component {
               ext
             },
             testcasecomponents(where:{type:"ui"}){id,sequence_number,group_name,
-                objectrepository{id,url,alias_name,thumbnail_url,horizontal_anchor_text,vertical_anchor_text,object_by_lable,action,element_type,element_label,element_id,element_value,element_xpaths,element_css,element_health,element_attributes,description,nlu,browser_height,browser_width,tag,protocol,query_parameters,domain,path,text,x_scroll,y_scroll,pixel_ratio,x_cord,y_cord,height,width,placeholder,fileupload_url{name}, best_match, timeout, expected_condition}
+                objectrepository{id,url,alias_name,thumbnail_url,horizontal_anchor_text,vertical_anchor_text,object_by_lable,action,element_type,element_label,element_id,element_value,element_xpaths,element_css,element_health,element_attributes,description,nlu,browser_height,browser_width,tag,protocol,query_parameters,domain,path,text,x_scroll,y_scroll,pixel_ratio,x_cord,y_cord,height,width,placeholder,fileupload_url{name}, best_match, timeout, expected_condition,api_attributes}
                 testcasegroup{
                   id,
                   name,
@@ -763,7 +763,7 @@ export default class TestcaseSteps extends React.Component {
                       // onClick={this.triggerExtension}
                       // onClick={this.triggerPlayback}
                       onClick={this.SelectBrowser}
-                      // className="positive-button"
+                    // className="positive-button"
                     >
                       <i className="fa fa-play fa-lg fa-color-run" />
                       {/* Run Steps */}
@@ -819,35 +819,35 @@ export default class TestcaseSteps extends React.Component {
                     {this.state.stepsData.length > 0
                       ? this.state.isCard
                         ? this.state.stepsData.map((details, index) => {
-                            return (
-                              <div key={index} className="col-md-2 animated zoomIn faster">
-                                <div className={"testcase-container " + (details.testcasecomponents ? "testcase-container-first" : details.sequence_number === 1 ? "testcase-container-first" : "")}>
-                                  {!details.testcasecomponents ? (
-                                    details.sequence_number !== 1 ? (
-                                      details.objectrepository ? (
-                                        details.objectrepository.thumbnail_url ? (
-                                          <img src={constants.image_host + details.objectrepository.thumbnail_url} height="100%" width="100%" />
-                                        ) : (
+                          return (
+                            <div key={index} className="col-md-2 animated zoomIn faster">
+                              <div className={"testcase-container " + (details.testcasecomponents ? "testcase-container-first" : details.sequence_number === 1 ? "testcase-container-first" : "")}>
+                                {!details.testcasecomponents ? (
+                                  details.sequence_number !== 1 ? (
+                                    details.objectrepository ? (
+                                      details.objectrepository.thumbnail_url ? (
+                                        <img src={constants.image_host + details.objectrepository.thumbnail_url} height="100%" width="100%" />
+                                      ) : (
                                           <img src="https://www.emergerstrategies.com/wp-content/themes/cannyon_/media/_frontend/img/grid-no-image.png" height="100%" width="100%" />
                                         )
-                                      ) : (
+                                    ) : (
                                         <img src="https://www.emergerstrategies.com/wp-content/themes/cannyon_/media/_frontend/img/grid-no-image.png" height="100%" width="100%" />
                                       )
-                                    ) : null
-                                  ) : null}
-                                  {details.sequence_number === 1 ? (
-                                    <div className={details.sequence_number === 1 && this.state.openUrlLoader === true ? "lds-dual-ring" : " "}>
-                                      <div className={details.sequence_number === 1 && details.openUrlLoader ? "lds-dual-ring" : " "}>
-                                        <div
-                                          className={
-                                            "testcase-container-index-count " + (details.playback ? "testcase-container-right-tick" : "") + (details.openUrlLoader ? "overwirte-background" : " ")
-                                          }
-                                        >
-                                          {details.sequence_number}
-                                        </div>
+                                  ) : null
+                                ) : null}
+                                {details.sequence_number === 1 ? (
+                                  <div className={details.sequence_number === 1 && this.state.openUrlLoader === true ? "lds-dual-ring" : " "}>
+                                    <div className={details.sequence_number === 1 && details.openUrlLoader ? "lds-dual-ring" : " "}>
+                                      <div
+                                        className={
+                                          "testcase-container-index-count " + (details.playback ? "testcase-container-right-tick" : "") + (details.openUrlLoader ? "overwirte-background" : " ")
+                                        }
+                                      >
+                                        {details.sequence_number}
                                       </div>
                                     </div>
-                                  ) : (
+                                  </div>
+                                ) : (
                                     <div className={details.sequence_number !== 1 && details.openUrlLoader ? "lds-dual-ring" : " "}>
                                       <div
                                         className={
@@ -862,80 +862,80 @@ export default class TestcaseSteps extends React.Component {
                                     </div>
                                   )}
 
-                                  {!details.testcasecomponents ? (
-                                    <div className="testcase-container-group-check">
-                                      <Whisper placement="top" trigger="hover" speaker={this.Tooltip("Create Group")}>
-                                        <div>
-                                          <Checkbox onChange={() => this.getCreateGroupStep(details.sequence_number, details.id)} />
+                                {!details.testcasecomponents ? (
+                                  <div className="testcase-container-group-check">
+                                    <Whisper placement="top" trigger="hover" speaker={this.Tooltip("Create Group")}>
+                                      <div>
+                                        <Checkbox onChange={() => this.getCreateGroupStep(details.sequence_number, details.id)} />
+                                      </div>
+                                    </Whisper>
+                                  </div>
+                                ) : null}
+                                {details.testcasecomponents ? (
+                                  <div className="testcase-container-first-header">
+                                    <div
+                                      className="fa fa-users"
+                                      style={{
+                                        fontSize: "25px",
+                                        marginRight: "10px",
+                                      }}
+                                    />
+                                      GROUP
+                                  </div>
+                                ) : details.sequence_number === 1 ? (
+                                  <div className="testcase-container-first-header">
+                                    <div className="globe-icon" /> OPEN URL
+                                  </div>
+                                ) : null}
+                                <div className="testcase-container-footer">
+                                  <div className="testcase-container-footer-tools">
+                                    {!details.testcasecomponents && details.sequence_number !== 1 && details.objectrepository ? (
+                                      <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("View Images")}>
+                                        <div
+                                          onClick={() => {
+                                            this.setState({
+                                              currentViewImage: index,
+                                              current_objectrepo_id: details.objectrepository.id,
+                                            });
+                                            this.loadModalImages(details.id);
+                                          }}
+                                          className="testcase-container-footer-tool-btn"
+                                        >
+                                          <i className="fa fa-picture-o" />
                                         </div>
                                       </Whisper>
-                                    </div>
-                                  ) : null}
-                                  {details.testcasecomponents ? (
-                                    <div className="testcase-container-first-header">
-                                      <div
-                                        className="fa fa-users"
-                                        style={{
-                                          fontSize: "25px",
-                                          marginRight: "10px",
-                                        }}
-                                      />
-                                      GROUP
-                                    </div>
-                                  ) : details.sequence_number === 1 ? (
-                                    <div className="testcase-container-first-header">
-                                      <div className="globe-icon" /> OPEN URL
-                                    </div>
-                                  ) : null}
-                                  <div className="testcase-container-footer">
-                                    <div className="testcase-container-footer-tools">
-                                      {!details.testcasecomponents && details.sequence_number !== 1 && details.objectrepository ? (
-                                        <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("View Images")}>
-                                          <div
-                                            onClick={() => {
-                                              this.setState({
-                                                currentViewImage: index,
-                                                current_objectrepo_id: details.objectrepository.id,
-                                              });
-                                              this.loadModalImages(details.id);
-                                            }}
-                                            className="testcase-container-footer-tool-btn"
-                                          >
-                                            <i className="fa fa-picture-o" />
-                                          </div>
-                                        </Whisper>
-                                      ) : null}
-                                      {!details.testcasecomponents && details.sequence_number !== 1 && details.objectrepository ? (
-                                        <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("View Meta Data")}>
-                                          <div
-                                            onClick={() => {
-                                              this.setState({
-                                                current_step: index,
-                                                metaDataModal: true,
-                                                modalInformation: details.objectrepository,
-                                              });
-                                            }}
-                                            className="testcase-container-footer-tool-btn"
-                                          >
-                                            <i className="fa fa-file-text" />
-                                          </div>
-                                        </Whisper>
-                                      ) : null}
-                                      {details.testcasecomponents ? (
-                                        <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("View Groupp")}>
-                                          <div
-                                            onClick={() =>
-                                              this.setState({
-                                                viewGroupModal: true,
-                                                viewGroupModalInformation: details,
-                                              })
-                                            }
-                                            className="testcase-container-footer-tool-btn"
-                                          >
-                                            <i className="fa fa-eye" />
-                                          </div>
-                                        </Whisper>
-                                      ) : (
+                                    ) : null}
+                                    {!details.testcasecomponents && details.sequence_number !== 1 && details.objectrepository ? (
+                                      <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("View Meta Data")}>
+                                        <div
+                                          onClick={() => {
+                                            this.setState({
+                                              current_step: index,
+                                              metaDataModal: true,
+                                              modalInformation: details.objectrepository,
+                                            });
+                                          }}
+                                          className="testcase-container-footer-tool-btn"
+                                        >
+                                          <i className="fa fa-file-text" />
+                                        </div>
+                                      </Whisper>
+                                    ) : null}
+                                    {details.testcasecomponents ? (
+                                      <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("View Groupp")}>
+                                        <div
+                                          onClick={() =>
+                                            this.setState({
+                                              viewGroupModal: true,
+                                              viewGroupModalInformation: details,
+                                            })
+                                          }
+                                          className="testcase-container-footer-tool-btn"
+                                        >
+                                          <i className="fa fa-eye" />
+                                        </div>
+                                      </Whisper>
+                                    ) : (
                                         <Whisper placement="bottom" trigger="hover" speaker={this.Tooltip("Delete Step")}>
                                           <div
                                             onClick={() =>
@@ -950,107 +950,107 @@ export default class TestcaseSteps extends React.Component {
                                           </div>
                                         </Whisper>
                                       )}
-                                    </div>
-                                    <div className="testcase-container-footer-description">
-                                      {details.testcasecomponents
-                                        ? details.name.toUpperCase()
-                                        : details.sequence_number === 1
+                                  </div>
+                                  <div className="testcase-container-footer-description">
+                                    {details.testcasecomponents
+                                      ? details.name.toUpperCase()
+                                      : details.sequence_number === 1
                                         ? this.state.allData.testcases
                                           ? this.state.allData.testcases[0].testcasecomponents[0].objectrepository.url
                                           : ""
                                         : details.objectrepository
-                                        ? details.objectrepository.description
                                           ? details.objectrepository.description
-                                          : details.objectrepository.action === "text_validation" || details.objectrepository.action === "element_validation"
-                                          ? "Validation"
-                                          : "Autofocus"
-                                        : "No discription"}
-                                    </div>
+                                            ? details.objectrepository.description
+                                            : details.objectrepository.action === "text_validation" || details.objectrepository.action === "element_validation"
+                                              ? "Validation"
+                                              : "Autofocus"
+                                          : "No discription"}
                                   </div>
                                 </div>
-                                {details.sequence_number !== 1 ? (
-                                  <div className={details.visible ? "testcase-steps-right-arrow-container-on-hover" : "testcase-steps-right-arrow-container"}>
-                                    <Dropdown
-                                      overlay={
-                                        <Menu onClick={(e) => this.handleMenuClick(e, this.state.stepsData[index - 1].sequence_number, this.state.stepsData[index].sequence_number)}>
-                                          <SubMenu title="Add Element">
-                                            <Menu.Item key="1.1">
-                                              <i
-                                                className="fa fa-play"
-                                                aria-hidden="true"
-                                                style={{
-                                                  marginRight: "10px",
-                                                }}
-                                              />
+                              </div>
+                              {details.sequence_number !== 1 ? (
+                                <div className={details.visible ? "testcase-steps-right-arrow-container-on-hover" : "testcase-steps-right-arrow-container"}>
+                                  <Dropdown
+                                    overlay={
+                                      <Menu onClick={(e) => this.handleMenuClick(e, this.state.stepsData[index - 1].sequence_number, this.state.stepsData[index].sequence_number)}>
+                                        <SubMenu title="Add Element">
+                                          <Menu.Item key="1.1">
+                                            <i
+                                              className="fa fa-play"
+                                              aria-hidden="true"
+                                              style={{
+                                                marginRight: "10px",
+                                              }}
+                                            />
                                               Record Element
                                             </Menu.Item>
-                                            <Menu.Item key="1.2">
-                                              <i
-                                                className="fa fa-plus"
-                                                aria-hidden="true"
-                                                style={{
-                                                  marginRight: "10px",
-                                                }}
-                                              />
+                                          <Menu.Item key="1.2">
+                                            <i
+                                              className="fa fa-plus"
+                                              aria-hidden="true"
+                                              style={{
+                                                marginRight: "10px",
+                                              }}
+                                            />
                                               Create Element
                                             </Menu.Item>
-                                          </SubMenu>
-                                          <Menu.Item key="2">Add Group</Menu.Item>
-                                          <Menu.Item key="3">Element Visible</Menu.Item>
-                                          <Menu.Item key="4">Compare Element Value</Menu.Item>
-                                          <Menu.Item key="5">Data Source</Menu.Item>
-                                          <Menu.Item key="6">Element Absent</Menu.Item>
-                                        </Menu>
-                                      }
-                                      onVisibleChange={(flag) => {
-                                        this.handleVisibleChange(flag, index);
-                                      }}
-                                      visible={details.visible}
-                                    >
-                                      {details.visible ? <i className="fa fa-plus circle-icon-add" /> : <i className="fa fa-caret-right right-arrow" />}
-                                    </Dropdown>
-                                  </div>
-                                ) : null}
+                                        </SubMenu>
+                                        <Menu.Item key="2">Add Group</Menu.Item>
+                                        <Menu.Item key="3">Element Visible</Menu.Item>
+                                        <Menu.Item key="4">Compare Element Value</Menu.Item>
+                                        <Menu.Item key="5">Data Source</Menu.Item>
+                                        <Menu.Item key="6">Element Absent</Menu.Item>
+                                      </Menu>
+                                    }
+                                    onVisibleChange={(flag) => {
+                                      this.handleVisibleChange(flag, index);
+                                    }}
+                                    visible={details.visible}
+                                  >
+                                    {details.visible ? <i className="fa fa-plus circle-icon-add" /> : <i className="fa fa-caret-right right-arrow" />}
+                                  </Dropdown>
+                                </div>
+                              ) : null}
+                            </div>
+                          );
+                        })
+                        : this.state.stepsData.map((details, index) => {
+                          if (details.sequence_number === 1) {
+                            return (
+                              <div key={index} className="list-view-container animated fadeInUp faster">
+                                <div className="list-view-index-counter">{details.sequence_number}</div>
+                                <div className="list-view-action-tag">OPEN URL</div>
+                                <div className="list-view-description">{this.state.allData.testcases[0].testcasecomponents[0].objectrepository.url}</div>
                               </div>
                             );
-                          })
-                        : this.state.stepsData.map((details, index) => {
-                            if (details.sequence_number === 1) {
-                              return (
-                                <div key={index} className="list-view-container animated fadeInUp faster">
-                                  <div className="list-view-index-counter">{details.sequence_number}</div>
-                                  <div className="list-view-action-tag">OPEN URL</div>
-                                  <div className="list-view-description">{this.state.allData.testcases[0].testcasecomponents[0].objectrepository.url}</div>
-                                </div>
-                              );
-                            } else {
-                              return (
-                                <div
-                                  key={index}
-                                  onClick={() =>
-                                    this.setState({
-                                      metaDataModal: details.testcasecomponents ? false : true,
-                                      modalInformation: details.objectrepository,
-                                    })
-                                  }
-                                  className="list-view-container animated fadeInUp faster"
-                                >
-                                  <div className="list-view-index-counter">{details.sequence_number}</div>
-                                  <div className="list-view-action-tag">{details.testcasecomponents ? "GROUP" : this.renderAction(details.objectrepository.action)}</div>
-                                  <div className="list-view-description">
-                                    {details.testcasecomponents
-                                      ? `${details.name} (${details.testcasecomponents.length} Steps)`
-                                      : details.objectrepository.description
+                          } else {
+                            return (
+                              <div
+                                key={index}
+                                onClick={() =>
+                                  this.setState({
+                                    metaDataModal: details.testcasecomponents ? false : true,
+                                    modalInformation: details.objectrepository,
+                                  })
+                                }
+                                className="list-view-container animated fadeInUp faster"
+                              >
+                                <div className="list-view-index-counter">{details.sequence_number}</div>
+                                <div className="list-view-action-tag">{details.testcasecomponents ? "GROUP" : this.renderAction(details.objectrepository.action)}</div>
+                                <div className="list-view-description">
+                                  {details.testcasecomponents
+                                    ? `${details.name} (${details.testcasecomponents.length} Steps)`
+                                    : details.objectrepository.description
                                       ? details.objectrepository.description
                                       : details.objectrepository.action === "text_validation" || details.objectrepository.action === "element_validation"
-                                      ? "Validation"
-                                      : "Autofocus"}
-                                  </div>
-                                  <div className="list-view-hover-btn" />
+                                        ? "Validation"
+                                        : "Autofocus"}
                                 </div>
-                              );
-                            }
-                          })
+                                <div className="list-view-hover-btn" />
+                              </div>
+                            );
+                          }
+                        })
                       : ""}
                     {this.state.stepsData.length > 0 && this.state.isCard ? (
                       <div className={this.state.visible ? "testcase-steps-right-arrow-container-last" : "testcase-steps-right-arrow-container-last"}>
