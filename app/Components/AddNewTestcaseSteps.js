@@ -496,6 +496,7 @@ const AddNewTestcaseSteps = Form.create()(
                             index
                           ].PathParametersKey = e.target.value)
                         }
+                        disabled
                       />
                     )}
                   </Form.Item>
@@ -514,6 +515,7 @@ const AddNewTestcaseSteps = Form.create()(
                             index
                           ].PathParametersValue = e.target.value)
                         }
+                        disabled
                       />
                     )}
                   </Form.Item>
@@ -601,6 +603,7 @@ const AddNewTestcaseSteps = Form.create()(
                             index
                           ].QueryParametersKey = e.target.value)
                         }
+                        disabled
                       />
                     )}
                   </Form.Item>
@@ -619,6 +622,7 @@ const AddNewTestcaseSteps = Form.create()(
                             index
                           ].QueryParametersValue = e.target.value)
                         }
+                        disabled
                       />
                     )}
                   </Form.Item>
@@ -726,6 +730,7 @@ const AddNewTestcaseSteps = Form.create()(
                           this.state.HeadersAdd[index].HeadersKey =
                             e.target.value;
                         }}
+                        disabled
                       />
                     )}
                   </Form.Item>
@@ -743,6 +748,7 @@ const AddNewTestcaseSteps = Form.create()(
                           this.state.HeadersAdd[index].HeadersValue =
                             e.target.value;
                         }}
+                        disabled
                       />
                     )}
                   </Form.Item>
@@ -1327,7 +1333,7 @@ const AddNewTestcaseSteps = Form.create()(
                         <Icon type="caret-right" rotate={isActive ? 90 : 0} />
                       )}
                     >
-                      <Collapse.Panel header="PATH PARAMETERS" key="1">
+                      {/* <Collapse.Panel header="PATH PARAMETERS" key="1">
                         <div className="lable-key-value-container">
                           <div className="lable-key-value">KEY</div>
                           <div className="lable-key-value">VALUE</div>
@@ -1351,9 +1357,9 @@ const AddNewTestcaseSteps = Form.create()(
                           </div>
                         </div>
                       </Collapse.Panel>
-                      <div className="sidebar-body-divider" />
+                      <div className="sidebar-body-divider" /> */}
 
-                      <Collapse.Panel header="QUERY PARAMETERS" key="2">
+                      <Collapse.Panel header="QUERY PARAMETERS" key="1">
                         <div className="lable-key-value-container">
                           <div className="lable-key-value">KEY</div>
                           <div className="lable-key-value">VALUE</div>
@@ -1380,7 +1386,7 @@ const AddNewTestcaseSteps = Form.create()(
 
                       <div className="sidebar-body-divider" />
 
-                      <Collapse.Panel header="AUTHORIZATION" key="3">
+                      <Collapse.Panel header="AUTHORIZATION" key="2">
                         <div className="sidebar-body-regular-row">
                           <Form.Item label="USERNAME">
                             {getFieldDecorator("AuthorizationUsername", {
@@ -1423,7 +1429,7 @@ const AddNewTestcaseSteps = Form.create()(
 
                       <div className="sidebar-body-divider" />
 
-                      <Collapse.Panel header="HEADERS" key="4">
+                      <Collapse.Panel header="HEADERS" key="3">
                         <div className="lable-key-value-container">
                           <div className="lable-key-value">KEY</div>
                           <div className="lable-key-value">VALUE</div>
@@ -1448,7 +1454,7 @@ const AddNewTestcaseSteps = Form.create()(
 
                       <div className={"sidebar-body-divider"} />
 
-                      <Collapse.Panel header="BODY" key="5">
+                      <Collapse.Panel header="BODY" key="4">
                         <div className="sidebar-body-regular-row-body-menu-container">
                           <div className="sidebar-body-regular-row-body-menu">
                             <div
